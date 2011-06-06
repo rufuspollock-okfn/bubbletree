@@ -641,3 +641,4 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 	
 };
 
+OpenSpending.BubbleTree.Styles = {};
