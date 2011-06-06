@@ -279,6 +279,7 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 		// sum radii of all children
 		for (i in children) {
 			c = children[i];
+			if (isNaN(a2rad(c.amount))) vis4.log('not a number', c.amount);
 			childRadSum += a2rad(c.amount);
 		}
 		
@@ -292,6 +293,8 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 		
 			da = a2rad(c.amount) / childRadSum * twopi;
 			ca = oa + da*0.5;
+		
+			if (isNaN(ca)) vis4.log(oa, da, c.amount, childRadSum, twopi);
 		
 			c.centerAngle = ca;
 		

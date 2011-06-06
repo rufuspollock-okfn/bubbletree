@@ -6,6 +6,7 @@
 if (!OpenSpending || !OpenSpending.BubbleTree) window.alert('You must include the BubbleTree before including the styles');
 
 OpenSpending.BubbleTree.Styles.Cofog = {
+	'01': { icon: 'icons/government-uk.svg' },
 	'02': { icon: 'icons/defence.svg' },
 	'02.1': { icon: 'icons/military.svg' },
 	'02.2': { icon: 'icons/civil-defence.svg' },
@@ -41,7 +42,13 @@ OpenSpending.BubbleTree.Styles.Cofog = {
 	'04.8': { icon: 'icons/rd-eco.svg' },
 	'04.9': { icon: 'icons/police.svg' },
 	'05': { icon: 'icons/environment.svg' },	
-	'05.1': { icon: 'icons/waste.svg' },	
+	'05.1': { icon: 'icons/waste.svg' },
+	'06': { icon: 'icons/our-streets.svg' },		
+	'06.1': { icon: 'icons/housing.svg' },		
+	'06.2': { icon: 'icons/community.svg' },
+	'06.3': { icon: 'icons/water.svg' },
+	'06.4': { icon: 'icons/street-lights.svg' },		
+	
 	'07': { icon: 'icons/health.svg' },											'07.1': { icon: 'icons/medical-supplies.svg' },				
 	'07.2': { icon: 'icons/health.svg' },
 	'08': { icon: 'icons/culture.svg' },					
