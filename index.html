@@ -111,7 +111,16 @@
 			config.yearChangeHandler = yearChange;
 			
 			config.bubbleStyles = {
-				'cofog': OpenSpending.BubbleTree.Styles.Cofog
+			
+				// the cofog style is defined in style.cofog.js
+				'cofog': OpenSpending.BubbleTree.Styles.Cofog,
+				
+				// the taxonomy "id" is actually not a real taxonomy,
+				// but a fallback to access nodes w/o taxonomy by
+				// their id
+				'id': {
+					'root': { icon: 'icons/pound.svg' }
+				}
 			};
 			
 			new OpenSpending.BubbleTree.Loader(config);

@@ -247,7 +247,9 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 				} 
 			} else {
 				// node has no taxonomy
-				
+				if (styles.hasOwnProperty('id') && styles.id.hasOwnProperty(node.id) && styles.id[node.id].hasOwnProperty('icon')) {
+					node.iconUrl = styles.id[node.id].icon;
+				}
 			}
 		}
 	};
