@@ -2,7 +2,7 @@
 /*global OpenSpending */
 
 
-OpenSpending.BubbleChart.Vector = function(x,y) {
+OpenSpending.BubbleTree.Vector = function(x,y) {
 	var me = this;
 	me.x = x; 
 	me.y = y;
@@ -30,6 +30,6 @@ OpenSpending.BubbleChart.Vector = function(x,y) {
 	 */
 	this.clone = function() {
 		var me = this;
-		return new OpenSpending.BubbleChart.Vector(me.x, me.y);
+		return new OpenSpending.BubbleTree.Vector(me.x, me.y);
 	};
 };

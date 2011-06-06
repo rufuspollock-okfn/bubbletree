@@ -5,13 +5,13 @@
  * loads the data and initializes the bubblechart
  * you need to include the bubblechart.min.js first
  */
-OpenSpending.BubbleChart.Loader = function(config) {
+OpenSpending.BubbleTree.Loader = function(config) {
 
 	var me = this;
 
 	me.config = config;
 
-	me.ns = OpenSpending.BubbleChart;
+	me.ns = OpenSpending.BubbleTree;
 
 	/*
 	 * is called by the constructor of the Loader
@@ -22,7 +22,7 @@ OpenSpending.BubbleChart.Loader = function(config) {
             breakdown;
 
         me.rootNode = { label: me.config.rootNodeLabel };
-	    OpenSpending.BubbleChart.getTree(
+	    OpenSpending.BubbleTree.getTree(
 		{apiUrl: me.config.apiUrl,
 		 dataset: me.config.dataset,
 		 drilldowns: me.config.drilldowns,
@@ -38,7 +38,7 @@ OpenSpending.BubbleChart.Loader = function(config) {
 	 */
 	me.dataLoaded = function(data) {
 		var me = this,
-		tree = OpenSpending.BubbleChart.buildTree(data, me.config.drilldowns,
+		tree = OpenSpending.BubbleTree.buildTree(data, me.config.drilldowns,
                                                           me.config.breakdown, me.rootNode);
 		me.run(tree);
 	};
@@ -133,7 +133,7 @@ OpenSpending.BubbleChart.Loader = function(config) {
 	me.run = function(data) {
 		var me = this;
 		// initialize bubble chart
-		var bubbleChart = new OpenSpending.BubbleChart(
+		var bubbleChart = new OpenSpending.BubbleTree(
 			me.config
 		);
 		bubbleChart.setData(data);

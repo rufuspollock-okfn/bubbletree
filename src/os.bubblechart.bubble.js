@@ -2,5 +2,5 @@
 /*global Raphael, TWEEN, OpenSpending, vis4 */
 
 // namespace for different bubble implementations
-OpenSpending.BubbleChart.Bubbles = {};
+OpenSpending.BubbleTree.Bubbles = {};
 

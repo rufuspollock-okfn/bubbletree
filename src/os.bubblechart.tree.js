@@ -20,7 +20,7 @@
  * test data. For testing only.
  **/
 
-OpenSpending.BubbleChart.getTree = function(config) {
+OpenSpending.BubbleTree.getTree = function(config) {
 
     //api_url, dataset, drilldowns, cuts, callback, testDataPath
     //construct the url
@@ -72,7 +72,7 @@ OpenSpending.BubbleChart.getTree = function(config) {
  * the 'label' (default: 'Total')
  **/
 
-OpenSpending.BubbleChart.buildTree = function(data, drilldowns,
+OpenSpending.BubbleTree.buildTree = function(data, drilldowns,
                                               breakdown, rootNode) {
 
     var entries = data.drilldown,

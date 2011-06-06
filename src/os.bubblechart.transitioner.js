@@ -8,7 +8,7 @@
  * - a node appears at the beginning of the transition
  * - a node disappears at the end of the transtion
  */
-OpenSpending.BubbleChart.SimpleTransitioner = function() {
+OpenSpending.BubbleTree.SimpleTransitioner = function() {
 	
 	var me = this;
 	
@@ -48,7 +48,7 @@ OpenSpending.BubbleChart.SimpleTransitioner = function() {
 	
 };
 
-OpenSpending.BubbleChart.AnimatedTransitioner = function(duration) {
+OpenSpending.BubbleTree.AnimatedTransitioner = function(duration) {
 	
 	var me = this;
 	

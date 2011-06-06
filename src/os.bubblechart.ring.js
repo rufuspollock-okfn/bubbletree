@@ -4,7 +4,7 @@
 /*
  * represents a ring
  */
-OpenSpending.BubbleChart.Ring = function(node, bc, o, rad, attr) {
+OpenSpending.BubbleTree.Ring = function(node, bc, o, rad, attr) {
 	
 	var me = this;
 	me.className = "ring";

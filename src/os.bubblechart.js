@@ -1,5 +1,5 @@
 /*!
- * OpenSpending BubbleChart 0.8
+ * OpenSpending BubbleTree 0.8
  *
  * Copyright (c) 2011 Gregor Aisch (http://driven-by-data.net)
  * Licensed under the MIT license
@@ -10,7 +10,7 @@
 var OpenSpending = OpenSpending ? OpenSpending : {}; 
 
 
-OpenSpending.BubbleChart = function(config, onHover, onUnHover) {
+OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 	
 	var me = this;
 	
@@ -31,7 +31,7 @@ OpenSpending.BubbleChart = function(config, onHover, onUnHover) {
 	 */
 	me.style = config.bubbleStyles;
 	
-	me.ns = OpenSpending.BubbleChart;
+	me.ns = OpenSpending.BubbleTree;
 	
 	/*
 	 * hashmap of all nodes by url token
@@ -229,7 +229,7 @@ OpenSpending.BubbleChart = function(config, onHover, onUnHover) {
 	
 	/*
 	 * if the bubble type is set to "icon", this func will be called before the
-	 * bubbles are traversed. it will store icon urls to the nodes 
+	 * bubbles are traversed. it will store icon urls into the nodes 
 	 */
 	me.initIcons = function() {
 		var me = this, styles = me.config.bubbleStyles, i, node, taxonomy, id, taxStyles;
@@ -237,14 +237,17 @@ OpenSpending.BubbleChart = function(config, onHover, onUnHover) {
 		for (i in me.nodeList) {
 			node = me.nodeList[i];
 			id = node.name;
-			if (node.hasOwnProperty('taxonomy') {
+			if (node.hasOwnProperty('taxonomy')) {
 				taxonomy = node.taxonomy;
 				if (styles.hasOwnProperty(taxonomy)) {
 					taxStyles = styles[taxonomy];
-					if (taxStyles.hasOwnProperty(id)) {
-						node.iconUrl = taxStyles[id];
+					if (taxStyles.hasOwnProperty(id) && taxStyles[id].hasOwnProperty('icon')) {
+						node.iconUrl = taxStyles[id].icon;
 					}
 				} 
+			} else {
+				// node has no taxonomy
+				
 			}
 		}
 	};

@@ -5,7 +5,7 @@
  * stores visual attributes of all elements in the visualization
  * 
  */
-OpenSpending.BubbleChart.Layout = function() {
+OpenSpending.BubbleTree.Layout = function() {
 
 	var me = this;
 	me.objects = [];
@@ -18,7 +18,7 @@ OpenSpending.BubbleChart.Layout = function() {
 	 *
 	 * if you have an object bubble, you can easily change its properties with
 	 * 
-	 * var l = new OpenSpendings.BubbleChart.Layout();
+	 * var l = new OpenSpendings.BubbleTree.Layout();
 	 * l.$(bubble).radius = 30;
 	 * l.$(bubble).angle = 3.14;
 	 */

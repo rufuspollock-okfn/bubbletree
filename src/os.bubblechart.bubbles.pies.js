@@ -5,9 +5,9 @@
 /*
  * represents a bubble
  */
-OpenSpending.BubbleChart.Bubbles.Pies = function(node, bubblechart, origin, radius, angle, color) {
+OpenSpending.BubbleTree.Bubbles.Pies = function(node, bubblechart, origin, radius, angle, color) {
 
-	var ns = OpenSpending.BubbleChart, utils = ns.Utils, me = this;
+	var ns = OpenSpending.BubbleTree, utils = ns.Utils, me = this;
 	me.className = "bubble";
 	me.node = node;
 	me.paper = bubblechart.paper;

@@ -6,7 +6,7 @@
  * events like click and hover for a group of objects that
  * belong together
  */
-OpenSpending.BubbleChart.MouseEventGroup = function(target, members) {
+OpenSpending.BubbleTree.MouseEventGroup = function(target, members) {
 	
 	var me = this;
 	me.target = target; // e.g. instance of a bubble

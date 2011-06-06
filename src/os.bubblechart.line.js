@@ -3,7 +3,7 @@
 /*
  * represents a radial line
  */
-OpenSpending.BubbleChart.Line = function(bc, attr, origin, angle, fromRad, toRad) {
+OpenSpending.BubbleTree.Line = function(bc, attr, origin, angle, fromRad, toRad) {
 	this.bc = bc;
 	this.o = origin;
 	this.angle = angle;
