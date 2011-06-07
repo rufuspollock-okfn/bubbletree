@@ -10,14 +10,19 @@ OpenSpending.BubbleTree.Utils.log = function() {
 };
 
 OpenSpending.BubbleTree.Utils.amount2rad = function(a) {
-	return Math.pow(a/OpenSpending.BubbleTree.a2radBase, 0.6);
+	return Math.pow(Math.max(0, a) /OpenSpending.BubbleTree.a2radBase, 0.6);
 };
 
 OpenSpending.BubbleTree.Utils.formatNumber = function(n) {
-	if (n >= 1000000000000) return Math.round(n / 100000000000)/10 + 't';
-	if (n >= 1000000000) return Math.round(n / 100000000)/10 + 'b';
-	if (n >= 1000000) return Math.round(n / 100000)/10 + 'm';
-	if (n >= 1000) return Math.round(n / 100)/10 + 'k';
-	else return n;
+	var prefix = '';
+	if (n < 0) {
+		n = n*-1;
+		prefix = '-';
+	}
+	if (n >= 1000000000000) return prefix+Math.round(n / 100000000000)/10 + 't';
+	if (n >= 1000000000) return prefix+Math.round(n / 100000000)/10 + 'b';
+	if (n >= 1000000) return prefix+Math.round(n / 100000)/10 + 'm';
+	if (n >= 1000) return prefix+Math.round(n / 100)/10 + 'k';
+	else return prefix+n;
 	
 };

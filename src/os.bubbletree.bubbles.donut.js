@@ -85,6 +85,7 @@ OpenSpending.BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radi
 	me.onhover = function(e) {
 		var me = this, c = me.bc.$container[0];
 		e.node = me.node;
+		e.target = me;
 		e.bubblePos = { x:me.pos.x, y: me.pos.y };
 		e.mousePos = { x:e.origEvent.pageX - c.offsetLeft, y: e.origEvent.pageY - c.offsetTop };
 		e.type = 'SHOW';
@@ -94,6 +95,7 @@ OpenSpending.BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radi
 	me.onunhover = function(e) {
 		var me = this, c = me.bc.$container[0];
 		e.node = me.node;
+		e.target = me;
 		e.type = 'HIDE';
 		e.bubblePos = { x:me.pos.x, y: me.pos.y };
 		e.mousePos = { x:e.origEvent.pageX - c.offsetLeft, y: e.origEvent.pageY - c.offsetTop };
@@ -222,10 +224,10 @@ OpenSpending.BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radi
 			
 		for (i in arcs) {
 			if (arcs[i].node == e.target) {
-				vis4.log(bd, i, bd[i]);
 				e.node = bd[i];
 				e.bubblePos = { x:me.pos.x, y: me.pos.y };
 				e.mousePos = { x:e.pageX - c.offsetLeft, y: e.pageY - c.offsetTop };
+				e.target = me;
 				e.type = 'SHOW';
 				me.bc.tooltip(e);
 				return;
@@ -246,6 +248,7 @@ OpenSpending.BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radi
 				e.bubblePos = { x:me.pos.x, y: me.pos.y };
 				e.mousePos = { x:e.pageX - c.offsetLeft, y: e.pageY - c.offsetTop };
 				e.type = 'HIDE';
+				e.target = me;
 				me.bc.tooltip(e);
 				return;
 			}

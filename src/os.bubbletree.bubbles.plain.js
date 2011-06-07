@@ -73,6 +73,7 @@ OpenSpending.BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radi
 	me.onhover = function(e) {
 		var me = this, c = me.bc.$container[0];
 		e.node = me.node;
+		e.target = me;
 		e.bubblePos = { x:me.pos.x, y: me.pos.y };
 		e.mousePos = { x:e.origEvent.pageX - c.offsetLeft, y: e.origEvent.pageY - c.offsetTop };
 		e.type = 'SHOW';
@@ -83,6 +84,7 @@ OpenSpending.BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radi
 		var me = this, c = me.bc.$container[0];
 		e.node = me.node;
 		e.type = 'HIDE';
+		e.target = me;
 		e.bubblePos = { x:me.pos.x, y: me.pos.y };
 		e.mousePos = { x:e.origEvent.pageX - c.offsetLeft, y: e.origEvent.pageY - c.offsetTop };
 		me.bc.tooltip(e);

@@ -237,6 +237,7 @@ OpenSpending.BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radiu
 		e.bubblePos = { x:me.pos.x, y: me.pos.y };
 		e.mousePos = { x:e.origEvent.pageX - c.offsetLeft, y: e.origEvent.pageY - c.offsetTop };
 		e.type = 'SHOW';
+		e.target = me;
 		me.bc.tooltip(e);
 	};
 	
@@ -244,6 +245,7 @@ OpenSpending.BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radiu
 		var me = this, c = me.bc.$container[0];
 		e.node = me.node;
 		e.type = 'HIDE';
+		e.target = me;
 		e.bubblePos = { x:me.pos.x, y: me.pos.y };
 		e.mousePos = { x:e.origEvent.pageX - c.offsetLeft, y: e.origEvent.pageY - c.offsetTop };
 		me.bc.tooltip(e);
