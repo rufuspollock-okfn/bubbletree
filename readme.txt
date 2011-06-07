@@ -61,6 +61,7 @@ The following event properties are available
 * bubblePos - same as mousePos, but stores the position of the bubble instead of the mouse
 * node - the node of the bubble that is related to the tooltip event
 * origEvent - the original event object as thrown by jQuery
+* target - the related Bubble object
 
 
 
