@@ -29,3 +29,5 @@ else
   uglifyjs -o $OUTFILE $TMPFILE
 fi
 rm -Rf $TMP
+
+python generateDocs.py
