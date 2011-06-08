@@ -31,7 +31,7 @@ The following config variables can be used to change the data source:
 
 ## Custom Styling
 It is possible to change the default display properties of each bubble by setting up bubble styles. Bubble styles can be defined once for each taxonomy (e.g. COFOG) or for individual node ids. By now, you can use bubble styles to change the colors that come out of the API or to set up icon images for the bubbleType "icon". 
-* bubbleStyle - Object, contains 
+* bubbleStyle
 
 ## Tooltips
 
@@ -64,4 +64,20 @@ The following event properties are available
 * target - the related Bubble object
 
 
+# Custom Taxonomy Styling (e.g. Icons)
 
+## Icon Specifications
+The icons are stored in /icons/ folder in standard SVG format. However, there are some specifications to ensure that the visualization can use the icons correctly
+* the svg canvas should be 100px * 100px
+* the icon itself must be stored in one or many SVG path elements. Every other SVG elements like <circle> will be ignored by the viz.
+* the icon SVG must not be too large to keep the viz performance. SVG filesize of under 10kb are perfect, everything above 100kb should be avoided.
+* the icon paths should not exceed the bubble size
+
+## Taxonomy to Icon Mapping
+The icon filenames are arbitrary. The mapping between taxonomies and icons is done at JavaScript side by defining the *bubbleStyle* property in the configuration (see above), which is a three level nested dictionary
+
+* *taxonomy_id* => *nodeStyles*
+* * *node_name* => *styles*
+* * * *styles* is a dictionary of visual properties to their actual values, e.g. 'color' = '#dd0000'
+
+Please see index.html and style.cofog.js for a working example.
