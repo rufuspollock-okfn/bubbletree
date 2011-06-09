@@ -1,5 +1,8 @@
-<html>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+	<meta charset="UTF-8"/>
+	<title>BubbleTree Demo</title>
 	<script type="text/javascript" src="../../lib/vendor/jquery-1.5.2.min.js"></script>
 	<script type="text/javascript" src="../../lib/vendor/jquery.history.js"></script>
 	<script type="text/javascript" src="../../lib/vendor/raphael.js"></script>
@@ -17,7 +20,7 @@
 	#bubble-chart-wrapper { width: 100%; height: 100%; position: absolute;  }
 	#bubble-chart { background: #fff; position: relative; height: 100%; overflow: hidden; }
 	#bubble-chart .label { position: absolute; color: #fff; text-align: center; cursor: default; }
-	#bubble-chart .amount { font-family: Graublau, Georgia, sans; font-size: 16px; }
+	#bubble-chart .amount { font-family: Graublau, Georgia, sans-serif; font-size: 16px; }
 	#bubble-chart .desc { font-family: sans-serif; font-size: 12px }
 	
 	#bubble-chart-wrapper .tooltip { max-width: 220px;  border: 1px solid #999; 
@@ -37,6 +40,15 @@
 		background: #600;
 		border-radius: 19px;
 		margin-right: 8px;
+	}
+	
+	#bubble-chart .tooltip svg {
+		width: 100px; height: 100px; fill: black; display: block; position: relative; visibility: visible; 
+		z-index: 10000;
+	}
+
+	#bubble-chart .tooltip svg path {
+		fill-opacity: 1; visiblity: visible;
 	}
 	
 	#bubble-chart-wrapper .tooltip .row {
@@ -96,7 +108,9 @@
 						left: event.mousePos.x + 4, 
 						top: event.mousePos.y + 4 
 					});
-					$tooltip.html(event.node.label+' <b>'+event.node.famount+'</b><br />'+event.node.urlToken);
+					$tooltip.html(event.node.label+' <b>'+event.node.famount+'</b>');
+					var bubble = event.target;
+					
 					$tooltip.show();
 				} else {
 					// hide tooltip
