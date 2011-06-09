@@ -1,0 +1,108 @@
+
+<!-- 
+  -- please do not edit this auto-generated file.
+  -- instead, change readme.txt and run generateDocs.py
+-->
+<html>
+<head>
+<style type="text/css">
+body { font-family: sans; margin: 40px; background: #f8f8f8 }
+#wrapper { width: 100ex; margin: 0 auto; background: white; border:1px solid #e9e9e9; padding: 1em 2em; }
+
+@font-face {
+	font-family: Graublau;
+	src: url('fonts/graublau/GraublauWeb.otf') format("opentype");
+}
+h1,h2,h3 { font-family: Graublau, Georgia, sans-serif; }
+</style>
+<title>OpenSpending BubbleTree Documentation</title>
+</head>
+<body><div id="wrapper">
+<h1>Radial Bubble Tree Documentation</h1>
+<h2>Configuration vars</h2>
+<p>The constructor of the bubble chart takes just one argument, the configuration object which contains all settings that can be set. This section will cover all available configuration variables.</p>
+<p>Example:</p>
+<pre><code>var config = { 
+    apiUrl: 'http://openspending.org/api', 
+    container: '#bubbletree' 
+};
+new OpenSpending.BubbleTree.Loader(config);
+</code></pre>
+<h3>Integration</h3>
+<ul>
+<li><em>container</em> - String, jQuery selector of the container element for the visualization, must be defined in HTML code, e.g. '#bubbletree-container'</li>
+</ul>
+<h3>Data Source</h3>
+<p>The following config variables can be used to change the data source:</p>
+<ul>
+<li>apiUrl - String, url of a running OpenSpending API instance, e.g. "http://openspending.org/api"</li>
+<li>dataset - String, name of the used dataset, e.g. "israel"</li>
+<li>drilldowns - Array of drilldown taxonomies, e.g. ['primary', 'section', 'entity']</li>
+<li>cuts - Array of filters?, e.g. ['year:2010']</li>
+<li>breakdown - String, taxonomy for sub-breakdowns as displayed in the donut bubbles, e.g. 'cofog1'</li>
+</ul>
+<h3>Display Properties</h3>
+<ul>
+<li>bubbleType - String, defines what class is used to render the bubbles. Possible values are plain, icon, donut</li>
+<li>initYear - Number, the year that is used to create the dynamic urls</li>
+</ul>
+<h3>Debbugging Properties</h3>
+<ul>
+<li>testDataPath - String, local url (must be on same server) to a test data set in JSON format</li>
+</ul>
+<h3>Custom Styling</h3>
+<p>It is possible to change the default display properties of each bubble by setting up bubble styles. Bubble styles can be defined once for each taxonomy (e.g. COFOG) or for individual node ids. By now, you can use bubble styles to change the colors that come out of the API or to set up icon images for the bubbleType "icon". 
+* bubbleStyle</p>
+<h3>Tooltips</h3>
+<ul>
+<li>tooltipCallback - Function that handles all tooltip events, see section Tooltips below for examples</li>
+</ul>
+<h2>Basic setup</h2>
+<ul>
+<li>Create an empty HTML page with a blank DIV in it that should be used as a container for the BubbleTree</li>
+<li>Include the required JS libraries, which are<ul>
+<li>jQuery 1.5.2 (<a href="http://www.jquery.org">http://www.jquery.org</a>)</li>
+<li>jQuery History (<a href="http://tkyk.github.com/jquery-history-plugin/">http://tkyk.github.com/jquery-history-plugin/</a>)</li>
+<li>RaphaelJS 1.5.2 (<a href="http://raphaeljs.com/">http://raphaeljs.com/</a>)</li>
+<li>Tween.js (<a href="https://github.com/sole/tween.js">https://github.com/sole/tween.js</a>)</li>
+<li>vis4.js (<a href="https://bitbucket.org/gka/vis4.js">https://bitbucket.org/gka/vis4.js</a>)</li>
+</ul>
+</li>
+<li>Include bubble</li>
+</ul>
+<h2>Tooltips</h2>
+<p>In the current implementation, tooltips are not part of the BubbleTree. Instead, the visualization provides a simple API for adding custom tooltips.</p>
+<h3>Event Handler</h3>
+<p>The tooltip event handler can be set with the <em>tooltipCallback</em> property in the configuration (see above).
+The event handler must handle both the tooltip show and hide events. See index.html for an example implementation.</p>
+<h3>Event Properties</h3>
+<p>The following event properties are available</p>
+<ul>
+<li>type - can be "SHOW" or "HIDE"</li>
+<li>mousePos - object with numerical properties x and y, stores the actual mouse position at the time the tooltip event was thrown, relative to the container div</li>
+<li>bubblePos - same as mousePos, but stores the position of the bubble instead of the mouse</li>
+<li>node - the node of the bubble that is related to the tooltip event</li>
+<li>origEvent - the original event object as thrown by jQuery</li>
+<li>target - the related Bubble object</li>
+</ul>
+<h2>Custom Taxonomy Styling (e.g. Icons)</h2>
+<h3>Icon Specifications</h3>
+<p>The icons are stored in /icons/ folder in standard SVG format. However, there are some specifications to ensure that the visualization can use the icons correctly.</p>
+<ul>
+<li>the svg canvas should be 100px * 100px</li>
+<li>the icon itself must be stored in one or many SVG path elements. Every other SVG elements like <circle> will be ignored by the viz.</li>
+<li>the icon SVG must not be too large to keep the viz performance. SVG filesize of under 10kb are perfect, everything above 100kb should be avoided.</li>
+<li>the icon paths should not exceed the bubble size</li>
+</ul>
+<h3>Taxonomy to Icon Mapping</h3>
+<p>The icon filenames are arbitrary. The mapping between taxonomies and icons is done at JavaScript side by defining the <em>bubbleStyle</em> property in the configuration (see above), which is a three level nested dictionary</p>
+<ul>
+<li><em>taxonomy_id</em> =&gt; <em>nodeStyles</em><ul>
+<li><em>node_name</em> =&gt; <em>styles</em><ul>
+<li><em>styles</em> is a dictionary of visual properties to their actual values, e.g. 'color' = '#dd0000'</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Please see index.html and style.cofog.js for a working example.</p></div></body></html>
