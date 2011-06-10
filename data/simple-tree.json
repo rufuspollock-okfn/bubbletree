@@ -1,0 +1,57 @@
+{
+	"id": "root",
+	"label": "Total",
+	"amount": 1400000,
+	"children": [{
+		"label": "Foo",
+		"id": "foo",
+		"amount": 250000,
+		"children": [{
+			"label": "Foo-1",
+			"amount": 100000,
+			"children": []
+		}, {
+			"label": "Foo-2",
+			"amount": 150000,
+			"children": []
+		}]
+	},{
+		"label": "Foobar",
+		"amount": 400000,
+		"color": "#00DD99",
+		"children": [{
+			"label": "Foobar-1",
+			"amount": 200000,
+			"children": []
+		}, {
+			"label": "Foobar-2",
+			"amount": 100000,
+			"children": []
+		}, {
+			"label": "Foobar-3",
+			"amount": 100000,
+			"children": []
+		}]
+	},{
+		"label": "Bar",
+		"amount": 750000,
+		"level": 1,
+		"children": [{
+			"label": "Bar-1",
+			"amount": 400000,
+			"children": []
+		}, {
+			"label": "Bar-2",
+			"amount": 150000,
+			"children": []
+		}, {
+			"label": "Bar-3",
+			"amount": 70000,
+			"children": []
+		}, {
+			"label": "Bar-4",
+			"amount": 30000,
+			"children": []
+		}]
+	}]
+}
