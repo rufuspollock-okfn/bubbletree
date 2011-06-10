@@ -49,6 +49,11 @@ OpenSpending.BubbleTree.Styles.Cofog = {
 	'04.3.6': { icon: 'icons/wind.svg' },
 	'04.4': { icon: 'icons/manufactoring-construction.svg' },
 	'04.5': { icon: 'icons/transport.svg' },
+	'04.5.1': { icon: 'icons/car.svg' },
+	'04.5.2': { icon: 'icons/anchor.svg' },
+	'04.5.3': { icon: 'icons/railways.svg' },
+	'04.5.4': { icon: 'icons/airplane.svg' },
+	
 	'04.6': { icon: 'icons/police.svg' },
 	'04.7': { icon: 'icons/police.svg' },
 	'04.8': { icon: 'icons/rd-eco.svg' },
@@ -71,6 +76,11 @@ OpenSpending.BubbleTree.Styles.Cofog = {
 	'07.2': { icon: 'icons/health.svg' },
 	'07.2.1': { icon: 'icons/health.svg' },
 	'07.2.2': { icon: 'icons/microscope.svg' },
+	'07.2.2': { icon: 'icons/dental.svg' },
+	'07.3': { icon: 'icons/hospital.svg' },
+	'07.3.1': { icon: 'icons/hospital.svg' },
+	'07.3.2': { icon: 'icons/hospital-specialized.svg' },
+	'07.3.2': { icon: 'icons/dental.svg' },
 	
 	'08': { icon: 'icons/culture.svg' },					
 	'08.2': { icon: 'icons/culture.svg' },					
