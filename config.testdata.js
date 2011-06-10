@@ -2,7 +2,7 @@ var config = {
 	// todo: we should really document all the settings
 	apiUrl: 'http://openspending.org/api',
 	// todo: ...
-	testDataPath: 'data/example-aggregate.json',
+	localApiCache: 'data/example-aggregate.json',
 	// todo: we should really document all the settings		
 	dataset: 'cra',
 	// todo: we should really document all the settings

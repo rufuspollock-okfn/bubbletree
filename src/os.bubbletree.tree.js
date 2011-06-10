@@ -46,8 +46,8 @@ OpenSpending.BubbleTree.getTree = function(config) {
     drilldowns = $.unique(drilldowns);
     data.drilldown = drilldowns.join('|');
 
-    if (config.testDataPath !== undefined) {
-        url = config.testDataPath;
+    if (config.localApiCache !== undefined) {
+        url = config.localApiCache;
         dataType = 'json';
     }
     $.ajax({

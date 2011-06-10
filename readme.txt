@@ -12,10 +12,16 @@ Example:
 	};
 	new OpenSpending.BubbleTree.Loader(config);
 
-### Integration
+### HTML Integration
+
 * *container* - String, jQuery selector of the container element for the visualization, must be defined in HTML code, e.g. '#bubbletree-container'
 
-### Data Source
+### Data Input
+
+There are three different ways of putting data into the BubbleTree.
+
+#### Calling the OpenSpending API
+
 The following config variables can be used to change the data source:
 
 * apiUrl - String, url of a running OpenSpending API instance, e.g. "http://openspending.org/api"
@@ -24,12 +30,23 @@ The following config variables can be used to change the data source:
 * cuts - Array of filters?, e.g. ['year:2010']
 * breakdown - String, taxonomy for sub-breakdowns as displayed in the donut bubbles, e.g. 'cofog1'
 
+#### Using a locally stored API result
+
+* localApiCache - String, url to a locally stored API output JSON
+
+#### Inserting local JSON data (without using OpenSpending API)
+
+See section *Custom Data Format* for details on the JS tree specification.
+
+* localData - JS tree object
+* localDataPath - local path to a JSON file, uses same format as the *localData*
+
 ### Display Properties
+
 * bubbleType - String, defines what class is used to render the bubbles. Possible values are plain, icon, donut
 * initYear - Number, the year that is used to create the dynamic urls
 
 ### Debbugging Properties
-* testDataPath - String, local url (must be on same server) to a test data set in JSON format
 
 ### Custom Styling
 It is possible to change the default display properties of each bubble by setting up bubble styles. Bubble styles can be defined once for each taxonomy (e.g. COFOG) or for individual node ids. By now, you can use bubble styles to change the colors that come out of the API or to set up icon images for the bubbleType "icon". 
@@ -40,6 +57,7 @@ It is possible to change the default display properties of each bubble by settin
 * tooltipCallback - Function that handles all tooltip events, see section Tooltips below for examples
 
 ## Basic setup
+
 * Create an empty HTML page with a blank DIV in it that should be used as a container for the BubbleTree
 * Include the required JS libraries, which are
 	* jQuery 1.5.2 (<http://www.jquery.org>)
@@ -49,7 +67,51 @@ It is possible to change the default display properties of each bubble by settin
 	* vis4.js (<https://bitbucket.org/gka/vis4.js>)
 * Include bubble
 
+## Custom Data Format
+
+If you're using the BubbleTree with data that's not imported into the OpenSpending API, you can use either the config properties *localData* or *localDataPath*. Both take a JSON tree as input, which's node must have at least the following properties:
+
+	node = {
+		"label": "Health",
+		"amount": 1234567,
+		"children": []
+	}
+
+However, you may insert bubble styling properties (*color*, *icon*) directly as node properties. 
+
+	node = {
+		"label": "Health",
+		"amount": 1234567,
+		"color": "#DD0000",
+		"icon": "icons/health.svg",
+		"children": []
+	}
+	
+Also you can tell the BubbleChart that the budget item represented by the node is using a standard taxonomy (for which might already exists a stylesheet).
+
+	node = {
+		"label": "Health",
+		"amount": 1234567,
+		"taxonomy": "cofog",
+		"name": "07.1",
+		"children": []
+	}
+
+You may want to look at the example tree in *data/simple-tree.json* for an example of nested nodes. If you want to insert the data directly via config object, just assign the root node to the *localData* property:
+
+	var config = {
+		localData: {
+			"label": "Total",
+			"amount": 1000000,
+			"children": []
+		}
+	};
+	
+	new OpenSpending.BubbleTree.Loader(config);
+
+
 ## Tooltips
+
 In the current implementation, tooltips are not part of the BubbleTree. Instead, the visualization provides a simple API for adding custom tooltips.
 
 ### Event Handler

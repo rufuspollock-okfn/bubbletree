@@ -14,9 +14,10 @@ OpenSpending.BubbleTree.Loader = function(config) {
 	me.ns = OpenSpending.BubbleTree;
 
 	/*
-	 * is called by the constructor of the Loader
+	 * loads either a cached API aggregate or
+	 * calls the API directly
 	 */
-	me.loadData = function() {
+	me.loadDataFromAPI = function() {
         var me = this,
             drilldowns,
             breakdown;
@@ -30,6 +31,24 @@ OpenSpending.BubbleTree.Loader = function(config) {
 		 cuts: me.config.cuts,
 		 callback: me.dataLoaded.bind(me),
 		 testDataPath: me.config.testDataPath
+		});
+	};
+	
+	/*
+	 * loads data from a local JSON file
+	 */
+	me.loadLocalData = function() {
+		var me = this;
+		vis4.log('loadLocalData()', me.config.localDataPath);
+		
+		$.ajax({
+			url: me.config.localDataPath,
+			context: me,
+			dataType: 'json',
+			success: function(data) {
+				
+				this.run(data);
+			}
 		});
 	};
 
@@ -83,49 +102,7 @@ OpenSpending.BubbleTree.Loader = function(config) {
 		}
 	};
 
-	/*
-	 * initializes all stuff needed by the tooltips
-	 */
-	me.tooltipTimer = undefined;
 
-	/*
-	 * this function is called by the bubbles if the user hovers over them
-	 */
-	me.setTooltip = function(event) {
-		var tt = $('#bubble-chart-wrapper .tooltip'), tthtml = '<div class="header"><div class="icon"></div><div class="title">'+event.node.label+' ('+event.node.id+')</div><div class="amount">'+me.ns.Utils.formatNumber(event.node.amount)+'&euro;</div></div>'+'<div class="row"><a>More Information</a></div>'+'<div class="row"><a>Add to Compare-O-Tron</a></div>';
-
-		if (tt.length > 0) {
-			tt.html(tthtml);
-		} else {
-			tt = $('<div class="tooltip">'+tthtml+'</div>');
-			$('#bubble-chart-wrapper').append(tt);
-		}
-		$('#bubble-chart-wrapper .tooltip .icon').css({ background: event.target.color });
-		event.mouseEventGroup.addMember(tt);
-		tt.css({ left: (event.position.x-tt.width()*0.5)+'px', top: (event.position.y+ 10)+'px', opacity: 0 });
-		me.tooltipTimer = new vis4.DelayedTask(2000, this, me.showTooltip.bind(me), tt);
-	};
-
-	/*
-	 * shows a tooltip, is called delayed by setTooltip
-	 */
-	me.showTooltip = function(tt) {
-		if (tt) {
-			tt.animate({ opacity: 1 }, { duration: 300 });
-			tt.show();
-		}
-	};
-
-	/*
-	 * hides the tooltip for a specific node
-	 */
-	me.hideTooltip = function(event) {
-		var tt = $('#bubble-chart-wrapper .tooltip');
-		tt.css({ opacity: 0, left: '-500px' });
-		tt.hide();
-		event.mouseEventGroup.removeMember(tt);
-		me.tooltipTimer.cancel();
-	};
 
 	/*
 	 * run will be called by dataLoaded once, well, the data is loaded
@@ -146,7 +123,15 @@ OpenSpending.BubbleTree.Loader = function(config) {
 		me.config.bubbleStyles = me.defaultBubbleStyles;
 	}
 
-	me.loadData();
-
+	if (me.config.hasOwnProperty('localData')) {
+		// use the given js object
+		me.run(me.config.localData);
+	} else if (me.config.hasOwnProperty('localDataPath')) {
+		// load local tree json file
+		me.loadLocalData();
+	} else {
+		// call api or use cached aggregate
+		me.loadDataFromAPI();
+	}
 };
 

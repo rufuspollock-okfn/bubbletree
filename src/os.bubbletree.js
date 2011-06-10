@@ -91,6 +91,7 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 	 */
 	me.initData = function(root) {
 		var me = this;
+		root.level = 0;
 		me.traverse(root, 0);
 		me.treeRoot = root;
 	};
@@ -99,18 +100,28 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 	 * used for recursive tree traversal
 	 */
 	me.traverse = function(node, index) {
-		var c, child, pc, me = this, urlTokenSource;
+		var c, child, pc, me = this, urlTokenSource, styles = me.config.bubbleStyles;
 		
 		// store node in flat node list
 		me.nodeList.push(node);
 		
 		node.famount = me.ns.Utils.formatNumber(node.amount);
+		if (node.parent) node.level = node.parent.level + 1;
 		
-		if (me.style.hasOwnProperty(node.id)) {
-			node.color = me.style[node.id].color;	
-		} else if (node.hasOwnProperty('color') && node.color !== undefined) {
-			// use color given in data
-		} else {
+		if (node.hasOwnProperty('color')) {
+			// node has already a color, ignore other colors
+			
+		} else if (styles) {
+		
+			if (styles.hasOwnProperty('id') && styles.id.hasOwnProperty(node.id) && styles.id[node.id].hasOwnProperty('color')) {
+				// use color by id
+				node.color = styles.id[node.id].color;
+			} else if (node.hasOwnProperty('taxonomy') && styles.hasOwnProperty(node.taxonomy) && styles[node.taxonomy].hasOwnProperty(node.id) && styles[node.taxonomy][node.id].hasOwnProperty('color')) {
+				node.color = styles[node.taxonomy][node.id].color;
+			} 
+		} 
+		
+		if (!node.color) {
 			// use color from parent node if no other match available
 			if (node.level > 0) node.color = node.parent.color;
 			else node.color = '#999999';
