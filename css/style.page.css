@@ -1,0 +1,46 @@
+
+@font-face {
+	font-family: Graublau;
+	src: url('../fonts/graublau/GraublauWeb.otf') format("opentype");
+}	
+
+
+html, body { 
+	background: #fff; 
+	margin: 0; 
+	height: 100%; 
+	width: 100%; 
+	padding: 0; 
+	overflow: hidden; 
+}
+
+#header {
+	font-family: Graublau;	
+	width: 150px;
+	position: absolute;
+	color: #333;
+	bottom: 20px;
+	
+	right: 20px;
+	z-index: 1000;
+	text-align: left;
+}
+
+#menu {
+	font-family: Graublau;
+	width: 150px;
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	font-size: 14px;
+	z-index: 1000;
+}
+
+#menu select { 
+	font-family: Graublau; 
+	font-size: 14px; 
+} 
+
+#header .title {
+	font-size: 24px;
+}

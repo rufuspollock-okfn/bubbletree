@@ -9,84 +9,9 @@
 	<script type="text/javascript" src="../../lib/vendor/vis4.js"></script>
 	<script type="text/javascript" src="../../lib/vendor/Tween.js"></script>
 	<script type="text/javascript" src="bubbletree.min.js"></script>
-	<style type="text/css">
-
-	html, body { background: #fff; margin: 0; height: 100%; width: 100%; padding: 0; overflow: hidden; }
-	
-	#demo-frame {
-		width: 1035px; margin: 0 auto; height: 900px; background: url(os-frame.png) no-repeat; position: relative;
-	}
-	
-	#bubble-chart-wrapper { width: 100%; height: 100%; position: absolute;  }
-	#bubble-chart { background: #fff; position: relative; height: 100%; overflow: hidden; }
-	#bubble-chart .label { position: absolute; color: #fff; text-align: center; cursor: default; }
-	#bubble-chart .amount { font-family: Graublau, Georgia, sans-serif; font-size: 16px; }
-	#bubble-chart .desc { font-family: sans-serif; font-size: 12px }
-	
-	#bubble-chart-wrapper .tooltip { max-width: 220px;  border: 1px solid #999; 
-		position: absolute; background: #fff; z-index: 9999;
-		box-shadow: 3px 3px 0px rgba(0,0,0,.2); border-radius: 2px;
-		font-family: sans-serif; font-size: 11px; padding: 4px;
-	}
-	
-	#bubble-chart-wrapper .tooltip .header {
-		padding: 6px;
-	}
-	
-	#bubble-chart-wrapper .tooltip .header .icon {
-		width: 38px;
-		height: 38px;
-		float: left;
-		background: #600;
-		border-radius: 19px;
-		margin-right: 8px;
-	}
-	
-	#bubble-chart .tooltip svg {
-		width: 100px; height: 100px; fill: black; display: block; position: relative; visibility: visible; 
-		z-index: 10000;
-	}
-
-	#bubble-chart .tooltip svg path {
-		fill-opacity: 1; visiblity: visible;
-	}
-	
-	#bubble-chart-wrapper .tooltip .row {
-		clear: both;
-		border-top: 1px solid #999; padding: 6px;
-	}
-
-	@font-face {
-		font-family: Graublau;
-		src: url('fonts/graublau/GraublauWeb.otf') format("opentype");
-	}
-	
-	#header {
-		font-family: Graublau;	
-		width: 150px;
-		position: absolute;
-		color: #333;
-		bottom: 20px;
-		
-		right: 20px;
-		z-index: 1000;
-		text-align: left;
-	}
-	#menu {
-		font-family: Graublau;
-		width: 150px;
-		position: absolute;
-		top: 20px;
-		right: 20px;
-		font-size: 14px;
-		z-index: 1000;
-	}
-	#menu select { font-family: Graublau; font-size: 14px; } 
-	#header .title {
-		font-size: 24px;
-	}
-	
-	</style>
+	<link rel="stylesheet" type="text/css" href="css/style.page.css" />
+	<link rel="stylesheet" type="text/css" href="css/style.bubbletree.css" />
+	<link rel="stylesheet" type="text/css" href="css/style.tooltips.css" />
 	<script type="text/javascript" src="config.testdata.js"></script>
 	<script type="text/javascript" src="style.cofog.js"></script>
 	<script type="text/javascript">
@@ -118,10 +43,10 @@
 				}
 			};
 			
-			// config is now defined in separate files
 			vis4.log(config);
 			
 			config.tooltipCallback = tooltip;
+			
 			config.yearChangeHandler = yearChange;
 			
 			config.bubbleStyles = {
@@ -130,13 +55,72 @@
 				'cofog': OpenSpending.BubbleTree.Styles.Cofog,
 				
 				// the taxonomy "id" is actually not a real taxonomy,
-				// but a fallback to access nodes w/o taxonomy by
-				// their id
+				// but a fallback to access nodes w/o taxonomy by their id
 				'id': {
-					'root': { icon: 'icons/pound.svg' }
+					'root': { icon: 'icons/pound.svg' },
+					'foo': { icon: 'icons/pig.svg', color: '#dd5555' }
 				}
 			};
 			
+			config.localDataPath = 'data/simple-tree.json';
+			
+			/*config.localData = {
+				'id': 'root',
+				'label': 'Total',
+				'amount': 1400000,
+				'children': [{
+					'label': 'Foo',
+					'id': 'foo',
+					'amount': 250000,
+					'children': [{
+						'label': 'Foo-1',
+						'amount': 100000,
+						'children': []
+					}, {
+						'label': 'Foo-2',
+						'amount': 150000,
+						'children': []
+					}]
+				},{
+					'label': 'Foobar',
+					'amount': 400000,
+					'children': [{
+						'label': 'Foobar-1',
+						'amount': 200000,
+						'children': []
+					}, {
+						'label': 'Foobar-2',
+						'amount': 100000,
+						'children': []
+					}, {
+						'label': 'Foobar-3',
+						'amount': 100000,
+						'children': []
+					}]
+				},{
+					'label': 'Bar',
+					'amount': 750000,
+					'level': 1,
+					'children': [{
+						'label': 'Bar-1',
+						'amount': 400000,
+						'children': []
+					}, {
+						'label': 'Bar-2',
+						'amount': 150000,
+						'children': []
+					}, {
+						'label': 'Bar-3',
+						'amount': 70000,
+						'children': []
+					}, {
+						'label': 'Bar-4',
+						'amount': 30000,
+						'children': []
+					}]
+				}]
+			};
+			*/
 			new OpenSpending.BubbleTree.Loader(config);
 			
 			
