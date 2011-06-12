@@ -12,7 +12,7 @@
 	<link rel="stylesheet" type="text/css" href="css/style.page.css" />
 	<link rel="stylesheet" type="text/css" href="css/style.bubbletree.css" />
 	<link rel="stylesheet" type="text/css" href="css/style.tooltips.css" />
-	<script type="text/javascript" src="config.italianregionalaccounts.js"></script>
+	<script type="text/javascript" src="config.cra.js"></script>
 	<script type="text/javascript" src="style.cofog.js"></script>
 	<script type="text/javascript" src="style.itb-function.js"></script>
 	
@@ -51,6 +51,7 @@
 			
 			config.yearChangeHandler = yearChange;
 			
+			config.bubbleStyles = config.bubbleStyles ? config.bubbleStyles : {};
 			config.bubbleStyles['cofog'] = OpenSpending.BubbleTree.Styles.Cofog;
 			config.bubbleStyles['itb-function'] = OpenSpending.BubbleTree.Styles.ITBFunction;
 				
