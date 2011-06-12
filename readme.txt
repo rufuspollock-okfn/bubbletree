@@ -43,14 +43,34 @@ See section *Custom Data Format* for details on the JS tree specification.
 
 ### Display Properties
 
-* bubbleType - String, defines what class is used to render the bubbles. Possible values are plain, icon, donut
-* initYear - Number, the year that is used to create the dynamic urls
+* *bubbleType* - defines what class is used to render the bubbles. Possible values are plain, icon, donut. Can be either a String if the same type should be used for all bubbles or an array of strings if different bubble types should be used for different tree levels.
 
-### Debbugging Properties
+
+	config.bubbleType = ['donut', 'icon', 'donut']; 
+
+* *initYear* - Number, the year that is used to create the dynamic urls
 
 ### Custom Styling
 It is possible to change the default display properties of each bubble by setting up bubble styles. Bubble styles can be defined once for each taxonomy (e.g. COFOG) or for individual node ids. By now, you can use bubble styles to change the colors that come out of the API or to set up icon images for the bubbleType "icon". 
-* bubbleStyle
+* *bubbleStyles* - Object that holds bubble style declarations, grouped into taxonomies. 
+
+Example:
+
+	config.bubbleStyles = {
+		'cofog': OpenSpending.BubbleTree.Styles.Cofog,
+		'itb-function': OpenSpending.BubbleTree.Styles.ItbFunction,
+	};
+
+There are two reserved words, that can't be used as taxonomy ids: *id* and *name*. Both are used to directly apply styles to bubbles which don't belong to any taxonomy. In the following example, a color is defined for the node with the id "root". Also, all nodes with the name "italy-toscana" will get the color #dd333.
+
+	config.bubbleStyles = {
+		'id: {
+			'root: { color: '#cccccc' }
+		},
+		'name': {
+			'italy-toscana': { color: '#dd3333' }
+		}
+	}
 
 ### Tooltips
 

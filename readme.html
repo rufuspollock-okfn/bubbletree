@@ -57,13 +57,33 @@ new OpenSpending.BubbleTree.Loader(config);
 </ul>
 <h3>Display Properties</h3>
 <ul>
-<li>bubbleType - String, defines what class is used to render the bubbles. Possible values are plain, icon, donut</li>
-<li>initYear - Number, the year that is used to create the dynamic urls</li>
+<li>
+<p><em>bubbleType</em> - defines what class is used to render the bubbles. Possible values are plain, icon, donut. Can be either a String if the same type should be used for all bubbles or an array of strings if different bubble types should be used for different tree levels.</p>
+<p>config.bubbleType = ['donut', 'icon', 'donut']; </p>
+</li>
+<li>
+<p><em>initYear</em> - Number, the year that is used to create the dynamic urls</p>
+</li>
 </ul>
-<h3>Debbugging Properties</h3>
 <h3>Custom Styling</h3>
 <p>It is possible to change the default display properties of each bubble by setting up bubble styles. Bubble styles can be defined once for each taxonomy (e.g. COFOG) or for individual node ids. By now, you can use bubble styles to change the colors that come out of the API or to set up icon images for the bubbleType "icon". 
-* bubbleStyle</p>
+<em> </em>bubbleStyles* - Object that holds bubble style declarations, grouped into taxonomies. </p>
+<p>Example:</p>
+<pre><code>config.bubbleStyles = {
+    'cofog': OpenSpending.BubbleTree.Styles.Cofog,
+    'itb-function': OpenSpending.BubbleTree.Styles.ItbFunction,
+};
+</code></pre>
+<p>There are two reserved words, that can't be used as taxonomy ids: <em>id</em> and <em>name</em>. Both are used to directly apply styles to bubbles which don't belong to any taxonomy. In the following example, a color is defined for the node with the id "root". Also, all nodes with the name "italy-toscana" will get the color #dd333.</p>
+<pre><code>config.bubbleStyles = {
+    'id: {
+        'root: { color: '#cccccc' }
+    },
+    'name': {
+        'italy-toscana': { color: '#dd3333' }
+    }
+}
+</code></pre>
 <h3>Tooltips</h3>
 <ul>
 <li>tooltipCallback - Function that handles all tooltip events, see section Tooltips below for examples</li>
@@ -115,6 +135,8 @@ new OpenSpending.BubbleTree.Loader(config);
         "children": []
     }
 };
+
+new OpenSpending.BubbleTree.Loader(config);
 </code></pre>
 <h2>Tooltips</h2>
 <p>In the current implementation, tooltips are not part of the BubbleTree. Instead, the visualization provides a simple API for adding custom tooltips.</p>
