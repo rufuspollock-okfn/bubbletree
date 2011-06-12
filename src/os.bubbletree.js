@@ -108,14 +108,14 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 		node.famount = me.ns.Utils.formatNumber(node.amount);
 		if (node.parent) node.level = node.parent.level + 1;
 		
-		if (node.hasOwnProperty('color')) {
-			// node has already a color, ignore other colors
-			
-		} else if (styles) {
+		if (styles) {
 		
 			if (styles.hasOwnProperty('id') && styles.id.hasOwnProperty(node.id) && styles.id[node.id].hasOwnProperty('color')) {
 				// use color by id
 				node.color = styles.id[node.id].color;
+			} else if (node.hasOwnProperty('name') && styles.hasOwnProperty('name') && styles.name.hasOwnProperty(node.name) && styles.name[node.name].hasOwnProperty('color')) {
+				// use color by id
+				node.color = styles.name[node.name].color;
 			} else if (node.hasOwnProperty('taxonomy') && styles.hasOwnProperty(node.taxonomy) && styles[node.taxonomy].hasOwnProperty(node.id) && styles[node.taxonomy][node.id].hasOwnProperty('color')) {
 				node.color = styles[node.taxonomy][node.id].color;
 			} 
@@ -211,31 +211,43 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 	 */
 	me.initBubbles = function() {
 		vis4.log('initBubbles');
-		var me = this, rt = me.treeRoot, Bubbles = me.ns.Bubbles, bubbleClass;
+		var me = this, rt = me.treeRoot, i, icons = false, Bubbles = me.ns.Bubbles, bubbleClass;
 		
-		// chosse one of them for the vis
-		switch (me.config.bubbleType) {
-			case 'pie':
-				bubbleClass = Bubbles.Pies;
-				break;
-			case 'donut':
-				bubbleClass = Bubbles.Donut;
-				break;
-			case 'multi':
-				bubbleClass = Bubbles.Multi;
-				break;
-			case 'icon':
-				bubbleClass = Bubbles.Icon;
-				me.initIcons();
-				break;
-			default:
-				bubbleClass = Bubbles.Plain;
-				break;
+		me.bubbleClasses = [];
+		
+		if ($.isArray(me.config.bubbleType)) {
+			for (i in me.config.bubbleType) {
+				if (me.config.bubbleType[i] == 'icon') icons = true;
+				me.bubbleClasses.push(me.getBubbleType(me.config.bubbleType[i]));
+			}
+		} else if ($.isString(me.config.bubbleType)) {
+			if (me.config.bubbleType == 'icon') icons = true;
+			me.bubbleClasses.push(me.getBubbleType(me.config.bubbleType));
+		} else {
+			// default to plain bubbles if no bubbleType is set in config
+			me.bubbleClasses.push(me.getBubbleType('plain'));
 		}
-		me.ns.Bubble = bubbleClass;	
+		
+		if (icons) me.initIcons();
 		
 		var rootBubble = me.createBubble(rt, me.origin, 0, 0, rt.color);
 		me.traverseBubbles(rootBubble);
+	};
+	
+	/*
+	 * returns the bubble class for a given bubble class id
+	 * e.g. 'icon' > OpenSpending.BubbleTree.Bubbles.Icon
+	 */
+	me.getBubbleType = function(id) {
+		var me = this, Bubbles = me.ns.Bubbles;
+		// chosse one of them for the vis
+		switch (id) {
+			case 'pie': return Bubbles.Pies;
+			case 'donut': return Bubbles.Donut;
+			case 'multi': return Bubbles.Multi;
+			case 'icon': return Bubbles.Icon;
+			default: return Bubbles.Plain;
+		}
 	};
 	
 	/*
@@ -264,23 +276,11 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 			}
 		}
 	};
-	
-	me.iconsLoaded = function(ldr) {
-		var me = this, i, j, paths, icon, svg, item;
-		vis4.log('loaded '+ldr.items.length+' icons');
-		for (i in ldr.items) {
-			item = ldr.items[i];
-			svg = item.data;
-			if (!me.iconsByUrlToken.hasOwnProperty(item.id)) {
-				me.iconsByUrlToken[item.id] = [];
-			}
-			paths = svg.getElementsByTagName('path');
-			for (j in paths) {
-				me.iconsByUrlToken[item.id].push(paths[j].getAttribute('d'));
-			}
-		}
-	};
 
+	/*
+	 * iterates over the complete tree and creates a bubble for
+	 * each node
+	 */
 	me.traverseBubbles = function(parentBubble) {
 		var me = this, ring,
 			a2rad = me.ns.Utils.amount2rad,
@@ -319,11 +319,15 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 	
 		
 	/*
-	 * creates a new bubble 
+	 * creates a new bubble for a given node. the bubble type will be chosen
+	 * by the level of the node
 	 */
 	me.createBubble = function(node, origin, rad, angle, color) {
-		var me = this, ns = me.ns, i, b, bubble;
-		bubble = new ns.Bubble(node, me, origin, rad, angle, color);
+		var me = this, ns = me.ns, i, b, bubble, classIndex = node.level;
+		classIndex = Math.min(classIndex, me.bubbleClasses.length-1);
+		if (node.level < 2) vis4.log('createBubble for ',node.level, classIndex, me.bubbleClasses[classIndex]);
+		
+		bubble = new me.bubbleClasses[classIndex](node, me, origin, rad, angle, color);
 		//me.bubbles.push(bubble);
 		me.displayObjects.push(bubble);
 		// vis4.log('created bubble for', node.label);

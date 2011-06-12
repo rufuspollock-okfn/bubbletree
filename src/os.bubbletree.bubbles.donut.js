@@ -44,17 +44,25 @@ OpenSpending.BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radi
 		me.pos = new me.ns.Vector(0,0);
 		me.getXY();
 		
-		var breakdown = [], i, val, bd = [];
+		var breakdown = [], b, i, val, bd = [], styles = me.bc.config.bubbleStyles;
+		
+		me.breakdownOpacities = [0.2, 0.7, 0.45, 0.6, 0.35];
+		
 		for (i in me.node.breakdowns) {
-			me.node.breakdowns[i].famount = utils.formatNumber(me.node.breakdowns[i].amount);
-			val = me.node.breakdowns[i].amount / me.node.amount;
+			b = me.node.breakdowns[i];
+			b.famount = utils.formatNumber(b.amount);
+			val = b.amount / me.node.amount;
 			breakdown.push(val);
-			bd.push(me.node.breakdowns[i]);
+			bd.push(b);
+			
+			
+			
+			if (styles && styles.hasOwnProperty('name') && styles.name.hasOwnProperty(b.name) && styles.name[b.name].hasOwnProperty('opacity')) {
+				me.breakdownOpacities[bd.length-1] = styles.name[b.name].opacity;
+			}
 		}
 		me.node.breakdowns = bd;
 		me.breakdown = breakdown;
-		
-		me.breakdownOpacities = [0.2, 0.7, 0.45, 0.6, 0.35];
 		
 		var showIcon = false; //this.bubbleRad * this.bc.bubbleScale > 30;
 		// create label

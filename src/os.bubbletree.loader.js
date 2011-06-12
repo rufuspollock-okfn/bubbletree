@@ -30,7 +30,7 @@ OpenSpending.BubbleTree.Loader = function(config) {
                  breakdown: me.config.breakdown,
 		 cuts: me.config.cuts,
 		 callback: me.dataLoaded.bind(me),
-		 testDataPath: me.config.testDataPath
+		 localApiCache: me.config.localApiCache
 		});
 	};
 	
