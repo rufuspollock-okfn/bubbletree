@@ -16,7 +16,7 @@ html, body {
 
 #header {
 	font-family: Graublau;	
-	width: 150px;
+	width: 200px;
 	position: absolute;
 	color: #333;
 	bottom: 20px;
@@ -32,7 +32,7 @@ html, body {
 	position: absolute;
 	top: 20px;
 	right: 20px;
-	font-size: 14px;
+	font-size: 20px;
 	z-index: 1000;
 }
 
@@ -42,5 +42,8 @@ html, body {
 } 
 
 #header .title {
-	font-size: 24px;
+	font-size: 32px;
+}
+#header .subtitle {
+	font-size: 18px;
 }

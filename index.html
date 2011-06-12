@@ -12,8 +12,10 @@
 	<link rel="stylesheet" type="text/css" href="css/style.page.css" />
 	<link rel="stylesheet" type="text/css" href="css/style.bubbletree.css" />
 	<link rel="stylesheet" type="text/css" href="css/style.tooltips.css" />
-	<script type="text/javascript" src="config.testdata.js"></script>
+	<script type="text/javascript" src="config.italianregionalaccounts.js"></script>
 	<script type="text/javascript" src="style.cofog.js"></script>
+	<script type="text/javascript" src="style.itb-function.js"></script>
+	
 	<script type="text/javascript">
        
 		$(function() {
@@ -33,7 +35,7 @@
 						left: event.mousePos.x + 4, 
 						top: event.mousePos.y + 4 
 					});
-					$tooltip.html(event.node.label+' <b>'+event.node.famount+'</b>');
+					$tooltip.html(event.node.label+' <b>'+event.node.famount+'</b><br/>'+event.node.taxonomy+'<br />'+event.node.name);
 					var bubble = event.target;
 					
 					$tooltip.show();
@@ -49,18 +51,9 @@
 			
 			config.yearChangeHandler = yearChange;
 			
-			config.bubbleStyles = {
-			
-				// the cofog style is defined in style.cofog.js
-				'cofog': OpenSpending.BubbleTree.Styles.Cofog,
+			config.bubbleStyles['cofog'] = OpenSpending.BubbleTree.Styles.Cofog;
+			config.bubbleStyles['itb-function'] = OpenSpending.BubbleTree.Styles.ITBFunction;
 				
-				// the taxonomy "id" is actually not a real taxonomy,
-				// but a fallback to access nodes w/o taxonomy by their id
-				'id': {
-					'root': { icon: 'icons/pound.svg' },
-					'foo': { icon: 'icons/pig.svg', color: '#dd5555' }
-				}
-			};
 			
 			// uncomment the following line to test local data import
 			// config.localDataPath = 'data/simple-tree.json';
@@ -133,10 +126,11 @@
 	</script>
 </head>
 <body>
-	<div id="header"><a class="title">OpenSpending</a><div class="subtitle">BubbleTree Demo</div></div>
-	<div id="menu">
+	<div id="header"><a class="title">OpenSpending</a>
+	<div class="subtitle">Italian Regional Accounts</div></div>
+	<!--<div id="menu">
 		Select year: <select id="year"></select>
-	</div>
+	</div>-->
 	<div id="bubble-chart-wrapper">
 		<div id="bubble-chart"></div>
 	</div>
