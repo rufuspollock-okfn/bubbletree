@@ -90,5 +90,9 @@ OpenSpending.BubbleTree.Styles.Cofog = {
 	
 	'10': { icon: 'icons/helping-others.svg' },
 	'10.1': { icon: 'icons/helping-others.svg' },
-	'10.1.2': { icon: 'icons/helping-others.svg' }
+	'10.1.2': { icon: 'icons/helping-others.svg' },
+	'10.2': { icon: 'icons/old-age.svg' },
+	'10.4': { icon: 'icons/family.svg' },
+	'10.7': { icon: 'icons/family2.svg' }
+
 };
