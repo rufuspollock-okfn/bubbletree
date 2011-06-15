@@ -1,0 +1,1335 @@
+{
+  "drilldown": [
+    {
+      "num_entries": 196, 
+      "oberfunktion": {
+        "name": "240", 
+        "color": "#b8100b", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Soziale Leistungen f\u00fcr Folgen von Krieg und politischen Ereignissen", 
+        "_id": "4dd2ee0a8010cc51785d6221", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee0a8010cc51785d6221"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "200", 
+        "color": "#CA221D", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Soziale Sicherung, soziale Kriegsfolgeaufgaben, Wiedergutmachung", 
+        "_id": "4dd2ee068010cc51785d6132", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee068010cc51785d6132"
+        }
+      }, 
+      "amount": 12342300.0
+    }, 
+    {
+      "num_entries": 3096, 
+      "oberfunktion": {
+        "name": "110", 
+        "color": "#67b460", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Allgemeinbildende und berufliche Schulen", 
+        "_id": "4dd2ee3e8010cc51785d6d89", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee3e8010cc51785d6d89"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "100", 
+        "color": "#44913D", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Bildungswesen, Wissenschaft, Forschung, kulturelle Angelegenheiten", 
+        "_id": "4dd2ee028010cc51785d604c", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee028010cc51785d604c"
+        }
+      }, 
+      "amount": 105117700.0
+    }, 
+    {
+      "num_entries": 2096, 
+      "oberfunktion": {
+        "name": "050", 
+        "color": "#164a95", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Rechtsschutz", 
+        "_id": "4dd2ee018010cc51785d6022", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee018010cc51785d6022"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "000", 
+        "color": "#2458A3", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Allgemeine Dienste ", 
+        "_id": "4dd2ee008010cc51785d5fec", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee008010cc51785d5fec"
+        }
+      }, 
+      "amount": 82137700.0
+    }, 
+    {
+      "num_entries": 12, 
+      "oberfunktion": {
+        "name": "820", 
+        "color": "#c22769", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Versorgungsunternehmen", 
+        "_id": "4dd2ee708010cc51785d773b", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee708010cc51785d773b"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "800", 
+        "color": "#C22769", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Wirtschaftsunternehmen, Allgemeines Grund- und Kapitalverm\u00f6gen, Sonderverm\u00f6gen", 
+        "_id": "4dd2ee068010cc51785d6127", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee068010cc51785d6127"
+        }
+      }, 
+      "amount": 100000.0
+    }, 
+    {
+      "num_entries": 202, 
+      "oberfunktion": {
+        "name": "440", 
+        "color": "#00003a", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "St\u00e4dtebauf\u00f6rderung", 
+        "_id": "4dd2ee5c8010cc51785d73c0", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee5c8010cc51785d73c0"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "400", 
+        "color": "#2458A3", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Wohnungswesen, St\u00e4dtebau, Raumordnung und kommunale Gemeinschaftsdienste", 
+        "_id": "4dd2ee598010cc51785d7339", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee598010cc51785d7339"
+        }
+      }, 
+      "amount": 15025300.0
+    }, 
+    {
+      "num_entries": 1840, 
+      "oberfunktion": {
+        "name": "310", 
+        "color": "#2a7a77", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Einrichtungen und Ma\u00dfnahmen des Gesundheitswesens", 
+        "_id": "4dd2ee358010cc51785d6be3", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee358010cc51785d6be3"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "300", 
+        "color": "#42928F", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Gesundheit, Umwelt, Sport und Erholung", 
+        "_id": "4dd2ee078010cc51785d614d", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee078010cc51785d614d"
+        }
+      }, 
+      "amount": 37099600.0
+    }, 
+    {
+      "num_entries": 74, 
+      "oberfunktion": {
+        "name": "910", 
+        "color": "#0d0965", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Steuern und allgemeine Finanzzuweisungen", 
+        "_id": "4dd2ee538010cc51785d71fc", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee538010cc51785d71fc"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "900", 
+        "color": "#211D79", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Allgemeine Finanzwirtschaft", 
+        "_id": "4dd2ee018010cc51785d601a", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee018010cc51785d601a"
+        }
+      }, 
+      "amount": 1300.0
+    }, 
+    {
+      "num_entries": 450, 
+      "oberfunktion": {
+        "name": "410", 
+        "color": "#2458a3", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Wohnungswesen", 
+        "_id": "4dd2ee5f8010cc51785d7483", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee5f8010cc51785d7483"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "400", 
+        "color": "#2458A3", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Wohnungswesen, St\u00e4dtebau, Raumordnung und kommunale Gemeinschaftsdienste", 
+        "_id": "4dd2ee598010cc51785d7339", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee598010cc51785d7339"
+        }
+      }, 
+      "amount": 13873400.0
+    }, 
+    {
+      "num_entries": 36, 
+      "oberfunktion": {
+        "name": "920", 
+        "color": "#000051", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Schulden", 
+        "_id": "4dd2ee688010cc51785d7695", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee688010cc51785d7695"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "900", 
+        "color": "#211D79", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Allgemeine Finanzwirtschaft", 
+        "_id": "4dd2ee018010cc51785d601a", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee018010cc51785d601a"
+        }
+      }, 
+      "amount": 1956600.0
+    }, 
+    {
+      "num_entries": 1204, 
+      "oberfunktion": {
+        "name": "120", 
+        "color": "#327f2b", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Allgemeinbildende und berufliche Schulen", 
+        "_id": "4dd2ee0b8010cc51785d6252", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee0b8010cc51785d6252"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "100", 
+        "color": "#44913D", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Bildungswesen, Wissenschaft, Forschung, kulturelle Angelegenheiten", 
+        "_id": "4dd2ee028010cc51785d604c", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee028010cc51785d604c"
+        }
+      }, 
+      "amount": 30947400.0
+    }, 
+    {
+      "num_entries": 282, 
+      "oberfunktion": {
+        "name": "190", 
+        "color": "#216e1a", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Kulturf\u00f6rderung, Denkmalschutz, Kirchliche Angelegenheiten", 
+        "_id": "4dd2ee028010cc51785d6065", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee028010cc51785d6065"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "100", 
+        "color": "#44913D", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Bildungswesen, Wissenschaft, Forschung, kulturelle Angelegenheiten", 
+        "_id": "4dd2ee028010cc51785d604c", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee028010cc51785d604c"
+        }
+      }, 
+      "amount": 15411600.0
+    }, 
+    {
+      "num_entries": 138, 
+      "oberfunktion": {
+        "name": "140", 
+        "color": "#0f5c08", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "F\u00f6rderung von Sch\u00fclern, Studenten und dgl.", 
+        "_id": "4dd2ee4b8010cc51785d704b", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee4b8010cc51785d704b"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "100", 
+        "color": "#44913D", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Bildungswesen, Wissenschaft, Forschung, kulturelle Angelegenheiten", 
+        "_id": "4dd2ee028010cc51785d604c", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee028010cc51785d604c"
+        }
+      }, 
+      "amount": 8104200.0
+    }, 
+    {
+      "num_entries": 8, 
+      "oberfunktion": {
+        "name": "830", 
+        "color": "#7c0023", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Verkehrsunternehmen", 
+        "_id": "4dd2ee708010cc51785d776f", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee708010cc51785d776f"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "800", 
+        "color": "#C22769", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Wirtschaftsunternehmen, Allgemeines Grund- und Kapitalverm\u00f6gen, Sonderverm\u00f6gen", 
+        "_id": "4dd2ee068010cc51785d6127", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee068010cc51785d6127"
+        }
+      }, 
+      "amount": 0.0
+    }, 
+    {
+      "num_entries": 692, 
+      "oberfunktion": {
+        "name": "710", 
+        "color": "#cfde4f", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Verwaltung", 
+        "_id": "4dd2ee638010cc51785d7570", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee638010cc51785d7570"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "700", 
+        "color": "#A5B425", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Verkehrs- und Nachrichtenwesen", 
+        "_id": "4dd2ee638010cc51785d7571", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee638010cc51785d7571"
+        }
+      }, 
+      "amount": 27932600.0
+    }, 
+    {
+      "num_entries": 252, 
+      "oberfunktion": {
+        "name": "610", 
+        "color": "#560c00", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Verwaltung", 
+        "_id": "4dd2ee638010cc51785d757f", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee638010cc51785d757f"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "600", 
+        "color": "#E29826", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Energie- und Wasserwirtschaft, Gewerbe, Dienstleistungen", 
+        "_id": "4dd2ee068010cc51785d6136", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee068010cc51785d6136"
+        }
+      }, 
+      "amount": 3673600.0
+    }, 
+    {
+      "num_entries": 892, 
+      "oberfunktion": {
+        "name": "150", 
+        "color": "#004b00", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Sonstiges Bildungswesen", 
+        "_id": "4dd2ee418010cc51785d6dfd", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee418010cc51785d6dfd"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "100", 
+        "color": "#44913D", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Bildungswesen, Wissenschaft, Forschung, kulturelle Angelegenheiten", 
+        "_id": "4dd2ee028010cc51785d604c", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee028010cc51785d604c"
+        }
+      }, 
+      "amount": 33972900.0
+    }, 
+    {
+      "num_entries": 7828, 
+      "oberfunktion": {
+        "name": "010", 
+        "color": "#00125d", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Politische F\u00fchrung und zentrale Verwaltung", 
+        "_id": "4dd2ee008010cc51785d5fea", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee008010cc51785d5fea"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "000", 
+        "color": "#2458A3", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Allgemeine Dienste ", 
+        "_id": "4dd2ee008010cc51785d5fec", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee008010cc51785d5fec"
+        }
+      }, 
+      "amount": 270563100.0
+    }, 
+    {
+      "num_entries": 24, 
+      "oberfunktion": {
+        "name": "690", 
+        "color": "#bf7503", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Regionale F\u00f6rderma\u00dfnahmen", 
+        "_id": "4dd2ee068010cc51785d6135", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee068010cc51785d6135"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "600", 
+        "color": "#E29826", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Energie- und Wasserwirtschaft, Gewerbe, Dienstleistungen", 
+        "_id": "4dd2ee068010cc51785d6136", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee068010cc51785d6136"
+        }
+      }, 
+      "amount": 756000.0
+    }, 
+    {
+      "num_entries": 286, 
+      "oberfunktion": {
+        "name": "980", 
+        "color": "#2b2783", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Globalposten", 
+        "_id": "4dd2ee018010cc51785d6019", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee018010cc51785d6019"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "900", 
+        "color": "#211D79", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Allgemeine Finanzwirtschaft", 
+        "_id": "4dd2ee018010cc51785d601a", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee018010cc51785d601a"
+        }
+      }, 
+      "amount": -508600.0
+    }, 
+    {
+      "num_entries": 6, 
+      "oberfunktion": {
+        "name": "520", 
+        "color": "#5f3290", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Verbesserung der Agrarstruktur", 
+        "_id": "4dd2ee708010cc51785d7744", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee708010cc51785d7744"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "500", 
+        "color": "#481B79", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Ern\u00e4hrung, Landwirtschaft und Forsten", 
+        "_id": "4dd2ee378010cc51785d6c1b", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee378010cc51785d6c1b"
+        }
+      }, 
+      "amount": 272000.0
+    }, 
+    {
+      "num_entries": 662, 
+      "oberfunktion": {
+        "name": "990", 
+        "color": "#000001", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Haushaltstechnische Verrechnungen", 
+        "_id": "4dd2ee0a8010cc51785d6229", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee0a8010cc51785d6229"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "900", 
+        "color": "#211D79", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Allgemeine Finanzwirtschaft", 
+        "_id": "4dd2ee018010cc51785d601a", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee018010cc51785d601a"
+        }
+      }, 
+      "amount": 11310400.0
+    }, 
+    {
+      "num_entries": 48, 
+      "oberfunktion": {
+        "name": "620", 
+        "color": "#e29826", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Energie- und Wasserwirtschaft, Kulturbau", 
+        "_id": "4dd2ee538010cc51785d7202", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee538010cc51785d7202"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "600", 
+        "color": "#E29826", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Energie- und Wasserwirtschaft, Gewerbe, Dienstleistungen", 
+        "_id": "4dd2ee068010cc51785d6136", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee068010cc51785d6136"
+        }
+      }, 
+      "amount": 4375900.0
+    }, 
+    {
+      "num_entries": 190, 
+      "oberfunktion": {
+        "name": "130", 
+        "color": "#55a24e", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Hochschulen", 
+        "_id": "4dd2ee068010cc51785d610b", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee068010cc51785d610b"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "100", 
+        "color": "#44913D", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Bildungswesen, Wissenschaft, Forschung, kulturelle Angelegenheiten", 
+        "_id": "4dd2ee028010cc51785d604c", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee028010cc51785d604c"
+        }
+      }, 
+      "amount": 7066900.0
+    }, 
+    {
+      "num_entries": 352, 
+      "oberfunktion": {
+        "name": "960", 
+        "color": "#000000", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Sonstiges", 
+        "_id": "4dd2ee018010cc51785d601d", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee018010cc51785d601d"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "900", 
+        "color": "#211D79", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Allgemeine Finanzwirtschaft", 
+        "_id": "4dd2ee018010cc51785d601a", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee018010cc51785d601a"
+        }
+      }, 
+      "amount": 1065600.0
+    }, 
+    {
+      "num_entries": 1034, 
+      "oberfunktion": {
+        "name": "420", 
+        "color": "#00125d", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Raumordnung, Landesplanung, Vermessungswesen", 
+        "_id": "4dd2ee598010cc51785d7338", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee598010cc51785d7338"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "400", 
+        "color": "#2458A3", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Wohnungswesen, St\u00e4dtebau, Raumordnung und kommunale Gemeinschaftsdienste", 
+        "_id": "4dd2ee598010cc51785d7339", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee598010cc51785d7339"
+        }
+      }, 
+      "amount": 27465100.0
+    }, 
+    {
+      "num_entries": 102, 
+      "oberfunktion": {
+        "name": "970", 
+        "color": "#000015", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Abwicklung der Vorjahre", 
+        "_id": "4dd2ee7d8010cc51785d7a3c", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee7d8010cc51785d7a3c"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "900", 
+        "color": "#211D79", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Allgemeine Finanzwirtschaft", 
+        "_id": "4dd2ee018010cc51785d601a", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee018010cc51785d601a"
+        }
+      }, 
+      "amount": 24000.0
+    }, 
+    {
+      "num_entries": 706, 
+      "oberfunktion": {
+        "name": "330", 
+        "color": "#59a9a6", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Umwelt- und Naturschutz", 
+        "_id": "4dd2ee538010cc51785d71ff", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee538010cc51785d71ff"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "300", 
+        "color": "#42928F", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Gesundheit, Umwelt, Sport und Erholung", 
+        "_id": "4dd2ee078010cc51785d614d", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee078010cc51785d614d"
+        }
+      }, 
+      "amount": 21717000.0
+    }, 
+    {
+      "num_entries": 30, 
+      "oberfunktion": {
+        "name": "020", 
+        "color": "#3266b1", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Ausw\u00e4rtige Angelegenheiten", 
+        "_id": "4dd2ee068010cc51785d6107", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee068010cc51785d6107"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "000", 
+        "color": "#2458A3", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Allgemeine Dienste ", 
+        "_id": "4dd2ee008010cc51785d5fec", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee008010cc51785d5fec"
+        }
+      }, 
+      "amount": 950100.0
+    }, 
+    {
+      "num_entries": 764, 
+      "oberfunktion": {
+        "name": "250", 
+        "color": "#ca221d", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Arbeitsmarktpolitik und Arbeitsschutz", 
+        "_id": "4dd2ee068010cc51785d6131", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee068010cc51785d6131"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "200", 
+        "color": "#CA221D", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Soziale Sicherung, soziale Kriegsfolgeaufgaben, Wiedergutmachung", 
+        "_id": "4dd2ee068010cc51785d6132", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee068010cc51785d6132"
+        }
+      }, 
+      "amount": 22524000.0
+    }, 
+    {
+      "num_entries": 224, 
+      "oberfunktion": {
+        "name": "160", 
+        "color": "#78c571", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Wissenschaft, Forschung, Entwicklung au\u00dferhalb der Hochschulen (ohne Wehrforschung und wehrtechnische Entwicklung, vgl. Funktion 036)", 
+        "_id": "4dd2ee038010cc51785d6086", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee038010cc51785d6086"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "100", 
+        "color": "#44913D", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Bildungswesen, Wissenschaft, Forschung, kulturelle Angelegenheiten", 
+        "_id": "4dd2ee028010cc51785d604c", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee028010cc51785d604c"
+        }
+      }, 
+      "amount": 11033900.0
+    }, 
+    {
+      "num_entries": 1586, 
+      "oberfunktion": {
+        "name": "260", 
+        "color": "#a70000", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Jugendhilfe nach dem SGB VIII", 
+        "_id": "4dd2ee408010cc51785d6de4", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee408010cc51785d6de4"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "200", 
+        "color": "#CA221D", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Soziale Sicherung, soziale Kriegsfolgeaufgaben, Wiedergutmachung", 
+        "_id": "4dd2ee068010cc51785d6132", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee068010cc51785d6132"
+        }
+      }, 
+      "amount": 86915700.0
+    }, 
+    {
+      "num_entries": 2314, 
+      "oberfunktion": {
+        "name": "210", 
+        "color": "#840000", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Verwaltung", 
+        "_id": "4dd2ee1b8010cc51785d65fd", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee1b8010cc51785d65fd"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "200", 
+        "color": "#CA221D", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Soziale Sicherung, soziale Kriegsfolgeaufgaben, Wiedergutmachung", 
+        "_id": "4dd2ee068010cc51785d6132", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee068010cc51785d6132"
+        }
+      }, 
+      "amount": 77847900.0
+    }, 
+    {
+      "num_entries": 2298, 
+      "oberfunktion": {
+        "name": "320", 
+        "color": "#004c49", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Sport und Erholung", 
+        "_id": "4dd2ee078010cc51785d614c", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee078010cc51785d614c"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "300", 
+        "color": "#42928F", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Gesundheit, Umwelt, Sport und Erholung", 
+        "_id": "4dd2ee078010cc51785d614d", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee078010cc51785d614d"
+        }
+      }, 
+      "amount": 79181500.0
+    }, 
+    {
+      "num_entries": 592, 
+      "oberfunktion": {
+        "name": "950", 
+        "color": "#000029", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "R\u00fccklagen", 
+        "_id": "4dd2ee098010cc51785d61e9", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee098010cc51785d61e9"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "900", 
+        "color": "#211D79", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Allgemeine Finanzwirtschaft", 
+        "_id": "4dd2ee018010cc51785d601a", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee018010cc51785d601a"
+        }
+      }, 
+      "amount": 4853700.0
+    }, 
+    {
+      "num_entries": 274, 
+      "oberfunktion": {
+        "name": "510", 
+        "color": "#020033", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Verwaltung (ohne Betriebsverwaltung)", 
+        "_id": "4dd2ee548010cc51785d7235", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee548010cc51785d7235"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "500", 
+        "color": "#481B79", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Ern\u00e4hrung, Landwirtschaft und Forsten", 
+        "_id": "4dd2ee378010cc51785d6c1b", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee378010cc51785d6c1b"
+        }
+      }, 
+      "amount": 6450000.0
+    }, 
+    {
+      "num_entries": 10, 
+      "oberfunktion": {
+        "name": "540", 
+        "color": "#300361", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Sonstige Bereiche", 
+        "_id": "4dd2ee378010cc51785d6c1a", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee378010cc51785d6c1a"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "500", 
+        "color": "#481B79", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Ern\u00e4hrung, Landwirtschaft und Forsten", 
+        "_id": "4dd2ee378010cc51785d6c1b", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee378010cc51785d6c1b"
+        }
+      }, 
+      "amount": 23500.0
+    }, 
+    {
+      "num_entries": 218, 
+      "oberfunktion": {
+        "name": "290", 
+        "color": "#a70000", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Sonstige soziale Angelegenheiten", 
+        "_id": "4dd2ee308010cc51785d6ae5", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee308010cc51785d6ae5"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "200", 
+        "color": "#CA221D", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Soziale Sicherung, soziale Kriegsfolgeaufgaben, Wiedergutmachung", 
+        "_id": "4dd2ee068010cc51785d6132", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee068010cc51785d6132"
+        }
+      }, 
+      "amount": 11609000.0
+    }, 
+    {
+      "num_entries": 192, 
+      "oberfunktion": {
+        "name": "680", 
+        "color": "#b97503", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Sonstige Bereiche", 
+        "_id": "4dd2ee5b8010cc51785d738c", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee5b8010cc51785d738c"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "600", 
+        "color": "#E29826", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Energie- und Wasserwirtschaft, Gewerbe, Dienstleistungen", 
+        "_id": "4dd2ee068010cc51785d6136", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee068010cc51785d6136"
+        }
+      }, 
+      "amount": 13640200.0
+    }, 
+    {
+      "num_entries": 60, 
+      "oberfunktion": {
+        "name": "220", 
+        "color": "#fe5651", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Sozialversicherung einschl. Arbeitslosenversicherung", 
+        "_id": "4dd2ee148010cc51785d6475", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee148010cc51785d6475"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "200", 
+        "color": "#CA221D", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Soziale Sicherung, soziale Kriegsfolgeaufgaben, Wiedergutmachung", 
+        "_id": "4dd2ee068010cc51785d6132", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee068010cc51785d6132"
+        }
+      }, 
+      "amount": 73600.0
+    }, 
+    {
+      "num_entries": 8, 
+      "oberfunktion": {
+        "name": "730", 
+        "color": "#7b8a00", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Wasserstra\u00dfen und H\u00e4fen, F\u00f6rderung der Schifffahrt", 
+        "_id": "4dd2ee638010cc51785d757b", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee638010cc51785d757b"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "700", 
+        "color": "#A5B425", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Verkehrs- und Nachrichtenwesen", 
+        "_id": "4dd2ee638010cc51785d7571", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee638010cc51785d7571"
+        }
+      }, 
+      "amount": 1667000.0
+    }, 
+    {
+      "num_entries": 3538, 
+      "oberfunktion": {
+        "name": "040", 
+        "color": "#4e82cd", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "\u00d6ffentliche Sicherheit und Ordnung", 
+        "_id": "4dd2ee0a8010cc51785d6225", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee0a8010cc51785d6225"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "000", 
+        "color": "#2458A3", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Allgemeine Dienste ", 
+        "_id": "4dd2ee008010cc51785d5fec", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee008010cc51785d5fec"
+        }
+      }, 
+      "amount": 146218700.0
+    }, 
+    {
+      "num_entries": 660, 
+      "oberfunktion": {
+        "name": "430", 
+        "color": "#477bc6", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Kommunale Gemeinschaftsdienste", 
+        "_id": "4dd2ee5b8010cc51785d73a2", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee5b8010cc51785d73a2"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "400", 
+        "color": "#2458A3", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Wohnungswesen, St\u00e4dtebau, Raumordnung und kommunale Gemeinschaftsdienste", 
+        "_id": "4dd2ee598010cc51785d7339", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee598010cc51785d7339"
+        }
+      }, 
+      "amount": 21277700.0
+    }, 
+    {
+      "num_entries": 664, 
+      "oberfunktion": {
+        "name": "870", 
+        "color": "#e54a8c", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Allgemeines Grund- und Kapitalverm\u00f6gen, Sonderverm\u00f6gen", 
+        "_id": "4dd2ee068010cc51785d6126", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee068010cc51785d6126"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "800", 
+        "color": "#C22769", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Wirtschaftsunternehmen, Allgemeines Grund- und Kapitalverm\u00f6gen, Sonderverm\u00f6gen", 
+        "_id": "4dd2ee068010cc51785d6127", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee068010cc51785d6127"
+        }
+      }, 
+      "amount": 23430200.0
+    }, 
+    {
+      "num_entries": 94, 
+      "oberfunktion": {
+        "name": "740", 
+        "color": "#5f6e00", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Eisenbahnen und \u00f6ffentlicher Personennahverkehr", 
+        "_id": "4dd2ee638010cc51785d758b", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee638010cc51785d758b"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "700", 
+        "color": "#A5B425", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Verkehrs- und Nachrichtenwesen", 
+        "_id": "4dd2ee638010cc51785d7571", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee638010cc51785d7571"
+        }
+      }, 
+      "amount": 3881200.0
+    }, 
+    {
+      "num_entries": 1398, 
+      "oberfunktion": {
+        "name": "270", 
+        "color": "#950000", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Einrichtungen der Jugendhilfe", 
+        "_id": "4dd2ee408010cc51785d6dd0", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee408010cc51785d6dd0"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "200", 
+        "color": "#CA221D", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Soziale Sicherung, soziale Kriegsfolgeaufgaben, Wiedergutmachung", 
+        "_id": "4dd2ee068010cc51785d6132", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee068010cc51785d6132"
+        }
+      }, 
+      "amount": 30863200.0
+    }, 
+    {
+      "num_entries": 690, 
+      "oberfunktion": {
+        "name": "720", 
+        "color": "#b3c233", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Stra\u00dfen", 
+        "_id": "4dd2ee638010cc51785d7575", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee638010cc51785d7575"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "700", 
+        "color": "#A5B425", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Verkehrs- und Nachrichtenwesen", 
+        "_id": "4dd2ee638010cc51785d7571", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee638010cc51785d7571"
+        }
+      }, 
+      "amount": 35060000.0
+    }, 
+    {
+      "num_entries": 5398, 
+      "oberfunktion": {
+        "name": "230", 
+        "color": "#db332e", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Familien- und Sozialhilfe, F\u00f6rderung der Wohlfahrtspflege u. \u00e4.", 
+        "_id": "4dd2ee318010cc51785d6b07", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee318010cc51785d6b07"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "200", 
+        "color": "#CA221D", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Soziale Sicherung, soziale Kriegsfolgeaufgaben, Wiedergutmachung", 
+        "_id": "4dd2ee068010cc51785d6132", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee068010cc51785d6132"
+        }
+      }, 
+      "amount": 159041000.0
+    }, 
+    {
+      "num_entries": 56, 
+      "oberfunktion": {
+        "name": "850", 
+        "color": "#9f0446", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Sonstige Wirtschaftsunternehmen", 
+        "_id": "4dd2ee608010cc51785d74d3", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee608010cc51785d74d3"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "800", 
+        "color": "#C22769", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Wirtschaftsunternehmen, Allgemeines Grund- und Kapitalverm\u00f6gen, Sonderverm\u00f6gen", 
+        "_id": "4dd2ee068010cc51785d6127", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee068010cc51785d6127"
+        }
+      }, 
+      "amount": 3418800.0
+    }, 
+    {
+      "num_entries": 746, 
+      "oberfunktion": {
+        "name": "060", 
+        "color": "#002e79", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Finanzverwaltung", 
+        "_id": "4dd2ee738010cc51785d77f0", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee738010cc51785d77f0"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "000", 
+        "color": "#2458A3", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Allgemeine Dienste ", 
+        "_id": "4dd2ee008010cc51785d5fec", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee008010cc51785d5fec"
+        }
+      }, 
+      "amount": 25187000.0
+    }, 
+    {
+      "num_entries": 10, 
+      "oberfunktion": {
+        "name": "750", 
+        "color": "#97a617", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Luftfahrt", 
+        "_id": "4dd2ee688010cc51785d7680", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee688010cc51785d7680"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "700", 
+        "color": "#A5B425", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Verkehrs- und Nachrichtenwesen", 
+        "_id": "4dd2ee638010cc51785d7571", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee638010cc51785d7571"
+        }
+      }, 
+      "amount": 868900.0
+    }, 
+    {
+      "num_entries": 2656, 
+      "oberfunktion": {
+        "name": "180", 
+        "color": "#44913d", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Kultureinrichtungen (einschlie\u00dflich Kulturverwaltung)", 
+        "_id": "4dd2ee028010cc51785d604b", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee028010cc51785d604b"
+        }
+      }, 
+      "hauptfunktion": {
+        "name": "100", 
+        "color": "#44913D", 
+        "taxonomy": "funktionenplan-berlin", 
+        "label": "Bildungswesen, Wissenschaft, Forschung, kulturelle Angelegenheiten", 
+        "_id": "4dd2ee028010cc51785d604c", 
+        "ref": {
+          "$ref": "classifier", 
+          "$id": "4dd2ee028010cc51785d604c"
+        }
+      }, 
+      "amount": 65869800.0
+    }
+  ], 
+  "summary": {
+    "amount": 1563690200.0, 
+    "num_drilldowns": 51, 
+    "num_entries": 47188
+  }
+}

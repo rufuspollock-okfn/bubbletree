@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="UTF-8"/>
+	<title>UK Country Regional Analysis</title>
+	<script type="text/javascript" src="../../../../lib/vendor/jquery-1.5.2.min.js"></script>
+	<script type="text/javascript" src="../../../../lib/vendor/jquery.history.js"></script>
+	<script type="text/javascript" src="../../../../lib/vendor/raphael.js"></script>
+	<script type="text/javascript" src="../../../../lib/vendor/vis4.js"></script>
+	<script type="text/javascript" src="../../../../lib/vendor/Tween.js"></script>
+	<script type="text/javascript" src="../../bubbletree.min.js"></script>
+	
+	<link rel="stylesheet" type="text/css" href="../../css/style.page.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/style.bubbletree.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/style.tooltips.css" />
+	
+	<script type="text/javascript" src="../../styles/style.cofog.js"></script>
+	<script type="text/javascript" src="config.js"></script>
+
+	
+	<script type="text/javascript">
+       
+		$(function() {
+			
+			var yearChange = function(year) {
+				window.alert('year changed to '+year);
+			};
+			
+			var $tooltip = $('<div class="tooltip">Tooltip</div>');
+			$('#bubble-chart').append($tooltip);
+			
+			var tooltip = function(event) {
+				if (event.type == 'SHOW') {
+					// show tooltip
+					vis4.log(event);
+					$tooltip.css({ 
+						left: event.mousePos.x + 4, 
+						top: event.mousePos.y + 4 
+					});
+					$tooltip.html(event.node.label+' <b>'+event.node.famount+'</b>');
+					var bubble = event.target;
+					
+					$tooltip.show();
+				} else {
+					// hide tooltip
+					$tooltip.hide();
+				}
+			};
+			
+			config.tooltipCallback = tooltip;
+			
+			config.yearChangeHandler = yearChange;
+			
+			config.bubbleStyles = config.bubbleStyles ? config.bubbleStyles : {};
+			config.bubbleStyles['cofog'] = OpenSpending.BubbleTree.Styles.Cofog;	
+			
+			// uncomment the following line to test local data import
+			// config.localDataPath = 'data/simple-tree.json';
+			
+			// uncomment the following block to test direct local data import
+			/*config.localData = {
+				'id': 'root',
+				'label': 'Total',
+				'amount': 1400000,
+				'children': [{
+					'label': 'Foo',
+					'id': 'foo',
+					'amount': 250000,
+					'children': [{
+						'label': 'Foo-1',
+						'amount': 100000,
+						'children': []
+					}, {
+						'label': 'Foo-2',
+						'amount': 150000,
+						'children': []
+					}]
+				},{
+					'label': 'Foobar',
+					'amount': 400000,
+					'children': [{
+						'label': 'Foobar-1',
+						'amount': 200000,
+						'children': []
+					}, {
+						'label': 'Foobar-2',
+						'amount': 100000,
+						'children': []
+					}, {
+						'label': 'Foobar-3',
+						'amount': 100000,
+						'children': []
+					}]
+				},{
+					'label': 'Bar',
+					'amount': 750000,
+					'level': 1,
+					'children': [{
+						'label': 'Bar-1',
+						'amount': 400000,
+						'children': []
+					}, {
+						'label': 'Bar-2',
+						'amount': 150000,
+						'children': []
+					}, {
+						'label': 'Bar-3',
+						'amount': 70000,
+						'children': []
+					}, {
+						'label': 'Bar-4',
+						'amount': 30000,
+						'children': []
+					}]
+				}]
+			};
+			*/
+			new OpenSpending.BubbleTree.Loader(config);
+			
+			
+		});
+
+       
+                                        
+	</script>
+</head>
+<body>
+	<div id="header"><a class="title">OpenSpending</a>
+	<div class="subtitle">Berlin Budget</div></div>
+	<!--<div id="menu">
+		Select year: <select id="year"></select>
+	</div>-->
+	<div id="bubble-chart-wrapper">
+		<div id="bubble-chart"></div>
+	</div>
+</body>
+</html>

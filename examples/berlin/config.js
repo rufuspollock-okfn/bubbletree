@@ -1,13 +1,13 @@
 var config = {
-				apiUrl: 'http://berlin.offenerhaushalt.de/api',
-				dataset: 'berlin',
-				// todo: we should really document all the settings		
-				drilldowns: ['hauptfunktion', 'oberfunktion'],
+	apiUrl: 'http://berlin.offenerhaushalt.de/api',
+	dataset: 'berlin',
+	// todo: we should really document all the settings		
+	drilldowns: ['hauptfunktion', 'oberfunktion'],
+	// todo: we should really document all the settings
+	cuts: ['year:2011'],
 				// todo: we should really document all the settings
-				cuts: ['year:2011'],
-				// todo: we should really document all the settings
-				rootNodeLabel: 'Berlin',
-
+	rootNodeLabel: 'Berlin',
+	localApiCache: 'aggregate.json',
 	container: '#bubble-chart',
 	// 
 	initYear: 2011,
@@ -16,7 +16,7 @@ var config = {
 	// this callback is invoked as soon as the year changes by url
 	// defines what class is used to render the bubbles
 	// possible values are pie,donut,plain,multi
-	bubbleType: 'plain',
+	bubbleType: ['plain'],
 	// fake breakdown values for each node
 	fakeBreakdowns: ['Government', 'General Bugdet Support', 'Aid'],
 
