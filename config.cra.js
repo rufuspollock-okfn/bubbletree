@@ -2,11 +2,11 @@ var config = {
 	// todo: we should really document all the settings
 	apiUrl: 'http://openspending.org/api',
 	// todo: ...
-	localApiCache: 'data/aggregate-uk.json',
+	localApiCache: 'data/aggregate-cra.json',
 	// todo: we should really document all the settings		
 	dataset: 'cra',
 	// todo: we should really document all the settings
-	drilldowns: ['cofog1', 'cofog2', 'cofog3'],
+	drilldowns: ['cofog1', 'cofog2', 'cofog3', 'from'],
 	// todo: we should really document all the settings
 	cuts: ['year:2009'],
 	// todo: we should really document all the settings
@@ -16,11 +16,11 @@ var config = {
 	// 
 	initYear: 2009,
 	// breakdown
-	breakdown: 'cofog3',
+	breakdown: 'region',
 	// this callback is invoked as soon as the year changes by url
 	// defines what class is used to render the bubbles
 	// possible values are pie,donut,plain,multi,icon
-	bubbleType: ['icon'],
+	bubbleType: ['icon','icon','icon','plain'],
 	// fake breakdown values for each node
 	fakeBreakdowns: ['Government', 'General Bugdet Support', 'Aid'],
 };

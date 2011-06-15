@@ -12,7 +12,7 @@ var config = {
 	// todo: we should really document all the settings
 	drilldowns: ['function', 'to'],
 	// todo: we should really document all the settings
-	//cuts: ['year:2010'],
+	//cuts: ['year:2005'],
 	// todo: we should really document all the settings
 	rootNodeLabel: 'Italian Regional Accounts Total', 
 	// jquery selector code to identify the container div 
