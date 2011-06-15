@@ -19,7 +19,7 @@ OpenSpending.BubbleTree.Bubbles.Pies = function(node, bubblechart, origin, radiu
 	me.alpha = 1;
 	me.visible = false;
 	me.ns = ns;
-	me.bubbleRad = utils.amount2rad(this.node.amount);
+	me.bubbleRad = utils.amount2rad(me.node.amount);
 	
 	/*
 	 * child rotation is just used from outside to layout possible child bubbles
