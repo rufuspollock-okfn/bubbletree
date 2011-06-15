@@ -18,6 +18,8 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 	
 	me.config = config;
 	
+	if (!me.config.hasOwnProperty('rootPath')) me.config.rootPath = '';
+	
 	/*
 	 * this function is called when the user hovers a bubble
 	 */
@@ -287,13 +289,13 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 				if (styles.hasOwnProperty(taxonomy)) {
 					taxStyles = styles[taxonomy];
 					if (taxStyles.hasOwnProperty(id) && taxStyles[id].hasOwnProperty('icon')) {
-						node.iconUrl = taxStyles[id].icon;
+						node.iconUrl = me.config.rootPath + taxStyles[id].icon;
 					}
 				} 
 			} else {
 				// node has no taxonomy
 				if (styles.hasOwnProperty('id') && styles.id.hasOwnProperty(node.id) && styles.id[node.id].hasOwnProperty('icon')) {
-					node.iconUrl = styles.id[node.id].icon;
+					node.iconUrl = me.config.rootPath + styles.id[node.id].icon;
 				}
 			}
 		}
