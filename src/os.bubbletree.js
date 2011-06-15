@@ -116,8 +116,8 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 			} else if (node.hasOwnProperty('name') && styles.hasOwnProperty('name') && styles.name.hasOwnProperty(node.name) && styles.name[node.name].hasOwnProperty('color')) {
 				// use color by id
 				node.color = styles.name[node.name].color;
-			} else if (node.hasOwnProperty('taxonomy') && styles.hasOwnProperty(node.taxonomy) && styles[node.taxonomy].hasOwnProperty(node.id) && styles[node.taxonomy][node.id].hasOwnProperty('color')) {
-				node.color = styles[node.taxonomy][node.id].color;
+			} else if (node.hasOwnProperty('taxonomy') && styles.hasOwnProperty(node.taxonomy) && styles[node.taxonomy].hasOwnProperty(node.name) && styles[node.taxonomy][node.name].hasOwnProperty('color')) {
+				node.color = styles[node.taxonomy][node.name].color;
 			} 
 		} 
 		
@@ -192,10 +192,32 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 		me.height = h;
 		me.paper = paper;
 		base = Math.pow((Math.pow(rt.amount, 0.6) + Math.pow(rt.maxChildAmount, 0.6)*2) / maxRad, 1.6666666667);
-//		window.alert(maxRad+', '+paper.height+'  '+paper.width+'   '+$c.height()+'   '+$c.width());
 		me.a2radBase = me.ns.a2radBase = base;
 		
 		me.origin = origin;
+		
+		$(window).resize(me.onResize.bind(me));
+	};
+	
+	me.onResize = function() {
+		var me = this, $c = me.$container, w = $c.width(), h = $c.height(), 
+			maxRad = Math.min(w, h) * 0.5 - 40, base, rt = me.treeRoot, b, obj;
+		me.paper.setSize(w, h);
+		me.origin.x = w * 0.5;
+		me.origin.y = h * 0.5;
+		me.width = w;
+		me.height = h;
+		base = Math.pow((Math.pow(rt.amount, 0.6) + Math.pow(rt.maxChildAmount, 0.6)*2) / maxRad, 1.6666666667);
+		me.a2radBase = me.ns.a2radBase = base;
+		
+		for (b in me.displayObjects) {
+			obj = me.displayObjects[b];
+			if (obj.className == "bubble") {
+				obj.bubbleRad = me.ns.Utils.amount2rad(obj.node.amount);
+			}
+		}
+		vis4.log(me.currentCenter.urlToken);
+		me.changeView(me.currentCenter.urlToken);
 	};
 	
 	/*
@@ -325,12 +347,9 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 	me.createBubble = function(node, origin, rad, angle, color) {
 		var me = this, ns = me.ns, i, b, bubble, classIndex = node.level;
 		classIndex = Math.min(classIndex, me.bubbleClasses.length-1);
-		if (node.level < 2) vis4.log('createBubble for ',node.level, classIndex, me.bubbleClasses[classIndex]);
 		
 		bubble = new me.bubbleClasses[classIndex](node, me, origin, rad, angle, color);
-		//me.bubbles.push(bubble);
 		me.displayObjects.push(bubble);
-		// vis4.log('created bubble for', node.label);
 		return bubble;
 	};
 	
@@ -500,7 +519,7 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 				} 
 			}
 
-			tr = new ns.AnimatedTransitioner($.browser.msie ? 0 : 1000);
+			tr = new ns.AnimatedTransitioner($.browser.msie || me.currentCenter == node ? 0 : 1000);
 			tr.changeLayout(t);
 			me.currentTransition = tr;
 			me.currentCenter = node;
