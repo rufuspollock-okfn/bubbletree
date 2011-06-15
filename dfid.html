@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="UTF-8"/>
+	<title>UK Department for International Development</title>
+	<script type="text/javascript" src="../../lib/vendor/jquery-1.5.2.min.js"></script>
+	<script type="text/javascript" src="../../lib/vendor/jquery.history.js"></script>
+	<script type="text/javascript" src="../../lib/vendor/raphael.js"></script>
+	<script type="text/javascript" src="../../lib/vendor/vis4.js"></script>
+	<script type="text/javascript" src="../../lib/vendor/Tween.js"></script>
+	<script type="text/javascript" src="bubbletree.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/style.page.css" />
+	<link rel="stylesheet" type="text/css" href="css/style.bubbletree.css" />
+	<link rel="stylesheet" type="text/css" href="css/style.tooltips.css" />
+
+	<script type="text/javascript" src="style.cofog.js"></script>
+	<script type="text/javascript" src="style.itb-function.js"></script>
+	
+	<script type="text/javascript">
+       
+		$(function() {
+			
+			var yearChange = function(year) {
+				window.alert('year changed to '+year);
+			};
+			
+			var $tooltip = $('<div class="tooltip">Tooltip</div>');
+			$('#bubble-chart').append($tooltip);
+			
+			var tooltip = function(event) {
+				if (event.type == 'SHOW') {
+					// show tooltip
+					vis4.log(event);
+					$tooltip.css({ 
+						left: event.mousePos.x + 4, 
+						top: event.mousePos.y + 4 
+					});
+					$tooltip.html(event.node.label+' <b>'+event.node.famount+'</b>');
+					var bubble = event.target;
+					
+					$tooltip.show();
+				} else {
+					// hide tooltip
+					$tooltip.hide();
+				}
+			};
+			
+			var config = {
+				// todo: we should really document all the settings
+				apiUrl: 'http://openspending.org/api',
+				// todo: ...
+				localApiCache: 'data/aggregate-dfid.json',
+				// todo: we should really document all the settings		
+				dataset: 'dfid',
+				// todo: we should really document all the settings
+				drilldowns: ['sector', 'agency', 'subagency', 'subsubagency'],
+				// todo: we should really document all the settings
+				//cuts: ['year:2009'],
+				// todo: we should really document all the settings
+				rootNodeLabel: 'Total Development Spending', 
+				// jquery selector code to identify the container div 
+				container: '#bubble-chart',
+				// 
+				initYear: 2009,
+				// breakdown
+				breakdown: 'sector',
+				// this callback is invoked as soon as the year changes by url
+				// defines what class is used to render the bubbles
+				// possible values are pie,donut,plain,multi,icon
+				bubbleType: ['icon'],
+				
+				bubbleStyles: {
+					'dfid': {
+						'education': { color: '#3333cc', icon: 'icons/education.svg' },
+						'health': { color: '#cc0066', icon: 'icons/health.svg' },
+						'social-services': { color: '#f4714c', icon: 'icons/helping-others.svg' },
+						'water-supply-sanitation': { color: '#cc6666', icon: 'icons/water.svg' },
+						'government-civil-society': { color: '#9900cc', icon: 'icons/legislative.svg' },
+						'humanitarian-assistance': { color: '#0099cc', icon: 'icons/aid-developing-countries.svg' },
+						'environment-protection': { color: '#006633', icon: 'icons/environment.svg' },
+						'economic': { color: '#33cc33', icon: 'icons/economic-aid.svg' },
+						'research': { color: '#3333cc', icon: 'icons/research.svg' },
+						'africa': { icon: 'icons/africa.svg' },
+						'asia': { icon: 'icons/asia.svg' },
+						'undefined-sector': { color: '#a6a6a6' },
+						'european-commission': { color: '#003399', icon: 'icons/EC.svg' } 
+					}
+				}
+				
+			};
+/*		'10': { // Helping Others
+			color: '#f4714c'
+		},
+		'02': { // Defence
+			color: '#999933'
+		},
+		'05': { // Environment
+			color: '#006633'
+		},
+		'07': { // Health
+			color: '#cc0066'
+		},
+		'03': { // Order & Safety
+			color: '#0099cc'
+		},
+		'06': { // Our Streets
+			color: '#cc6666'
+		},
+		'08': { // Culture
+			color: '#cccc00'
+		},
+		'01': { // Running Government
+			color: '#9900cc'
+		},
+		'09': { // Education
+			color: '#3333cc'
+		},
+		'04': { // Country, Social Systems
+			color: '#33cc33'
+		}*/
+			config.tooltipCallback = tooltip;
+			
+			config.yearChangeHandler = yearChange;
+			
+			config.bubbleStyles = config.bubbleStyles ? config.bubbleStyles : {};
+			config.bubbleStyles['cofog'] = OpenSpending.BubbleTree.Styles.Cofog;
+			config.bubbleStyles['itb-function'] = OpenSpending.BubbleTree.Styles.ITBFunction;
+				
+			
+			new OpenSpending.BubbleTree.Loader(config);
+			
+			
+		});
+
+       
+                                        
+	</script>
+</head>
+<body>
+	<div id="header"><a class="title">OpenSpending</a>
+	<div class="subtitle">UK Department for International Development</div></div>
+	<!--<div id="menu">
+		Select year: <select id="year"></select>
+	</div>-->
+	<div id="bubble-chart-wrapper">
+		<div id="bubble-chart"></div>
+	</div>
+</body>
+</html>
