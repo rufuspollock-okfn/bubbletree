@@ -6,7 +6,7 @@ var config = {
 	// todo: we should really document all the settings
 	apiUrl: 'http://openspending.org/api',
 	// todo: ...
-	localApiCache: 'data/aggregate-italy.json',
+	localApiCache: 'aggregate.json',
 	// todo: we should really document all the settings		
 	dataset: 'italyregionalaccounts',
 	// todo: we should really document all the settings

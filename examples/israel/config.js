@@ -9,15 +9,17 @@ var config = {
 	// todo: we should really document all the settings
 	rootNodeLabel: 'Budget total', 
 
+	localApiCache: 'aggregate.json',
+	
 	container: '#bubble-chart',
 	// 
-	initYear: 2009,
+	//initYear: 2009,
 	// breakdown
 	//breakdown: 'cofog3',
 	// this callback is invoked as soon as the year changes by url
 	// defines what class is used to render the bubbles
 	// possible values are pie,donut,plain,multi
-	bubbleType: 'plain',
+	bubbleType: ['plain'],
 	// fake breakdown values for each node
 	fakeBreakdowns: ['Government', 'General Bugdet Support', 'Aid'],
 

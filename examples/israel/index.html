@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta charset="UTF-8"/>
-	<title>UK Country Regional Analysis</title>
+	<title>Israel Budget</title>
 	<script type="text/javascript" src="../../../../lib/vendor/jquery-1.5.2.min.js"></script>
 	<script type="text/javascript" src="../../../../lib/vendor/jquery.history.js"></script>
 	<script type="text/javascript" src="../../../../lib/vendor/raphael.js"></script>
@@ -15,6 +15,7 @@
 	<link rel="stylesheet" type="text/css" href="../../css/style.tooltips.css" />
 	
 	<script type="text/javascript" src="../../styles/style.cofog.js"></script>
+	<script type="text/javascript" src="config.js"></script>
 	
 	<script type="text/javascript">
        
@@ -45,32 +46,7 @@
 				}
 			};
 			
-			var config = {
-				// todo: we should really document all the settings
-				apiUrl: 'http://openspending.org/api',
-				// todo: ...
-				localApiCache: 'aggregate.json',
-				// todo: we should really document all the settings		
-				dataset: 'cra',
-				// todo: we should really document all the settings
-				drilldowns: ['cofog1', 'cofog2', 'cofog3'],
-				// todo: we should really document all the settings
-				cuts: ['year:2008'],
-				// todo: we should really document all the settings
-				rootNodeLabel: 'Grant total', 
-				// jquery selector code to identify the container div 
-				container: '#bubble-chart',
-				// 
-				initYear: 2009,
-				// breakdown
-				breakdown: 'region',
-				// this callback is invoked as soon as the year changes by url
-				// defines what class is used to render the bubbles
-				// possible values are pie,donut,plain,multi,icon
-				bubbleType: ['icon'],
-				
-				rootPath: '../../'
-			};
+			config.rootPath = '../../';
 			
 			config.tooltipCallback = tooltip;
 			
@@ -151,7 +127,7 @@
 </head>
 <body>
 	<div id="header"><a class="title">OpenSpending</a>
-	<div class="subtitle">UK Country Regional Analysis</div></div>
+	<div class="subtitle">Israel Budget</div></div>
 	<!--<div id="menu">
 		Select year: <select id="year"></select>
 	</div>-->

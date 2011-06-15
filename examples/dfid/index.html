@@ -3,26 +3,19 @@
 <head>
 	<meta charset="UTF-8"/>
 	<title>UK Department for International Development</title>
-	<script type="text/javascript" src="../../lib/vendor/jquery-1.5.2.min.js"></script>
-	<script type="text/javascript" src="../../lib/vendor/jquery.history.js"></script>
-	<script type="text/javascript" src="../../lib/vendor/raphael.js"></script>
-	<script type="text/javascript" src="../../lib/vendor/vis4.js"></script>
-	<script type="text/javascript" src="../../lib/vendor/Tween.js"></script>
-	<script type="text/javascript" src="bubbletree.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="css/style.page.css" />
-	<link rel="stylesheet" type="text/css" href="css/style.bubbletree.css" />
-	<link rel="stylesheet" type="text/css" href="css/style.tooltips.css" />
-
-	<script type="text/javascript" src="style.cofog.js"></script>
-	<script type="text/javascript" src="style.itb-function.js"></script>
+	<script type="text/javascript" src="../../../../lib/vendor/jquery-1.5.2.min.js"></script>
+	<script type="text/javascript" src="../../../../lib/vendor/jquery.history.js"></script>
+	<script type="text/javascript" src="../../../../lib/vendor/raphael.js"></script>
+	<script type="text/javascript" src="../../../../lib/vendor/vis4.js"></script>
+	<script type="text/javascript" src="../../../../lib/vendor/Tween.js"></script>
+	<script type="text/javascript" src="../../bubbletree.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../css/style.page.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/style.bubbletree.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/style.tooltips.css" />
 	
 	<script type="text/javascript">
        
 		$(function() {
-			
-			var yearChange = function(year) {
-				window.alert('year changed to '+year);
-			};
 			
 			var $tooltip = $('<div class="tooltip">Tooltip</div>');
 			$('#bubble-chart').append($tooltip);
@@ -49,7 +42,7 @@
 				// todo: we should really document all the settings
 				apiUrl: 'http://openspending.org/api',
 				// todo: ...
-				localApiCache: 'data/aggregate-dfid.json',
+				localApiCache: 'aggregate.json',
 				// todo: we should really document all the settings		
 				dataset: 'dfid',
 				// todo: we should really document all the settings
@@ -71,64 +64,64 @@
 				
 				bubbleStyles: {
 					'dfid': {
-						'education': { color: '#3333cc', icon: 'icons/education.svg' },
-						'health': { color: '#cc0066', icon: 'icons/health.svg' },
-						'social-services': { color: '#f4714c', icon: 'icons/helping-others.svg' },
-						'water-supply-sanitation': { color: '#cc6666', icon: 'icons/water.svg' },
-						'government-civil-society': { color: '#9900cc', icon: 'icons/legislative.svg' },
-						'humanitarian-assistance': { color: '#0099cc', icon: 'icons/aid-developing-countries.svg' },
-						'environment-protection': { color: '#006633', icon: 'icons/environment.svg' },
-						'economic': { color: '#33cc33', icon: 'icons/economic-aid.svg' },
-						'research': { color: '#3333cc', icon: 'icons/research.svg' },
-						'africa': { icon: 'icons/africa.svg' },
-						'asia': { icon: 'icons/asia.svg' },
-						'undefined-sector': { color: '#a6a6a6' },
-						'european-commission': { color: '#003399', icon: 'icons/EC.svg' } 
+						'education': { 
+							color: '#3333cc', 
+							icon: 'styles/icons/education.svg'
+						},
+						'health': { 
+							color: '#cc0066', 
+							icon: 'styles/icons/health.svg' 
+						},
+						'social-services': { 
+							color: '#f4714c', 
+							icon: 'styles/icons/helping-others.svg' 
+						},
+						'water-supply-sanitation': { 
+							color: '#cc6666', 
+							icon: 'styles/icons/water.svg' 
+						},
+						'government-civil-society': { 
+							color: '#9900cc', 
+							icon: 'styles/icons/legislative.svg' 
+						},
+						'humanitarian-assistance': { 
+							color: '#0099cc', 
+							icon: 'styles/icons/aid-developing-countries.svg' 
+						},
+						'environment-protection': { 
+							color: '#006633', 
+							icon: 'styles/icons/environment.svg' 
+						},
+						'economic': { 
+							color: '#33cc33', 
+							icon: 'styles/icons/economic-aid.svg' 
+						},
+						'research': { 
+							color: '#3333cc', 
+							icon: 'styles/icons/research.svg' 
+						},
+						'africa': { 
+							icon: 'styles/icons/africa.svg' 
+						},
+						'asia': { 
+							icon: 'styles/icons/asia.svg' 
+						},
+						'undefined-sector': { 
+							color: '#a6a6a6' 
+						},
+						'european-commission': { 
+							color: '#003399', 
+							icon: 'styles/icons/EC.svg' 
+						} 
 					}
-				}
+				},
+				rootPath: '../../'
+				
 				
 			};
-/*		'10': { // Helping Others
-			color: '#f4714c'
-		},
-		'02': { // Defence
-			color: '#999933'
-		},
-		'05': { // Environment
-			color: '#006633'
-		},
-		'07': { // Health
-			color: '#cc0066'
-		},
-		'03': { // Order & Safety
-			color: '#0099cc'
-		},
-		'06': { // Our Streets
-			color: '#cc6666'
-		},
-		'08': { // Culture
-			color: '#cccc00'
-		},
-		'01': { // Running Government
-			color: '#9900cc'
-		},
-		'09': { // Education
-			color: '#3333cc'
-		},
-		'04': { // Country, Social Systems
-			color: '#33cc33'
-		}*/
 			config.tooltipCallback = tooltip;
-			
-			config.yearChangeHandler = yearChange;
-			
-			config.bubbleStyles = config.bubbleStyles ? config.bubbleStyles : {};
-			config.bubbleStyles['cofog'] = OpenSpending.BubbleTree.Styles.Cofog;
-			config.bubbleStyles['itb-function'] = OpenSpending.BubbleTree.Styles.ITBFunction;
-				
-			
+					
 			new OpenSpending.BubbleTree.Loader(config);
-			
 			
 		});
 
