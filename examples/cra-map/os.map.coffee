@@ -9,7 +9,7 @@
 ###
 
 class OpenSpending.Map
-	constructor: (@svgSrc, @container, @mode = 'total') ->
+	constructor: (@svgSrc, @container, @mode = 'percapita') ->
 		@loadSVG()
 		
 	loadSVG: ->
@@ -105,18 +105,25 @@ class OpenSpending.Map
 					when 'total' then ma = Math.max(ma, subnode.amount) 
 					when 'percapita' then ma = Math.max(ma, subnode.amount / population)
 					else vis4.log 'unsupported map mode '+@mode
-				
-		for id, subnode of node.breakdowns
-			if @pathsByRegion[id]?
+		
+		for id, paths of @pathsByRegion
+			vis4.log id, paths
+			if node.breakdowns[id]?
+				subnode = node.breakdowns[id]
 				population = @populationPerRegion[id]
-				console.log id, 'pop = ',population
 				switch @mode
 					when 'total' then color = vis4color.fromHSL(330, .3, .9 - subnode.amount / ma * .5).x
 					when 'percapita' then color = vis4color.fromHSL(330, .3, .9 - (subnode.amount / population) / ma * .5).x
 					else vis4.log 'unsupported map mode '+@mode
 				
-				for path in @pathsByRegion[id]
-					path.node.setAttribute 'tooltip', '<div class="label">'+subnode.label+'</div><div>Total: <span  class="amount">'+subnode.famount+'</span> ('+Math.round(subnode.amount/node.amount*100)+'%)</div>'
-					path.animate
-						fill: color, 300
+				tooltip =  '<div class="label">'+subnode.label+'</div><div>Total: <span  class="amount">'+subnode.famount+'</span> ('+Math.round(subnode.amount/node.amount*100)+'%)</div>'
+			else
+				tooltip = '<div class="label"></div><div>n/a</div>'
+				color = '#bbb'
+				
+			for path in paths
+				path.node.setAttribute 'tooltip', tooltip
+				path.animate
+					fill: color, 300
+				
 		return

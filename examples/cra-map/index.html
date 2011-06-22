@@ -82,13 +82,11 @@
 			
 			
 			
-			//config.tooltipCallback = tooltip;
+			config.tooltipCallback = tooltip;
 			
 			config.tooltipContent = function(node) {
 				return node.label+'<br/><span class="amount">'+node.famount+'</span>';
 			};
-			
-			config.yearChangeHandler = yearChange;
 			
 			config.bubbleStyles = config.bubbleStyles ? config.bubbleStyles : {};
 			config.bubbleStyles['cofog'] = OpenSpending.BubbleTree.Styles.Cofog;	
@@ -158,6 +156,6 @@
 	<div id="mapdesc">
 		
 	</div>
-	<div id="maptypeswitch"><a name="total" class="active">Total</a> &nbsp;<a name="percapita">By Population</a></div>
+	<div id="maptypeswitch"><a name="total">Total</a> &nbsp;<a name="percapita" class="active">By Population</a></div>
 </body>
 </html>

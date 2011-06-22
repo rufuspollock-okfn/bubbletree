@@ -10,7 +10,7 @@
     function Map(svgSrc, container, mode) {
       this.svgSrc = svgSrc;
       this.container = container;
-      this.mode = mode != null ? mode : 'total';
+      this.mode = mode != null ? mode : 'percapita';
       this.loadSVG();
     }
     Map.prototype.loadSVG = function() {
@@ -101,7 +101,7 @@
       }
     };
     Map.prototype.updateValues = function(node) {
-      var color, id, ma, path, population, subnode, total, _i, _len, _ref, _ref2, _ref3;
+      var color, id, ma, path, paths, population, subnode, tooltip, total, _i, _len, _ref, _ref2;
       this.currentNode = node;
       total = node.amount;
       console.log('map.mode = ', this.mode);
@@ -123,12 +123,13 @@
           }
         }
       }
-      _ref2 = node.breakdowns;
+      _ref2 = this.pathsByRegion;
       for (id in _ref2) {
-        subnode = _ref2[id];
-        if (this.pathsByRegion[id] != null) {
+        paths = _ref2[id];
+        vis4.log(id, paths);
+        if (node.breakdowns[id] != null) {
+          subnode = node.breakdowns[id];
           population = this.populationPerRegion[id];
-          console.log(id, 'pop = ', population);
           switch (this.mode) {
             case 'total':
               color = vis4color.fromHSL(330, .3, .9 - subnode.amount / ma * .5).x;
@@ -139,14 +140,17 @@
             default:
               vis4.log('unsupported map mode ' + this.mode);
           }
-          _ref3 = this.pathsByRegion[id];
-          for (_i = 0, _len = _ref3.length; _i < _len; _i++) {
-            path = _ref3[_i];
-            path.node.setAttribute('tooltip', '<div class="label">' + subnode.label + '</div><div>Total: <span  class="amount">' + subnode.famount + '</span> (' + Math.round(subnode.amount / node.amount * 100) + '%)</div>');
-            path.animate({
-              fill: color
-            }, 300);
-          }
+          tooltip = '<div class="label">' + subnode.label + '</div><div>Total: <span  class="amount">' + subnode.famount + '</span> (' + Math.round(subnode.amount / node.amount * 100) + '%)</div>';
+        } else {
+          tooltip = '<div class="label"></div><div>n/a</div>';
+          color = '#bbb';
+        }
+        for (_i = 0, _len = paths.length; _i < _len; _i++) {
+          path = paths[_i];
+          path.node.setAttribute('tooltip', tooltip);
+          path.animate({
+            fill: color
+          }, 300);
         }
       }
     };

@@ -111,7 +111,6 @@ OpenSpending.BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radiu
 	 */
 	me.iconLoadComplete = function(ldr) {
 		var me = this, svg, j, paths;
-		vis4.log('icon load complete');
 		svg = ldr.items[0].data;
 		me.iconPathData = [];
 		paths = svg.getElementsByTagName('path');
@@ -130,7 +129,6 @@ OpenSpending.BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radiu
 	me.displayIcon = function() {
 		var me = this, i, path;
 		me.iconPaths = [];
-		vis4.log('displaying icon');
 		for (i in me.iconPathData) {
 			path = me.paper.path(me.iconPathData[i])
 				.attr({fill: "#fff", stroke: "none"})

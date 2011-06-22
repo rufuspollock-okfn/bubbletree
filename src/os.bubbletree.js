@@ -211,7 +211,7 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 			}
 		}
 		// vis4.log(me);
-		if (me.currentCenter !== null) {
+		if (me.currentCenter) {
 			me.changeView(me.currentCenter.urlToken);
 		}
 	};
@@ -530,10 +530,11 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 			tr = new ns.AnimatedTransitioner($.browser.msie || me.currentCenter == node ? 0 : 1000);
 			tr.changeLayout(t);
 			me.currentTransition = tr;
-			if (!me.currentCenter && me.config.firstNodeCallback !== null) {
+			if (!me.currentCenter && $.isFunction(me.config.firstNodeCallback)) {
 				me.config.firstNodeCallback(node);
 			}
 			me.currentCenter = node;
+			vis4.log('currentNode = '+me.currentCenter);
 						
 		} else {
 			utils.log('node '+token+' not found');
@@ -682,7 +683,7 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 	};
 	
 	me.onNodeClick = function(node) {
-		if (me.config.nodeClickCallback !== null) {
+		if ($.isFunction(me.config.nodeClickCallback)) {
 			me.config.nodeClickCallback(node);
 		}
 	};
