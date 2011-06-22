@@ -76,6 +76,10 @@ OpenSpending.BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radiu
 		me.label = $('<div class="label"><div class="amount">'+utils.formatNumber(me.node.amount)+'</div><div class="desc">'+me.node.label+'</div></div>');
 		$('#bubble-chart').append(me.label);
 		
+		// additional label
+		me.label2 = $('<div class="label2"><span>'+me.node.label+'</span></div>');
+		$('#bubble-chart').append(me.label2);
+		
 		if (me.node.children.length > 0) {
 			$(me.circle.node).css({ cursor: 'pointer'});
 			$(me.label).css({ cursor: 'pointer'});
@@ -169,21 +173,29 @@ OpenSpending.BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radiu
 		
 
 		//me.label.attr({ x: me.pos.x, y: me.pos.y, 'font-size': Math.max(4, me.bubbleRad * me.bc.bubbleScale * 0.25) });
-		if (!showLabel) me.label.hide();
-		else {
+		if (!showLabel) {
+			me.label.hide();
+			me.label2.show();
+		} else {
 			me.label.show();
-		
 			if ((showIcon && r < 70) || (!showIcon && r < 40)) {
 				me.label.find('.desc').hide();
+				me.label2.show();
 			} else {
 				// full label
 				me.label.find('.desc').show();
+				me.label2.hide();
 			}
 			
 		}
 		ly = showIcon ? y+r*0.77-me.label.height() : y-me.label.height()*0.5; 
 		me.label.css({ width: (showIcon ? r*1.2 : 2*r)+'px', opacity: me.alpha });
 		me.label.css({ left: (showIcon ? x - r*0.6 : x-r)+'px', top: ly+'px' });
+		
+		var w = Math.max(80, 3*r);
+		me.label2.css({ width: w+'px', opacity: me.alpha });
+		me.label2.css({ left: (x - w*0.5)+'px', top: (y + r)+'px' });
+		
 		
 		//if (me.icon) me.icon.translate(me.pos.x - ox, me.pos.y - oy);
 		if (me.hasIcon) {
@@ -214,6 +226,8 @@ OpenSpending.BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radiu
 		me.circle.remove();
 		me.dashedBorder.remove();
 		me.label.remove();
+		me.label2.remove();
+		
 		//$('#bubble-chart')
 		me.visible = false;
 		if (me.hasIcon) me.removeIcon();

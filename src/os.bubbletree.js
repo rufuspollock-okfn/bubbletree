@@ -157,6 +157,10 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 		} 
 		me.nodesByUrlToken[node.urlToken] = node;
 		node.maxChildAmount = 0;
+		
+		// sort children
+		node.children = me.sortChildren(node.children);
+		
 		for (c in node.children) {
 			child = node.children[c];
 			child.parent = node;
@@ -169,6 +173,22 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 				node.breakdowns[c].famount = me.ns.Utils.formatNumber(node.breakdowns[c].amount);
 			}
 		}
+	};
+	
+	me.sortChildren = function(children) {
+		var tmp = [], odd = true;
+		children.sort(me.compareAmounts);
+		while (children.length > 0) {
+			tmp.push(odd ? children.pop() : children.shift());
+			odd = !odd;
+		}
+		return tmp;
+	};
+	
+	me.compareAmounts = function(a, b) {
+		if (a.amount > b.amount) return 1;
+		if (a.amount == b.amount) return 0;
+		return -1;
 	};
 	
 	/*
