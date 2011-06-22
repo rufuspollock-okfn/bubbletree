@@ -69,7 +69,7 @@ OpenSpending.BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radiu
 		me.circle = me.paper.circle(cx, cy, r)
 			.attr({ stroke: false, fill: me.color });
 
-		me.dashedBorder = me.paper.circle(cx, cy, r-3)
+		me.dashedBorder = me.paper.circle(cx, cy, Math.min(r-3, r*0.95))
 			.attr({ stroke: '#ffffff', 'stroke-dasharray': "- " });
 	
 	
@@ -166,7 +166,7 @@ OpenSpending.BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radiu
 		if (!me.visible) return;
 		
 		me.circle.attr({ cx: x, cy: y, r: r, 'fill-opacity': me.alpha });
-		if (me.node.children.length > 0) me.dashedBorder.attr({ cx: me.pos.x, cy: me.pos.y, r: r-3, 'stroke-opacity': me.alpha * 0.4 });
+		if (me.node.children.length > 0) me.dashedBorder.attr({ cx: me.pos.x, cy: me.pos.y, r: Math.min(r-3, r*0.90), 'stroke-opacity': me.alpha * 0.9 });
 		else me.dashedBorder.attr({ 'stroke-opacity': 0 });
 		
 
@@ -183,14 +183,14 @@ OpenSpending.BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radiu
 			}
 			
 		}
-		ly = showIcon ? y+r*0.85-me.label.height() : y-me.label.height()*0.5; 
+		ly = showIcon ? y+r*0.77-me.label.height() : y-me.label.height()*0.5; 
 		me.label.css({ width: (showIcon ? r*1.2 : 2*r)+'px', opacity: me.alpha });
 		me.label.css({ left: (showIcon ? x - r*0.6 : x-r)+'px', top: ly+'px' });
 		
 		//if (me.icon) me.icon.translate(me.pos.x - ox, me.pos.y - oy);
 		if (me.hasIcon) {
 			if (showIcon) {
-				scale = (r - (showLabel ? me.label.height()*0.5 : 0)) / 50;
+				scale = (r - (showLabel ? me.label.height()*0.5 : 0)) / 60;
 				for (i in me.iconPaths) {
 					path = me.iconPaths[i];
 					//path.translate(me.pos.x - ox, me.pos.y - oy);
@@ -226,6 +226,7 @@ OpenSpending.BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radiu
 	 */
 	me.onclick = function(e) {
 		var me = this;
+		me.bc.onNodeClick(me.node);
 		if (me.node.children.length > 1) {
 			me.bc.navigateTo(me.node);
 		}
