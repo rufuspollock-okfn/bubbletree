@@ -29,7 +29,7 @@ h4 { font-family: sans; }
 
 footer = "</div></body></html>"
 
-out = open('readme.html', 'wb')
+out = open('index.html', 'wb')
 out.write(head)
 out.write(content)
 out.write(footer)

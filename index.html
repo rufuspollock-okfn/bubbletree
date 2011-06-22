@@ -1,139 +1,176 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-	<meta charset="UTF-8"/>
-	<title>BubbleTree Demo</title>
-	<script type="text/javascript" src="../../lib/vendor/jquery-1.5.2.min.js"></script>
-	<script type="text/javascript" src="../../lib/vendor/jquery.history.js"></script>
-	<script type="text/javascript" src="../../lib/vendor/raphael.js"></script>
-	<script type="text/javascript" src="../../lib/vendor/vis4.js"></script>
-	<script type="text/javascript" src="../../lib/vendor/Tween.js"></script>
-	<script type="text/javascript" src="bubbletree.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="css/style.page.css" />
-	<link rel="stylesheet" type="text/css" href="css/style.bubbletree.css" />
-	<link rel="stylesheet" type="text/css" href="css/style.tooltips.css" />
-	<script type="text/javascript" src="config.cra.js"></script>
-	<script type="text/javascript" src="style.cofog.js"></script>
-	<script type="text/javascript" src="style.itb-function.js"></script>
-	
-	<script type="text/javascript">
-       
-		$(function() {
-			
-			var yearChange = function(year) {
-				window.alert('year changed to '+year);
-			};
-			
-			var $tooltip = $('<div class="tooltip">Tooltip</div>');
-			$('#bubble-chart').append($tooltip);
-			
-			var tooltip = function(event) {
-				if (event.type == 'SHOW') {
-					// show tooltip
-					vis4.log(event);
-					$tooltip.css({ 
-						left: event.mousePos.x + 4, 
-						top: event.mousePos.y + 4 
-					});
-					$tooltip.html(event.node.label+' <b>'+event.node.famount+'</b><br/>'+event.node.taxonomy+'<br />'+event.node.name);
-					var bubble = event.target;
-					
-					$tooltip.show();
-				} else {
-					// hide tooltip
-					$tooltip.hide();
-				}
-			};
-			
-			vis4.log(config);
-			
-			config.tooltipCallback = tooltip;
-			
-			config.yearChangeHandler = yearChange;
-			
-			config.bubbleStyles = config.bubbleStyles ? config.bubbleStyles : {};
-			config.bubbleStyles['cofog'] = OpenSpending.BubbleTree.Styles.Cofog;
-			config.bubbleStyles['itb-function'] = OpenSpending.BubbleTree.Styles.ITBFunction;
-				
-			
-			// uncomment the following line to test local data import
-			// config.localDataPath = 'data/simple-tree.json';
-			
-			// uncomment the following block to test direct local data import
-			/*config.localData = {
-				'id': 'root',
-				'label': 'Total',
-				'amount': 1400000,
-				'children': [{
-					'label': 'Foo',
-					'id': 'foo',
-					'amount': 250000,
-					'children': [{
-						'label': 'Foo-1',
-						'amount': 100000,
-						'children': []
-					}, {
-						'label': 'Foo-2',
-						'amount': 150000,
-						'children': []
-					}]
-				},{
-					'label': 'Foobar',
-					'amount': 400000,
-					'children': [{
-						'label': 'Foobar-1',
-						'amount': 200000,
-						'children': []
-					}, {
-						'label': 'Foobar-2',
-						'amount': 100000,
-						'children': []
-					}, {
-						'label': 'Foobar-3',
-						'amount': 100000,
-						'children': []
-					}]
-				},{
-					'label': 'Bar',
-					'amount': 750000,
-					'level': 1,
-					'children': [{
-						'label': 'Bar-1',
-						'amount': 400000,
-						'children': []
-					}, {
-						'label': 'Bar-2',
-						'amount': 150000,
-						'children': []
-					}, {
-						'label': 'Bar-3',
-						'amount': 70000,
-						'children': []
-					}, {
-						'label': 'Bar-4',
-						'amount': 30000,
-						'children': []
-					}]
-				}]
-			};
-			*/
-			new OpenSpending.BubbleTree.Loader(config);
-			
-			
-		});
 
-       
-                                        
-	</script>
+<!-- 
+  -- please do not edit this auto-generated file.
+  -- instead, change readme.txt and run generateDocs.py
+-->
+<html>
+<head>
+<style type="text/css">
+body { font-family: Georgia, serif; margin: 40px; background: #f8f8f8 }
+#wrapper { width: 100ex; margin: 0 auto; background: white; border:1px solid #e9e9e9; padding: 1em 2em; }
+
+@font-face {
+	font-family: Graublau;
+	src: url('fonts/graublau/GraublauWeb.otf') format("opentype");
+}
+h1,h2,h3 { font-family: Graublau, Georgia, sans-serif; color: #555555; }
+h2 { border-bottom: 1px solid silver; margin-top: 2em; }
+h4 { font-family: sans; }
+</style>
+<title>OpenSpending BubbleTree Documentation</title>
 </head>
-<body>
-	<div id="header"><a class="title">OpenSpending</a>
-	<div class="subtitle">Italian Regional Accounts</div></div>
-	<!--<div id="menu">
-		Select year: <select id="year"></select>
-	</div>-->
-	<div id="bubble-chart-wrapper">
-		<div id="bubble-chart"></div>
-	</div>
-</body>
-</html>
+<body><div id="wrapper">
+<h1>Radial Bubble Tree Documentation</h1>
+<h2>Configuration vars</h2>
+<p>The constructor of the bubble chart takes just one argument, the configuration object which contains all settings that can be set. This section will cover all available configuration variables.</p>
+<p>Example:</p>
+<pre><code>var config = { 
+    apiUrl: 'http://openspending.org/api', 
+    container: '#bubbletree' 
+};
+new OpenSpending.BubbleTree.Loader(config);
+</code></pre>
+<h3>HTML Integration</h3>
+<ul>
+<li><em>container</em> - String, jQuery selector of the container element for the visualization, must be defined in HTML code, e.g. '#bubbletree-container'</li>
+</ul>
+<h3>Data Input</h3>
+<p>There are three different ways of putting data into the BubbleTree.</p>
+<h4>Calling the OpenSpending API</h4>
+<p>The following config variables can be used to change the data source:</p>
+<ul>
+<li>apiUrl - String, url of a running OpenSpending API instance, e.g. "http://openspending.org/api"</li>
+<li>dataset - String, name of the used dataset, e.g. "israel"</li>
+<li>drilldowns - Array of drilldown taxonomies, e.g. ['primary', 'section', 'entity']</li>
+<li>cuts - Array of filters?, e.g. ['year:2010']</li>
+<li>breakdown - String, taxonomy for sub-breakdowns as displayed in the donut bubbles, e.g. 'cofog1'</li>
+</ul>
+<h4>Using a locally stored API result</h4>
+<ul>
+<li>localApiCache - String, url to a locally stored API output JSON</li>
+</ul>
+<h4>Inserting local JSON data (without using OpenSpending API)</h4>
+<p>See section <em>Custom Data Format</em> for details on the JS tree specification.</p>
+<ul>
+<li>localData - JS tree object</li>
+<li>localDataPath - local path to a JSON file, uses same format as the <em>localData</em></li>
+</ul>
+<h3>Display Properties</h3>
+<ul>
+<li>
+<p><em>bubbleType</em> - defines what class is used to render the bubbles. Possible values are plain, icon, donut. Can be either a String if the same type should be used for all bubbles or an array of strings if different bubble types should be used for different tree levels.</p>
+<p>config.bubbleType = ['donut', 'icon', 'donut']; </p>
+</li>
+<li>
+<p><em>initYear</em> - Number, the year that is used to create the dynamic urls</p>
+</li>
+</ul>
+<h3>Custom Styling</h3>
+<p>It is possible to change the default display properties of each bubble by setting up bubble styles. Bubble styles can be defined once for each taxonomy (e.g. COFOG) or for individual node ids. By now, you can use bubble styles to change the colors that come out of the API or to set up icon images for the bubbleType "icon". 
+<em> </em>bubbleStyles* - Object that holds bubble style declarations, grouped into taxonomies. </p>
+<p>Example:</p>
+<pre><code>config.bubbleStyles = {
+    'cofog': OpenSpending.BubbleTree.Styles.Cofog,
+    'itb-function': OpenSpending.BubbleTree.Styles.ItbFunction,
+};
+</code></pre>
+<p>There are two reserved words, that can't be used as taxonomy ids: <em>id</em> and <em>name</em>. Both are used to directly apply styles to bubbles which don't belong to any taxonomy. In the following example, a color is defined for the node with the id "root". Also, all nodes with the name "italy-toscana" will get the color #dd333.</p>
+<pre><code>config.bubbleStyles = {
+    'id: {
+        'root: { color: '#cccccc' }
+    },
+    'name': {
+        'italy-toscana': { color: '#dd3333' }
+    }
+}
+</code></pre>
+<h3>Tooltips</h3>
+<ul>
+<li>tooltipCallback - Function that handles all tooltip events, see section Tooltips below for examples</li>
+</ul>
+<h2>Basic setup</h2>
+<ul>
+<li>Create an empty HTML page with a blank DIV in it that should be used as a container for the BubbleTree</li>
+<li>Include the required JS libraries, which are<ul>
+<li>jQuery 1.5.2 (<a href="http://www.jquery.org">http://www.jquery.org</a>)</li>
+<li>jQuery History (<a href="http://tkyk.github.com/jquery-history-plugin/">http://tkyk.github.com/jquery-history-plugin/</a>)</li>
+<li>RaphaelJS 1.5.2 (<a href="http://raphaeljs.com/">http://raphaeljs.com/</a>)</li>
+<li>Tween.js (<a href="https://github.com/sole/tween.js">https://github.com/sole/tween.js</a>)</li>
+<li>vis4.js (<a href="https://bitbucket.org/gka/vis4.js">https://bitbucket.org/gka/vis4.js</a>)</li>
+</ul>
+</li>
+<li>Include bubble</li>
+</ul>
+<h2>Custom Data Format</h2>
+<p>If you're using the BubbleTree with data that's not imported into the OpenSpending API, you can use either the config properties <em>localData</em> or <em>localDataPath</em>. Both take a JSON tree as input, which's node must have at least the following properties:</p>
+<pre><code>node = {
+    "label": "Health",
+    "amount": 1234567,
+    "children": []
+}
+</code></pre>
+<p>However, you may insert bubble styling properties (<em>color</em>, <em>icon</em>) directly as node properties. </p>
+<pre><code>node = {
+    "label": "Health",
+    "amount": 1234567,
+    "color": "#DD0000",
+    "icon": "icons/health.svg",
+    "children": []
+}
+</code></pre>
+<p>Also you can tell the BubbleChart that the budget item represented by the node is using a standard taxonomy (for which might already exists a stylesheet).</p>
+<pre><code>node = {
+    "label": "Health",
+    "amount": 1234567,
+    "taxonomy": "cofog",
+    "name": "07.1",
+    "children": []
+}
+</code></pre>
+<p>You may want to look at the example tree in <em>data/simple-tree.json</em> for an example of nested nodes. If you want to insert the data directly via config object, just assign the root node to the <em>localData</em> property:</p>
+<pre><code>var config = {
+    localData: {
+        "label": "Total",
+        "amount": 1000000,
+        "children": []
+    }
+};
+
+new OpenSpending.BubbleTree.Loader(config);
+</code></pre>
+<h2>Tooltips</h2>
+<p>In the current implementation, tooltips are not part of the BubbleTree. Instead, the visualization provides a simple API for adding custom tooltips.</p>
+<h3>Event Handler</h3>
+<p>The tooltip event handler can be set with the <em>tooltipCallback</em> property in the configuration (see above).
+The event handler must handle both the tooltip show and hide events. See index.html for an example implementation.</p>
+<h3>Event Properties</h3>
+<p>The following event properties are available</p>
+<ul>
+<li>type - can be "SHOW" or "HIDE"</li>
+<li>mousePos - object with numerical properties x and y, stores the actual mouse position at the time the tooltip event was thrown, relative to the container div</li>
+<li>bubblePos - same as mousePos, but stores the position of the bubble instead of the mouse</li>
+<li>node - the node of the bubble that is related to the tooltip event</li>
+<li>origEvent - the original event object as thrown by jQuery</li>
+<li>target - the related Bubble object</li>
+</ul>
+<h2>Custom Taxonomy Styling (e.g. Icons)</h2>
+<h3>Icon Specifications</h3>
+<p>The icons are stored in /icons/ folder in standard SVG format. However, there are some specifications to ensure that the visualization can use the icons correctly.</p>
+<ul>
+<li>the svg canvas should be 100px * 100px</li>
+<li>the icon itself must be stored in one or many SVG path elements. Every other SVG elements like <circle> will be ignored by the viz.</li>
+<li>the icon SVG must not be too large to keep the viz performance. SVG filesize of under 10kb are perfect, everything above 100kb should be avoided.</li>
+<li>the icon paths should not exceed the bubble size</li>
+</ul>
+<h3>Taxonomy to Icon Mapping</h3>
+<p>The icon filenames are arbitrary. The mapping between taxonomies and icons is done at JavaScript side by defining the <em>bubbleStyle</em> property in the configuration (see above), which is a three level nested dictionary</p>
+<ul>
+<li><em>taxonomy_id</em> =&gt; <em>nodeStyles</em><ul>
+<li><em>node_name</em> =&gt; <em>styles</em><ul>
+<li><em>styles</em> is a dictionary of visual properties to their actual values, e.g. 'color' = '#dd0000'</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Please see index.html and style.cofog.js for a working example.</p></div></body></html>
