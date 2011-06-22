@@ -35,7 +35,7 @@
 						left: event.mousePos.x + 4, 
 						top: event.mousePos.y + 4 
 					});
-					$tooltip.html(event.node.label+' <b>'+event.node.famount+'</b><br/>'+event.node.taxonomy+' - '+event.node.name);
+					$tooltip.html(event.node.label+' <b>'+event.node.famount+'</b>');
 					var bubble = event.target;
 					
 					$tooltip.show();
@@ -53,7 +53,7 @@
 				// todo: we should really document all the settings		
 				dataset: 'cra',
 				// todo: we should really document all the settings
-				drilldowns: ['cofog1', 'cofog2', 'region'],
+				drilldowns: ['cofog1', 'cofog2', 'cofog3'],
 				// todo: we should really document all the settings
 				cuts: ['year:2008'],
 				// todo: we should really document all the settings
@@ -63,11 +63,11 @@
 				// 
 				initYear: 2009,
 				// breakdown
-				//breakdown: 'cg_lg_or_pc',
+				breakdown: 'region',
 				// this callback is invoked as soon as the year changes by url
 				// defines what class is used to render the bubbles
 				// possible values are pie,donut,plain,multi,icon
-				bubbleType: ['icon', 'icon', 'icon', 'plain'],
+				bubbleType: ['icon', 'icon', 'donut'],
 				
 				rootPath: '../../'
 			};

@@ -186,8 +186,8 @@ OpenSpending.BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radiu
 				me.label.find('.desc').show();
 				me.label2.hide();
 			}
-			
 		}
+		
 		ly = showIcon ? y+r*0.77-me.label.height() : y-me.label.height()*0.5; 
 		me.label.css({ width: (showIcon ? r*1.2 : 2*r)+'px', opacity: me.alpha });
 		me.label.css({ left: (showIcon ? x - r*0.6 : x-r)+'px', top: ly+'px' });

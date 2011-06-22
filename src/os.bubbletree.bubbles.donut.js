@@ -111,16 +111,16 @@ OpenSpending.BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radi
 	};
 	
 	this.draw = function() {
-		var me = this, r = Math.max(5, me.bubbleRad * me.bc.bubbleScale), ox = me.pos.x, oy = me.pos.y, devnull = me.getXY();
+		var me = this, r = Math.max(5, me.bubbleRad * me.bc.bubbleScale), ox = me.pos.x, oy = me.pos.y, devnull = me.getXY(), showLabel = r > 20, x = me.pos.x, y = me.pos.y;
 		if (!me.visible) return;
 		
-		me.circle.attr({ cx: me.pos.x, cy: me.pos.y, r: r, 'fill-opacity': me.alpha });
-		if (me.node.children.length > 1) me.dashedBorder.attr({ cx: me.pos.x, cy: me.pos.y, r: r*0.85, 'stroke-opacity': me.alpha * 0.8 });
+		me.circle.attr({ cx: x, cy: y, r: r, 'fill-opacity': me.alpha });
+		if (me.node.children.length > 1) me.dashedBorder.attr({ cx: x, cy: y, r: r*0.85, 'stroke-opacity': me.alpha * 0.8 });
 		else me.dashedBorder.attr({ 'stroke-opacity': 0 });
 
 		if (me.breakdown.length > 1) {
 			// draw breakdown chart
-			var i,x=me.pos.x,y=me.pos.y,x0,x1,x2,x3,y0,y1,y2,y3,ir = r*0.85, oa = -Math.PI * 0.5, da;
+			var i,x0,x1,x2,x3,y0,y1,y2,y3,ir = r*0.85, oa = -Math.PI * 0.5, da;
 			for (i in me.breakdown) {
 				da = me.breakdown[i] * Math.PI * 2;
 				x0 = x+Math.cos((oa))*ir; 
@@ -140,21 +140,27 @@ OpenSpending.BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radi
 		}
 
 		//me.label.attr({ x: me.pos.x, y: me.pos.y, 'font-size': Math.max(4, me.bubbleRad * me.bc.bubbleScale * 0.25) });
-		if (r < 20) me.label.hide();
-		else {
+		if (!showLabel) {
+			me.label.hide();
+			me.label2.show();
+		} else {
 			me.label.show();
-		
 			if (r < 40) {
 				me.label.find('.desc').hide();
+				me.label2.show();
 			} else {
 				// full label
 				me.label.find('.desc').show();
+				me.label2.hide();
 			}
 		}
+		
 		me.label.css({ width: 2*r*0.9+'px', opacity: me.alpha });
 		me.label.css({ left: (me.pos.x-r*0.9)+'px', top: (me.pos.y-me.label.height()*0.53)+'px' });
 	
-		//if (me.icon) me.icon.translate(me.pos.x - ox, me.pos.y - oy);
+		var w = Math.max(80, 3*r);
+		me.label2.css({ width: w+'px', opacity: me.alpha });
+		me.label2.css({ left: (x - w*0.5)+'px', top: (y + r)+'px' });
 	
 	};
 	
@@ -166,6 +172,8 @@ OpenSpending.BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radi
 		me.circle.remove();
 		me.dashedBorder.remove();
 		me.label.remove();
+		me.label2.remove();
+		
 		//$('#bubble-chart')
 		me.visible = false;
 		for (i in me.breakdownArcs) {
@@ -194,6 +202,10 @@ OpenSpending.BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radi
 			$(me.circle.node).css({ cursor: 'pointer'});
 			$(me.label).css({ cursor: 'pointer'});
 		}	
+		
+		// additional label
+		me.label2 = $('<div class="label2"><span>'+me.node.label+'</span></div>');
+		$('#bubble-chart').append(me.label2);
 		
 		var list = [me.circle.node, me.label];
 		
