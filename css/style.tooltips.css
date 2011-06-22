@@ -38,3 +38,26 @@
 	clear: both;
 	border-top: 1px solid #999; padding: 6px;
 }
+
+
+#tooltip {
+	position: absolute;
+	z-index: 3000;
+	background-color: #fff;
+	padding: 5px;
+
+	border: 1px solid #999;
+	box-shadow: 3px 3px 0px rgba(0,0,0,.2); 
+	border-radius: 2px;
+	font-family: sans-serif; 
+	font-size: 13px; 
+	padding: 4px;	
+}
+
+#tooltip .amount {
+	font-weight: bold;
+}
+
+#tooltip h3, #tooltip div { margin: 0; }
+
+p#vtip #vtipArrow { position: absolute; top: -10px; left: 5px }
