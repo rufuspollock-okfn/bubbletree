@@ -74,11 +74,11 @@ OpenSpending.BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radiu
 	
 	
 		me.label = $('<div class="label"><div class="amount">'+utils.formatNumber(me.node.amount)+'</div><div class="desc">'+me.node.label+'</div></div>');
-		$('#bubble-chart').append(me.label);
+		me.bc.$container.append(me.label);
 		
 		// additional label
 		me.label2 = $('<div class="label2"><span>'+me.node.label+'</span></div>');
-		$('#bubble-chart').append(me.label2);
+		me.bc.$container.append(me.label2);
 		
 		if (me.node.children.length > 0) {
 			$(me.circle.node).css({ cursor: 'pointer'});
@@ -228,7 +228,7 @@ OpenSpending.BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radiu
 		me.label.remove();
 		me.label2.remove();
 		
-		//$('#bubble-chart')
+		//me.bc.$container
 		me.visible = false;
 		if (me.hasIcon) me.removeIcon();
 	};

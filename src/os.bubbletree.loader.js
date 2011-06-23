@@ -33,7 +33,6 @@ OpenSpending.BubbleTree.Loader = function(config) {
 	 * run will be called by dataLoaded once, well, the data is loaded
 	 */
 	me.run = function(data) {
-		console.log('running bubbletree');
 		var me = this;
 		// initialize bubble chart
 		var bubbleChart = new OpenSpending.BubbleTree(
@@ -44,7 +43,7 @@ OpenSpending.BubbleTree.Loader = function(config) {
 	};
 
 	if (!me.config.hasOwnProperty('data')) {
-		console.error('BubbleTree Error: no data set', me.config);
+		//console.error('BubbleTree Error: no data set', me.config);
 	}
 	if (typeof me.config.data == "string") {
 		// use the given js object

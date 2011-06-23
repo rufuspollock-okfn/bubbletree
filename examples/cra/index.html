@@ -21,7 +21,7 @@
 		$(function() {
 			
 			var $tooltip = $('<div class="tooltip">Tooltip</div>');
-			$('#bubble-chart').append($tooltip);
+			$('#bubbletree').append($tooltip);
 			$tooltip.hide();
 			
 			var tooltip = function(event) {
@@ -46,7 +46,7 @@
 				console.log('dataLoaded', data);
 				new OpenSpending.BubbleTree.Loader({
 					data: data,
-					container: '#bubble-chart',
+					container: '#bubbletree',
 					rootNodeLabel: 'Grant total',
 					bubbleType: 'icon',
 					bubbleStyles: {
@@ -76,8 +76,8 @@
 <body>
 	<div id="header"><a class="title">OpenSpending</a>
 	<div class="subtitle">UK Country Regional Analysis</div></div>
-	<div id="bubble-chart-wrapper">
-		<div id="bubble-chart"></div>
+	<div id="bubbletree-wrapper">
+		<div id="bubbletree"></div>
 	</div>
 </body>
 </html>

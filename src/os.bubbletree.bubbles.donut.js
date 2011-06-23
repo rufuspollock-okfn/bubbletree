@@ -174,7 +174,7 @@ OpenSpending.BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radi
 		me.label.remove();
 		me.label2.remove();
 		
-		//$('#bubble-chart')
+		//me.bc.$container
 		me.visible = false;
 		for (i in me.breakdownArcs) {
 			me.breakdownArcs[i].remove();
@@ -196,7 +196,7 @@ OpenSpending.BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radi
 			.attr({ stroke: '#fff', 'stroke-opacity': me.alpha * 0.4,  'stroke-dasharray': ". ", fill: false });
 		
 		me.label = $('<div class="label"><div class="amount">'+utils.formatNumber(me.node.amount)+'</div><div class="desc">'+me.node.label+'</div></div>');
-		$('#bubble-chart').append(me.label);
+		me.bc.$container.append(me.label);
 		
 		if (me.node.children.length > 1) {
 			$(me.circle.node).css({ cursor: 'pointer'});
@@ -205,7 +205,7 @@ OpenSpending.BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radi
 		
 		// additional label
 		me.label2 = $('<div class="label2"><span>'+me.node.label+'</span></div>');
-		$('#bubble-chart').append(me.label2);
+		me.bc.$container.append(me.label2);
 		
 		var list = [me.circle.node, me.label];
 		
