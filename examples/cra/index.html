@@ -14,7 +14,6 @@
 	<link rel="stylesheet" type="text/css" href="../../css/style.page.css" />
 	<link rel="stylesheet" type="text/css" href="../../css/style.bubbletree.css" />
 	<link rel="stylesheet" type="text/css" href="../../css/style.tooltips.css" />
-	
 	<script type="text/javascript" src="../../styles/style.cofog.js"></script>
 	
 	<script type="text/javascript">
@@ -42,66 +41,6 @@
 					$tooltip.hide();
 				}
 			};
-			
-
-			// uncomment the following block to test direct local data import
-			/*config.localData = {
-				'id': 'root',
-				'label': 'Total',
-				'amount': 1400000,
-				'children': [{
-					'label': 'Foo',
-					'id': 'foo',
-					'amount': 250000,
-					'children': [{
-						'label': 'Foo-1',
-						'amount': 100000,
-						'children': []
-					}, {
-						'label': 'Foo-2',
-						'amount': 150000,
-						'children': []
-					}]
-				},{
-					'label': 'Foobar',
-					'amount': 400000,
-					'children': [{
-						'label': 'Foobar-1',
-						'amount': 200000,
-						'children': []
-					}, {
-						'label': 'Foobar-2',
-						'amount': 100000,
-						'children': []
-					}, {
-						'label': 'Foobar-3',
-						'amount': 100000,
-						'children': []
-					}]
-				},{
-					'label': 'Bar',
-					'amount': 750000,
-					'level': 1,
-					'children': [{
-						'label': 'Bar-1',
-						'amount': 400000,
-						'children': []
-					}, {
-						'label': 'Bar-2',
-						'amount': 150000,
-						'children': []
-					}, {
-						'label': 'Bar-3',
-						'amount': 70000,
-						'children': []
-					}, {
-						'label': 'Bar-4',
-						'amount': 30000,
-						'children': []
-					}]
-				}]
-			};
-			*/
 			
 			var dataLoaded = function(data) {
 				console.log('dataLoaded', data);
@@ -137,9 +76,6 @@
 <body>
 	<div id="header"><a class="title">OpenSpending</a>
 	<div class="subtitle">UK Country Regional Analysis</div></div>
-	<!--<div id="menu">
-		Select year: <select id="year"></select>
-	</div>-->
 	<div id="bubble-chart-wrapper">
 		<div id="bubble-chart"></div>
 	</div>
