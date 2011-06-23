@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="UTF-8"/>
+	<title>UK Country Regional Analysis</title>
+	<script type="text/javascript" src="../../../../lib/vendor/jquery-1.5.2.min.js"></script>
+	<script type="text/javascript" src="../../../../lib/vendor/jquery.history.js"></script>
+	<script type="text/javascript" src="../../../../lib/vendor/raphael.js"></script>
+	<script type="text/javascript" src="../../../../lib/vendor/vis4.js"></script>
+	<script type="text/javascript" src="../../../../lib/vendor/Tween.js"></script>
+	<script type="text/javascript" src="../../bubbletree.min.js"></script>
+	<script type="text/javascript" src="../../../../lib/aggregator.js"></script>
+	
+	<link rel="stylesheet" type="text/css" href="../../css/style.page.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/style.bubbletree.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/style.tooltips.css" />
+	
+	<script type="text/javascript" src="../../styles/style.cofog.js"></script>
+	
+	<script type="text/javascript">
+       
+		$(function() {
+			
+			var minimalExampleData = {
+				'id': 'root',
+				'label': 'Total',
+				'amount': 1000000,
+				'color': '#D44',
+				'children': [{
+					'label': 'Foo',
+					'id': 'foo',
+					'amount': 250000,
+					'color': '#DD4',
+					'children': [{
+						'label': 'Foo-1', 'amount': 100000
+					}, {
+						'label': 'Foo-2', 'amount': 150000, 'color': '#BB0',
+					}]
+				},{
+					'label': 'Foobar',
+					'amount': 400000,
+					'children': [{
+						'label': 'Foobar-1', 'amount': 200000
+					}, {
+						'label': 'Foobar-2', 'amount': 100000,
+					}, {
+						'label': 'Foobar-3', 'amount': 100000
+					}]
+				},{
+					'label': 'Bar',
+					'amount': 350000,
+					'level': 1,
+					'children': [{
+						'label': 'Bar-1', 'amount': 200000
+					}, {
+						'label': 'Bar-2', 'amount': 150000
+					}, {
+						'label': 'Bar-3', 'amount': 70000
+					}, {
+						'label': 'Bar-4', 'amount': 30000
+					}]
+				}]
+			};
+			
+			
+			
+			new OpenSpending.BubbleTree.Loader({
+				data: minimalExampleData,
+				container: '#bubble-chart'
+			});
+		
+			
+		});
+                                        
+	</script>
+</head>
+<body>
+	<div id="header"><a class="title">OpenSpending</a>
+	<div class="subtitle">UK Country Regional Analysis</div></div>
+	<!--<div id="menu">
+		Select year: <select id="year"></select>
+	</div>-->
+	<div id="bubble-chart-wrapper">
+		<div id="bubble-chart"></div>
+	</div>
+</body>
+</html>
