@@ -120,7 +120,7 @@ OpenSpending.BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radi
 
 		if (me.breakdown.length > 1) {
 			// draw breakdown chart
-			var i,x0,x1,x2,x3,y0,y1,y2,y3,ir = r*0.85, oa = -Math.PI * 0.5, da;
+			var i,x0,x1,x2,x3,y0,y1,y2,y3,ir = r*0.77, oa = -Math.PI * 0.5, da;
 			for (i in me.breakdown) {
 				da = me.breakdown[i] * Math.PI * 2;
 				x0 = x+Math.cos((oa))*ir; 
