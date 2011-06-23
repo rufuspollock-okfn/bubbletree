@@ -9,6 +9,7 @@
 	<script type="text/javascript" src="../../../../lib/vendor/vis4.js"></script>
 	<script type="text/javascript" src="../../../../lib/vendor/Tween.js"></script>
 	<script type="text/javascript" src="../../bubbletree.min.js"></script>
+	<script type="text/javascript" src="../../../../lib/aggregator.js"></script>
 	
 	<link rel="stylesheet" type="text/css" href="../../css/style.page.css" />
 	<link rel="stylesheet" type="text/css" href="../../css/style.bubbletree.css" />
@@ -20,12 +21,9 @@
        
 		$(function() {
 			
-			var yearChange = function(year) {
-				window.alert('year changed to '+year);
-			};
-			
 			var $tooltip = $('<div class="tooltip">Tooltip</div>');
 			$('#bubble-chart').append($tooltip);
+			$tooltip.hide();
 			
 			var tooltip = function(event) {
 				if (event.type == 'SHOW') {
@@ -45,43 +43,7 @@
 				}
 			};
 			
-			var config = {
-				// todo: we should really document all the settings
-				apiUrl: 'http://openspending.org/api',
-				// todo: ...
-				localApiCache: 'aggregate.json',
-				// todo: we should really document all the settings		
-				dataset: 'cra',
-				// todo: we should really document all the settings
-				drilldowns: ['cofog1', 'cofog2', 'cofog3'],
-				// todo: we should really document all the settings
-				cuts: ['year:2008'],
-				// todo: we should really document all the settings
-				rootNodeLabel: 'Grant total', 
-				// jquery selector code to identify the container div 
-				container: '#bubble-chart',
-				// 
-				initYear: 2009,
-				// breakdown
-				breakdown: 'region',
-				// this callback is invoked as soon as the year changes by url
-				// defines what class is used to render the bubbles
-				// possible values are pie,donut,plain,multi,icon
-				bubbleType: ['icon', 'icon', 'donut'],
-				
-				rootPath: '../../'
-			};
-			
-			config.tooltipCallback = tooltip;
-			
-			config.yearChangeHandler = yearChange;
-			
-			config.bubbleStyles = config.bubbleStyles ? config.bubbleStyles : {};
-			config.bubbleStyles['cofog'] = OpenSpending.BubbleTree.Styles.Cofog;	
-			
-			// uncomment the following line to test local data import
-			// config.localDataPath = 'data/simple-tree.json';
-			
+
 			// uncomment the following block to test direct local data import
 			/*config.localData = {
 				'id': 'root',
@@ -140,12 +102,35 @@
 				}]
 			};
 			*/
-			new OpenSpending.BubbleTree.Loader(config);
+			
+			var dataLoaded = function(data) {
+				console.log('dataLoaded', data);
+				new OpenSpending.BubbleTree.Loader({
+					data: data,
+					container: '#bubble-chart',
+					rootNodeLabel: 'Grant total',
+					bubbleType: 'icon',
+					bubbleStyles: {
+						'cofog': OpenSpending.BubbleTree.Styles.Cofog
+					},
+					rootPath: '../../',
+					tooltipCallback: tooltip
+				});
+			};
+			
+			// call openspending api for data
+			new OpenSpending.Aggregator({
+				apiUrl: 'http://openspending.org/api',
+				dataset: 'cra',
+				drilldowns: ['cofog1', 'cofog2', 'cofog3'],
+				cuts: ['year:2008'],
+				breakdown: 'region',
+				localApiCache: 'aggregate.json',
+				callback: dataLoaded
+			});
 			
 			
 		});
-
-       
                                         
 	</script>
 </head>

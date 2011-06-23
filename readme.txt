@@ -6,11 +6,9 @@ The constructor of the bubble chart takes just one argument, the configuration o
 
 Example:
 
-	var config = { 
-		apiUrl: 'http://openspending.org/api', 
-		container: '#bubbletree' 
-	};
-	new OpenSpending.BubbleTree.Loader(config);
+	new OpenSpending.BubbleTree.Loader({
+		container: '#bubbletree'
+	});
 
 ### HTML Integration
 
@@ -20,7 +18,28 @@ Example:
 
 There are three different ways of putting data into the BubbleTree.
 
-#### Calling the OpenSpending API
+See section *Custom Data Format* for details on the JS tree specification.
+
+* data - can be either an object that stores the spending tree or a String that contains the path to a local JSON file.
+
+#### Integration with OpenSpending API
+
+If you want to connect the BubbleTree with OpenSpending data you might want to use the Aggregator class.
+
+	new OpenSpending.Aggregator({
+		apiUrl: "http://openspending.org/api",
+		dataset: "cra",
+		drilldowns: ["cofog1", "cofog2"],
+		cuts: ['year:2008'],
+		breakdown: 'region',
+		callback: function(data) {
+			new OpenSpending.BubbleTree({
+				data: data,
+				container: '#bubbletree',
+				//...
+			});
+		}
+	});
 
 The following config variables can be used to change the data source:
 
@@ -30,22 +49,22 @@ The following config variables can be used to change the data source:
 * cuts - Array of filters?, e.g. ['year:2010']
 * breakdown - String, taxonomy for sub-breakdowns as displayed in the donut bubbles, e.g. 'cofog1'
 
+For local testing purposes you can also use locally cached api call results by setting the *localApiCache* property.
+
+
+
 #### Using a locally stored API result
 
 * localApiCache - String, url to a locally stored API output JSON
 
-#### Inserting local JSON data (without using OpenSpending API)
 
-See section *Custom Data Format* for details on the JS tree specification.
-
-* localData - JS tree object
-* localDataPath - local path to a JSON file, uses same format as the *localData*
 
 ### Display Properties
 
 * *bubbleType* - defines what class is used to render the bubbles. Possible values are plain, icon, donut. Can be either a String if the same type should be used for all bubbles or an array of strings if different bubble types should be used for different tree levels.
 
-
+	config.bubbleType = 'plain'
+		
 	config.bubbleType = ['donut', 'icon', 'donut']; 
 
 * *initYear* - Number, the year that is used to create the dynamic urls

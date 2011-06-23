@@ -24,11 +24,9 @@ h4 { font-family: sans; }
 <h2>Configuration vars</h2>
 <p>The constructor of the bubble chart takes just one argument, the configuration object which contains all settings that can be set. This section will cover all available configuration variables.</p>
 <p>Example:</p>
-<pre><code>var config = { 
-    apiUrl: 'http://openspending.org/api', 
-    container: '#bubbletree' 
-};
-new OpenSpending.BubbleTree.Loader(config);
+<pre><code>new OpenSpending.BubbleTree.Loader({
+    container: '#bubbletree'
+});
 </code></pre>
 <h3>HTML Integration</h3>
 <ul>
@@ -36,7 +34,27 @@ new OpenSpending.BubbleTree.Loader(config);
 </ul>
 <h3>Data Input</h3>
 <p>There are three different ways of putting data into the BubbleTree.</p>
-<h4>Calling the OpenSpending API</h4>
+<p>See section <em>Custom Data Format</em> for details on the JS tree specification.</p>
+<ul>
+<li>data - can be either an object that stores the spending tree or a String that contains the path to a local JSON file.</li>
+</ul>
+<h4>Integration with OpenSpending API</h4>
+<p>If you want to connect the BubbleTree with OpenSpending data you might want to use the Aggregator class.</p>
+<pre><code>new OpenSpending.Aggregator({
+    apiUrl: "http://openspending.org/api",
+    dataset: "cra",
+    drilldowns: ["cofog1", "cofog2"],
+    cuts: ['year:2008'],
+    breakdown: 'region',
+    callback: function(data) {
+        new OpenSpending.BubbleTree({
+            data: data,
+            container: '#bubbletree',
+            //...
+        });
+    }
+});
+</code></pre>
 <p>The following config variables can be used to change the data source:</p>
 <ul>
 <li>apiUrl - String, url of a running OpenSpending API instance, e.g. "http://openspending.org/api"</li>
@@ -45,20 +63,16 @@ new OpenSpending.BubbleTree.Loader(config);
 <li>cuts - Array of filters?, e.g. ['year:2010']</li>
 <li>breakdown - String, taxonomy for sub-breakdowns as displayed in the donut bubbles, e.g. 'cofog1'</li>
 </ul>
+<p>For local testing purposes you can also use locally cached api call results by setting the <em>localApiCache</em> property.</p>
 <h4>Using a locally stored API result</h4>
 <ul>
 <li>localApiCache - String, url to a locally stored API output JSON</li>
-</ul>
-<h4>Inserting local JSON data (without using OpenSpending API)</h4>
-<p>See section <em>Custom Data Format</em> for details on the JS tree specification.</p>
-<ul>
-<li>localData - JS tree object</li>
-<li>localDataPath - local path to a JSON file, uses same format as the <em>localData</em></li>
 </ul>
 <h3>Display Properties</h3>
 <ul>
 <li>
 <p><em>bubbleType</em> - defines what class is used to render the bubbles. Possible values are plain, icon, donut. Can be either a String if the same type should be used for all bubbles or an array of strings if different bubble types should be used for different tree levels.</p>
+<p>config.bubbleType = 'plain'</p>
 <p>config.bubbleType = ['donut', 'icon', 'donut']; </p>
 </li>
 <li>

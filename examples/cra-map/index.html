@@ -8,8 +8,10 @@
 	<script type="text/javascript" src="../../../../lib/vendor/jquery.tooltip.min.js"></script>
 	<script type="text/javascript" src="../../../../lib/vendor/raphael.js"></script>
 	<script type="text/javascript" src="../../../../lib/vendor/vis4.js"></script>
+		<script type="text/javascript" src="../../../../lib/aggregator.js"></script>
 	<script type="text/javascript" src="../../../../lib/vendor/Tween.js"></script>
 	<script type="text/javascript" src="../../bubbletree.min.js"></script>
+	
 	<script type="text/javascript" src="os.map.js"></script>
 	
 	<link rel="stylesheet" type="text/css" href="../../css/style.page.css" />
@@ -91,7 +93,7 @@
 			config.bubbleStyles = config.bubbleStyles ? config.bubbleStyles : {};
 			config.bubbleStyles['cofog'] = OpenSpending.BubbleTree.Styles.Cofog;	
 
-			var map = new OpenSpending.Map('uk-map.svg', $('#map'));
+			/*var map = new OpenSpending.Map('uk-map.svg', $('#map'));
 			
 			$('#maptypeswitch').click(function(e) {
 				if (!$(e.target).hasClass('active')) {
@@ -109,7 +111,9 @@
 
 			config.nodeClickCallback = onNodeClick;
 			config.firstNodeCallback = onNodeClick;
-			new OpenSpending.BubbleTree.Loader(config);
+			new OpenSpending.BubbleTree.Loader(config);*/
+			
+			new OpenSpending.Aggregator();
 		});
 
        
