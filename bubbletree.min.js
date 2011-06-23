@@ -106,6 +106,8 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 	me.traverse = function(node, index) {
 		var c, child, pc, me = this, urlTokenSource, styles = me.config.bubbleStyles;
 		
+		if (!node.children) node.children = [];
+		
 		// store node in flat node list
 		me.nodeList.push(node);
 		
