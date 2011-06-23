@@ -61,6 +61,8 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 	
 	me.currentTransition = undefined;
 	
+	me.baseUrl = '';
+	
 	/*
 	 * @public loadData
 	 * @deprecated!
@@ -651,6 +653,12 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 	me.urlChanged = function(hash) {
 		var me = this, tr = me.currentTransition;
 		
+		if (!me.freshUrl) {
+			// setting an url for the very first time
+			if (hash.indexOf('/~/')) {
+				me.baseUrl = hash.substr(0, hash.indexOf('/~/'));
+			}
+		}
 		me.freshUrl = hash;
 		
 		if (tr && tr.running) {
@@ -665,7 +673,10 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 	 * this function initiate the action which follows the url change
 	 */
 	me.changeUrl = function() {
-		var me = this, parts = me.freshUrl.split('/'), yr = parts[1], token = parts[parts.length-1], url;
+		var me = this, parts = me.freshUrl.split('/'), token = parts[parts.length-1], url;
+		
+		// var urlParts = me.freshUrl.split('/~/');
+		
 		
 		if (me.freshUrl === "") me.navigateTo(me.treeRoot);
 		
@@ -699,7 +710,7 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 			node = node.parent;
 		}
 		parts.reverse();
-		return '/'+me.currentYear+'/'+parts.join('/');
+		return me.baseUrl+'/~/'+parts.join('/');
 	};
 	
 	me.onNodeClick = function(node) {
