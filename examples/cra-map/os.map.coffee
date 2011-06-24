@@ -9,7 +9,11 @@
 ###
 
 class OpenSpending.Map
-	constructor: (@svgSrc, @container, @mode = 'percapita') ->
+	constructor: (config) ->
+		@svgSrc = config.svg
+		@container = config.container
+		@mode = config.mode ? 'percapita'
+		@getTooltip = config.tooltip ? @defaultTooltip
 		@loadSVG()
 		
 	loadSVG: ->
@@ -20,17 +24,18 @@ class OpenSpending.Map
 		return
 		
 	svgLoaded: (svg) ->
-		@mapSrcWidth = @valueFromPixel svg.childNodes[2].getAttribute 'width'
-		@mapSrcHeight = @valueFromPixel svg.childNodes[2].getAttribute 'height'
+		svgRoot = svg.getElementsByTagName('svg')[0]
+		@mapSrcWidth = @valueFromPixel svgRoot.getAttribute 'width'
+		@mapSrcHeight = @valueFromPixel svgRoot.getAttribute 'height'
 		#@mapSrcHeight -= 238
 		
 		paths = svg.getElementsByTagName 'path'
 		regionMapSrc = {}
 		@populationPerRegion = {}
-		
 		for path in paths
 			if path.getAttribute? and path.getAttribute('class') is 'region' and path.getAttribute('d')?
 				region_id = path.getAttribute 'region'
+				
 				regionMapSrc[region_id] ?= []
 				regionMapSrc[region_id].push path.getAttribute 'd'
 				@populationPerRegion[region_id] = path.getAttribute('population') if path.getAttribute('population')? 
@@ -49,9 +54,12 @@ class OpenSpending.Map
 		@paths = []
 		@pathsByRegion = {}
 		for id, pathSrcs of @mapSrc
+				
 			@pathsByRegion[id] = []
 			for ps in pathSrcs
+				
 				path = @createPath ps
+				
 				@paths.push path
 				path.node.setAttribute 'region:id', id
 				path.node.setAttribute 'map:instance', @
@@ -80,9 +88,13 @@ class OpenSpending.Map
 		@paper.setSize w, h 
 		scale = Math.min h * 0.85 / @mapSrcHeight, w * 0.85 / @mapSrcWidth
 		xo = (w - @mapSrcWidth * scale) * 0.5
-		yo = (h - @mapSrcHeight * scale) * 0.5 
+		yo = (h - @mapSrcHeight * scale) * 0.5
 		
-		transform = "scale("+scale+") translate("+xo*scale+", "+yo*scale+")"
+		@container.css 
+			'padding-top': yo+'px'	
+			'padding-left': xo+'px'
+			
+		transform = "scale("+scale+")"
 		
 		for path in @paths
 			path.node.setAttribute "transform", transform 
@@ -94,31 +106,38 @@ class OpenSpending.Map
 		@currentNode = node
 		total = node.amount
 		
-		console.log 'map.mode = ',@mode  
-		
 		ma = 0
 		
-		for id, subnode of node.breakdowns
+		# find out wether to chose breakdowns or breakdownsByName to access breakdowns
+		# we do this by checking if any id matches to a known region id
+		match = no
+		for id of @pathsByRegion
+			match = yes if node.breakdowns[id]? 
+		
+		breakdowns = if match then node.breakdowns else node.breakdownsByName
+		
+		hue = vis4color.fromHex(node.color).h
+		
+		for id, subnode of breakdowns
 			if @pathsByRegion[id]?
 				population = @populationPerRegion[id]
 				switch @mode
 					when 'total' then ma = Math.max(ma, subnode.amount) 
 					when 'percapita' then ma = Math.max(ma, subnode.amount / population)
-					else vis4.log 'unsupported map mode '+@mode
+					#else vis4.log 'unsupported map mode '+@mode
 		
 		for id, paths of @pathsByRegion
-			vis4.log id, paths
-			if node.breakdowns[id]?
-				subnode = node.breakdowns[id]
+			if node.breakdownsByName[id]? or node.breakdowns[id]?
+				subnode = if node.breakdowns[id]? then node.breakdowns[id] else node.breakdownsByName[id]
 				population = @populationPerRegion[id]
 				switch @mode
-					when 'total' then color = vis4color.fromHSL(330, .3, .9 - subnode.amount / ma * .5).x
-					when 'percapita' then color = vis4color.fromHSL(330, .3, .9 - (subnode.amount / population) / ma * .5).x
-					else vis4.log 'unsupported map mode '+@mode
+					when 'total' then color = vis4color.fromHSL(hue, .3, .9 - subnode.amount / ma * .5).x
+					when 'percapita' then color = vis4color.fromHSL(hue, .3, .9 - (subnode.amount / population) / ma * .5).x
+					#else vis4.log 'unsupported map mode '+@mode
 				
-				tooltip =  '<div class="label">'+subnode.label+'</div><div>Total: <span  class="amount">'+subnode.famount+'</span> ('+Math.round(subnode.amount/node.amount*100)+'%)</div>'
+				tooltip = @getTooltip @, node, subnode, population
 			else
-				tooltip = '<div class="label"></div><div>n/a</div>'
+				tooltip = @getTooltip @, node
 				color = '#bbb'
 				
 			for path in paths
@@ -127,3 +146,6 @@ class OpenSpending.Map
 					fill: color, 300
 				
 		return
+		
+	defaultTooltip: (map, node, subnode = null, population = undefined) ->
+		subnode.label + '<br />' + (if subnode? then subnode.famount else 'n/a')

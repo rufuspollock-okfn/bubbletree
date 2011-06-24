@@ -7,10 +7,12 @@
   * in os.map.coffee
   *
   */  OpenSpending.Map = (function() {
-    function Map(svgSrc, container, mode) {
-      this.svgSrc = svgSrc;
-      this.container = container;
-      this.mode = mode != null ? mode : 'percapita';
+    function Map(config) {
+      var _ref, _ref2;
+      this.svgSrc = config.svg;
+      this.container = config.container;
+      this.mode = (_ref = config.mode) != null ? _ref : 'percapita';
+      this.getTooltip = (_ref2 = config.tooltip) != null ? _ref2 : this.defaultTooltip;
       this.loadSVG();
     }
     Map.prototype.loadSVG = function() {
@@ -21,9 +23,10 @@
       });
     };
     Map.prototype.svgLoaded = function(svg) {
-      var path, paths, regionMapSrc, region_id, _i, _len, _ref;
-      this.mapSrcWidth = this.valueFromPixel(svg.childNodes[2].getAttribute('width'));
-      this.mapSrcHeight = this.valueFromPixel(svg.childNodes[2].getAttribute('height'));
+      var path, paths, regionMapSrc, region_id, svgRoot, _i, _len, _ref;
+      svgRoot = svg.getElementsByTagName('svg')[0];
+      this.mapSrcWidth = this.valueFromPixel(svgRoot.getAttribute('width'));
+      this.mapSrcHeight = this.valueFromPixel(svgRoot.getAttribute('height'));
       paths = svg.getElementsByTagName('path');
       regionMapSrc = {};
       this.populationPerRegion = {};
@@ -93,7 +96,11 @@
       scale = Math.min(h * 0.85 / this.mapSrcHeight, w * 0.85 / this.mapSrcWidth);
       xo = (w - this.mapSrcWidth * scale) * 0.5;
       yo = (h - this.mapSrcHeight * scale) * 0.5;
-      transform = "scale(" + scale + ") translate(" + xo * scale + ", " + yo * scale + ")";
+      this.container.css({
+        'padding-top': yo + 'px',
+        'padding-left': xo + 'px'
+      });
+      transform = "scale(" + scale + ")";
       _ref2 = this.paths;
       for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
         path = _ref2[_i];
@@ -101,14 +108,20 @@
       }
     };
     Map.prototype.updateValues = function(node) {
-      var color, id, ma, path, paths, population, subnode, tooltip, total, _i, _len, _ref, _ref2;
+      var breakdowns, color, hue, id, ma, match, path, paths, population, subnode, tooltip, total, _i, _len, _ref;
       this.currentNode = node;
       total = node.amount;
-      console.log('map.mode = ', this.mode);
       ma = 0;
-      _ref = node.breakdowns;
-      for (id in _ref) {
-        subnode = _ref[id];
+      match = false;
+      for (id in this.pathsByRegion) {
+        if (node.breakdowns[id] != null) {
+          match = true;
+        }
+      }
+      breakdowns = match ? node.breakdowns : node.breakdownsByName;
+      hue = vis4color.fromHex(node.color).h;
+      for (id in breakdowns) {
+        subnode = breakdowns[id];
         if (this.pathsByRegion[id] != null) {
           population = this.populationPerRegion[id];
           switch (this.mode) {
@@ -117,32 +130,25 @@
               break;
             case 'percapita':
               ma = Math.max(ma, subnode.amount / population);
-              break;
-            default:
-              vis4.log('unsupported map mode ' + this.mode);
           }
         }
       }
-      _ref2 = this.pathsByRegion;
-      for (id in _ref2) {
-        paths = _ref2[id];
-        vis4.log(id, paths);
-        if (node.breakdowns[id] != null) {
-          subnode = node.breakdowns[id];
+      _ref = this.pathsByRegion;
+      for (id in _ref) {
+        paths = _ref[id];
+        if ((node.breakdownsByName[id] != null) || (node.breakdowns[id] != null)) {
+          subnode = node.breakdowns[id] != null ? node.breakdowns[id] : node.breakdownsByName[id];
           population = this.populationPerRegion[id];
           switch (this.mode) {
             case 'total':
-              color = vis4color.fromHSL(330, .3, .9 - subnode.amount / ma * .5).x;
+              color = vis4color.fromHSL(hue, .3, .9 - subnode.amount / ma * .5).x;
               break;
             case 'percapita':
-              color = vis4color.fromHSL(330, .3, .9 - (subnode.amount / population) / ma * .5).x;
-              break;
-            default:
-              vis4.log('unsupported map mode ' + this.mode);
+              color = vis4color.fromHSL(hue, .3, .9 - (subnode.amount / population) / ma * .5).x;
           }
-          tooltip = '<div class="label">' + subnode.label + '</div><div>Total: <span  class="amount">' + subnode.famount + '</span> (' + Math.round(subnode.amount / node.amount * 100) + '%)</div>';
+          tooltip = this.getTooltip(this, node, subnode, population);
         } else {
-          tooltip = '<div class="label"></div><div>n/a</div>';
+          tooltip = this.getTooltip(this, node);
           color = '#bbb';
         }
         for (_i = 0, _len = paths.length; _i < _len; _i++) {
@@ -153,6 +159,15 @@
           }, 300);
         }
       }
+    };
+    Map.prototype.defaultTooltip = function(map, node, subnode, population) {
+      if (subnode == null) {
+        subnode = null;
+      }
+      if (population == null) {
+        population = void 0;
+      }
+      return subnode.label + '<br />' + (subnode != null ? subnode.famount : 'n/a');
     };
     return Map;
   })();

@@ -48,15 +48,16 @@
 				drilldowns: ['hauptfunktion', 'oberfunktion'],
 				cuts: ['year:2011'],
 				localApiCache: 'aggregate.json',
-				bubbleType: 'plain',
 				rootNodeLabel: 'Berliner Haushalt',
+				
 				callback: function(data) {
-					console.log(data);
+					
 					new OpenSpending.BubbleTree.Loader({
 						data: data,
-						
 						container: '#bubbletree',
-						tooltipCallback: tooltip
+						tooltipCallback: tooltip,
+						bubbleType: 'plain'
+				
 					});
 				}
 			});
