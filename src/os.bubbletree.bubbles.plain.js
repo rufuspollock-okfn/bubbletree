@@ -57,6 +57,8 @@ OpenSpending.BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radi
 	 */
 	me.onclick = function(e) {
 		var me = this;
+		me.bc.onNodeClick(me.node);
+		
 		if (me.node.children.length > 1) {
 			me.bc.navigateTo(me.node);
 		}
