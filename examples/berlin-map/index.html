@@ -11,7 +11,6 @@
 	<script type="text/javascript" src="../../../../lib/aggregator.js"></script>
 	<script type="text/javascript" src="../../../../lib/vendor/Tween.js"></script>
 	<script type="text/javascript" src="../../bubbletree.min.js"></script>
-	<script type="text/javascript" src="../../../../lib/l10n.js"></script>
 	
 	
 	<script type="text/javascript" src="os.map.js"></script>
@@ -129,27 +128,29 @@
 			left: 50%;
 			height: 95%;
 		}
-		#header { top: 3%; right: 2%; width: 40%; bottom:auto; text-align: right; }
+		#header { top: 3%; left:0; text-align:center; width: 100%; bottom:auto; }
+		#footer { top: 3%; right:2%; text-align:right; position: absolute; font-size:12px; font-family: Graublau; }
+		
 		#header .title { font-size:38px; }
 		#header .subtitle { font-size: 14px; }
 		#mapdesc { width: 50%; bottom: 10%; color: #9b9999; left: 50%;
 			position: absolute; text-align: center; font-family: Graublau; }
 		#maptypeswitch {
 			z-index: 10000;
-			position: absolute; top: 11%; right: 2%; font-family: Graublau; font-size:15px;
+			position: absolute; bottom: 4%; left: 50%; text-align:center; width:50%; font-family: Graublau; font-size:12px;
 		}
 		#maptypeswitch a {
-			cursor: pointer; color: #999; padding: 3px 0.5ex;
+			cursor: pointer; color: #999; padding: 3px 0ex; margin: 0 1em; 
 		}
 		#maptypeswitch a.active {
-			background: #7788cc; color: #fff; text-decoration: none;
+			color: #000; text-decoration: none;
 		}
 	</style>
 	
 </head>
 <body>
-	<div id="header"><a class="title">Berliner Senatshaushalt</a>
-	<div class="subtitle">Jahr: 2011, Quelle: <a href="http://berlin.offenerhaushalt.de">offenerhaushalt.de</a></div></div>
+	<div id="header"><a class="title">Berliner Senatshaushalt</a></div>
+	<div id="footer">Jahr: 2011, Quelle: <a href="http://berlin.offenerhaushalt.de">offenerhaushalt.de</a></div>
 	<!--<div id="menu">
 		Select year: <select id="year"></select>
 	</div>-->
@@ -162,6 +163,6 @@
 	<div id="mapdesc">
 		
 	</div>
-	<div id="maptypeswitch"><a name="total">Gesamt</a> &nbsp;<a name="percapita" class="active">Pro Einwohner</a></div>
+	<div id="maptypeswitch"><a name="total">Gesamt</a><a name="percapita" class="active">Pro Einwohner</a></div>
 </body>
 </html>
