@@ -85,9 +85,9 @@ OpenSpending.BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radi
 	 */
 	me.onclick = function(e) {
 		var me = this;
-		if (me.node.children.length > 1) {
-			me.bc.navigateTo(me.node);
-		}
+
+		me.bc.navigateTo(me.node);
+		
 	};
 		
 	me.onhover = function(e) {

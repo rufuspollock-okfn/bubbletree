@@ -239,9 +239,9 @@ OpenSpending.BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radiu
 	me.onclick = function(e) {
 		var me = this;
 		me.bc.onNodeClick(me.node);
-		if (me.node.children.length > 1) {
+		//if (me.node.children.length > 1) {
 			me.bc.navigateTo(me.node);
-		}
+		//}
 	};
 	
 	me.onhover = function(e) {
