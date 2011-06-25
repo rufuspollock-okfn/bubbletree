@@ -1,5 +1,7 @@
-Radial Bubble Tree Documentation
-=============================================
+Documentation for BubbleTree
+============================
+
+The BubbleTree can be used to display hierarchical (spending) data in an interactive visualization. The setup is easy and independent from the OpenSpending platform. However, there is an optional integration module to connect with data from the OpenSpending API.
 
 ## Configuration vars
 The constructor of the bubble chart takes just one argument, the configuration object which contains all settings that can be set. This section will cover all available configuration variables.
