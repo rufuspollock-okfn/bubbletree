@@ -47,6 +47,8 @@ OpenSpending.BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radi
 		
 		var showIcon = false; //this.bubbleRad * this.bc.bubbleScale > 30;
 		
+		me.node.shortLabel = me.node.label.length > 50 ? me.node.label.substr(0, 30)+'...' : me.node.label;
+		
 		me.initialized = true;
 		
 		//me.show();
@@ -151,7 +153,7 @@ OpenSpending.BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radi
 			.attr({ stroke: '#ffffff', 'stroke-dasharray': "- " });
 	
 	
-		me.label = $('<div class="label"><div class="amount">'+utils.formatNumber(me.node.amount)+'</div><div class="desc">'+me.node.label+'</div></div>');
+		me.label = $('<div class="label"><div class="amount">'+utils.formatNumber(me.node.amount)+'</div><div class="desc">'+me.node.shortLabel+'</div></div>');
 		me.container.append(me.label);
 		
 		if (me.node.children.length > 0) {
@@ -160,7 +162,7 @@ OpenSpending.BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radi
 		}	
 		
 		// additional label
-		me.label2 = $('<div class="label2"><span>'+me.node.label+'</span></div>');
+		me.label2 = $('<div class="label2"><span>'+me.node.shortLabel+'</span></div>');
 		me.container.append(me.label2);
 		
 		var list = [me.circle.node, me.label, me.dashedBorder.node];
