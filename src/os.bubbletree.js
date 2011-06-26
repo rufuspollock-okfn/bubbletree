@@ -116,15 +116,21 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 		
 		if (styles) {
 		
-			if (styles.hasOwnProperty('id') && styles.id.hasOwnProperty(node.id) && styles.id[node.id].hasOwnProperty('color')) {
-				// use color by id
-				node.color = styles.id[node.id].color;
-			} else if (node.hasOwnProperty('name') && styles.hasOwnProperty('name') && styles.name.hasOwnProperty(node.name) && styles.name[node.name].hasOwnProperty('color')) {
-				// use color by id
-				node.color = styles.name[node.name].color;
-			} else if (node.hasOwnProperty('taxonomy') && styles.hasOwnProperty(node.taxonomy) && styles[node.taxonomy].hasOwnProperty(node.name) && styles[node.taxonomy][node.name].hasOwnProperty('color')) {
-				node.color = styles[node.taxonomy][node.name].color;
-			} 
+			var props = ['color', 'shortLabel', 'icon'];
+		
+			for (var p in props) {
+				var prop = props[p];
+				
+				if (styles.hasOwnProperty('id') && styles.id.hasOwnProperty(node.id) && styles.id[node.id].hasOwnProperty(prop)) {
+					// use color by id
+					node[prop] = styles.id[node.id][prop];
+				} else if (node.hasOwnProperty('name') && styles.hasOwnProperty('name') && styles.name.hasOwnProperty(node.name) && styles.name[node.name].hasOwnProperty(prop)) {
+					// use color by id
+					node[prop] = styles.name[node.name][prop];
+				} else if (node.hasOwnProperty('taxonomy') && styles.hasOwnProperty(node.taxonomy) && styles[node.taxonomy].hasOwnProperty(node.name) && styles[node.taxonomy][node.name].hasOwnProperty(prop)) {
+					node[prop] = styles[node.taxonomy][node.name][prop];
+				}
+			}
 		} 
 		
 		if (!node.color) {
@@ -272,8 +278,6 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 			}
 		}
 		
-		if (icons) me.initIcons();
-		
 		var rootBubble = me.createBubble(rt, me.origin, 0, 0, rt.color);
 		me.traverseBubbles(rootBubble);
 	};
@@ -291,33 +295,6 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 			case 'multi': return Bubbles.Multi;
 			case 'icon': return Bubbles.Icon;
 			default: return Bubbles.Plain;
-		}
-	};
-	
-	/*
-	 * if the bubble type is set to "icon", this func will be called before the
-	 * bubbles are traversed. it will store icon urls into the nodes 
-	 */
-	me.initIcons = function() {
-		var me = this, styles = me.config.bubbleStyles, i, node, taxonomy, id, taxStyles;
-		
-		for (i in me.nodeList) {
-			node = me.nodeList[i];
-			id = node.name;
-			if (node.hasOwnProperty('taxonomy')) {
-				taxonomy = node.taxonomy;
-				if (styles.hasOwnProperty(taxonomy)) {
-					taxStyles = styles[taxonomy];
-					if (taxStyles.hasOwnProperty(id) && taxStyles[id].hasOwnProperty('icon')) {
-						node.iconUrl = me.config.rootPath + taxStyles[id].icon;
-					}
-				} 
-			} else {
-				// node has no taxonomy
-				if (styles.hasOwnProperty('id') && styles.id.hasOwnProperty(node.id) && styles.id[node.id].hasOwnProperty('icon')) {
-					node.iconUrl = me.config.rootPath + styles.id[node.id].icon;
-				}
-			}
 		}
 	};
 

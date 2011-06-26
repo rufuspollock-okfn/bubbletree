@@ -47,7 +47,7 @@ OpenSpending.BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radi
 		
 		var showIcon = false; //this.bubbleRad * this.bc.bubbleScale > 30;
 		
-		me.node.shortLabel = me.node.label.length > 50 ? me.node.label.substr(0, 30)+'...' : me.node.label;
+		if (!me.node.shortLabel) me.node.shortLabel = me.node.label.length > 50 ? me.node.label.substr(0, 30)+'...' : me.node.label;
 		
 		me.initialized = true;
 		
@@ -92,7 +92,7 @@ OpenSpending.BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radi
 		if (!me.visible) return;
 		
 		me.circle.attr({ cx: me.pos.x, cy: me.pos.y, r: r, 'fill-opacity': me.alpha });
-		if (me.node.children.length > 0) me.dashedBorder.attr({ cx: me.pos.x, cy: me.pos.y, r: r-3, 'stroke-opacity': me.alpha * 0.4 });
+		if (me.node.children.length > 1) me.dashedBorder.attr({ cx: me.pos.x, cy: me.pos.y, r: r-4, 'stroke-opacity': me.alpha * 0.9 });
 		else me.dashedBorder.attr({ 'stroke-opacity': 0 });
 		
 

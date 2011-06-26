@@ -46,6 +46,8 @@ OpenSpending.BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radi
 		
 		var breakdown = [], b, i, val, bd = [], styles = me.bc.config.bubbleStyles;
 		
+		if (!me.node.shortLabel) me.node.shortLabel = me.node.label.length > 50 ? me.node.label.substr(0, 30)+'...' : me.node.label;
+		
 		me.breakdownOpacities = [0.2, 0.7, 0.45, 0.6, 0.35];
 		
 		for (i in me.node.breakdowns) {
@@ -195,7 +197,7 @@ OpenSpending.BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radi
 		me.dashedBorder = me.paper.circle(me.pos.x, me.pos.y,  r*0.85)
 			.attr({ stroke: '#fff', 'stroke-opacity': me.alpha * 0.4,  'stroke-dasharray': ". ", fill: false });
 		
-		me.label = $('<div class="label"><div class="amount">'+utils.formatNumber(me.node.amount)+'</div><div class="desc">'+me.node.label+'</div></div>');
+		me.label = $('<div class="label"><div class="amount">'+utils.formatNumber(me.node.amount)+'</div><div class="desc">'+me.node.shortLabel+'</div></div>');
 		me.bc.$container.append(me.label);
 		
 		if (me.node.children.length > 1) {
@@ -204,7 +206,7 @@ OpenSpending.BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radi
 		}	
 		
 		// additional label
-		me.label2 = $('<div class="label2"><span>'+me.node.label+'</span></div>');
+		me.label2 = $('<div class="label2"><span>'+me.node.shortLabel+'</span></div>');
 		me.bc.$container.append(me.label2);
 		
 		var list = [me.circle.node, me.label];
