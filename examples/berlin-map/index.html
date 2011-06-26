@@ -51,7 +51,7 @@
 				vis4.formatNumber_ksep = '.';
 				vis4.formatNumber_dsep = ',';
 
-				if (!subnode) return 'n/a';
+				if (!subnode) return 'n/a<br/><small>'+node.taxonomy+' = '+node.name+'</small>';
 
 				if (map.mode == 'total') {
 					value = subnode.famount
@@ -100,10 +100,50 @@
 					new OpenSpending.BubbleTree.Loader({
 						data: data,
 						container: '#bubbletree',
-						bubbleType: 'plain',
+						bubbleType: 'icon',
 						nodeClickCallback: onNodeClick,
 						firstNodeCallback: onNodeClick,
 						rootPath: '../../',
+						bubbleStyles: {
+							'funktionenplan-berlin': {
+								'010': { icon: 'styles/icons/legislative.svg' },
+								'011': { icon: 'styles/icons/legislative.svg' },
+								'012': { icon: 'styles/icons/admin.svg' },
+								
+								'040': { icon: 'styles/icons/order-safety.svg' },
+								'042': { icon: 'styles/icons/police2.svg' },
+								'044': { icon: 'styles/icons/fire-brigade.svg' },
+								'050': { icon: 'styles/icons/courts.svg' },
+								
+								'052': { icon: 'styles/icons/courts.svg' },
+								'056': { icon: 'styles/icons/prisons.svg' },
+								'060': { icon: 'styles/icons/financial-admin.svg' },
+								'062': { icon: 'styles/icons/public-debt.svg' },
+								'100': { icon: 'styles/icons/education.svg', shortLabel: 'Bildung, Forschung, Kultur' },
+								'110': { icon: 'styles/icons/schools.svg', shortLabel: 'Schulen' },
+								'112': { icon: 'styles/icons/pre-school.svg' },
+								'113': { icon: 'styles/icons/secondary-lower.svg' },
+								'116': { icon: 'styles/icons/secondary-upper.svg' },								
+								'117': { icon: 'styles/icons/post-secondary.svg' },
+								'119': { icon: 'styles/icons/schools.svg' },
+								
+								'130': { icon: 'styles/icons/education.svg' },
+								
+								'200': { icon: 'styles/icons/social-systems.svg' },
+								'230': { icon: 'styles/icons/family.svg' },
+								'234': { icon: 'styles/icons/unemployment.svg' },
+								'310': { icon: 'styles/icons/health.svg' },
+								'320': { icon: 'styles/icons/sports.svg' },
+								'330': { icon: 'styles/icons/environment.svg' },
+								'180': { icon: 'styles/icons/culture.svg', shortLabel: 'Kultur' },
+								'188': { icon: 'styles/icons/culture.svg', shortLabel: 'Bibliotheken' },
+								
+								'234': { icon: 'styles/icons/unemployment.svg' },
+								'234': { icon: 'styles/icons/unemployment.svg' },
+								
+								'700': { shortLabel: 'Verkehr' }
+							}
+						},
 						tooltipCallback: tooltip	
 					})
 					
@@ -128,9 +168,9 @@
 			left: 50%;
 			height: 95%;
 		}
-		#header { top: 3%; left:0; text-align:center; width: 100%; bottom:auto; }
+		#header { display:none; top: 3%; left:0; text-align:center; width: 100%; bottom:auto; }
 		#footer { top: 3%; right:2%; text-align:right; position: absolute; font-size:12px; font-family: Graublau; }
-		
+		#bubbletree .label .desc { font-size: 11px; } 
 		#header .title { font-size:38px; }
 		#header .subtitle { font-size: 14px; }
 		#mapdesc { width: 50%; bottom: 10%; color: #333; left: 50%;
