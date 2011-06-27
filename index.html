@@ -127,9 +127,27 @@ h4 { font-family: sans; }
 <ul>
 <li>localApiCache - String, url to a locally stored API output JSON</li>
 </ul>
-<h3>Tooltips</h3>
+<h3>Tooltip integration</h3>
+<p>In the current implementation, tooltips are not part of the BubbleTree. Instead, the visualization provides a simple API for adding custom tooltips.</p>
 <ul>
-<li>tooltipCallback - Function that handles all tooltip events, see section Tooltips below for examples</li>
+<li>
+<p><em>initTooltip</em> - function that will initialize the tooltip for a given bubble.</p>
+<p>function initTooltip(node, bubble) {</p>
+<p>}</p>
+</li>
+</ul>
+<h4>Event Handler</h4>
+<p>The tooltip event handler can be set with the <em>tooltipCallback</em> property in the configuration (see above).
+The event handler must handle both the tooltip show and hide events. See index.html for an example implementation.</p>
+<h4>Event Properties</h4>
+<p>The following event properties are available</p>
+<ul>
+<li>type - can be "SHOW" or "HIDE"</li>
+<li>mousePos - object with numerical properties x and y, stores the actual mouse position at the time the tooltip event was thrown, relative to the container div</li>
+<li>bubblePos - same as mousePos, but stores the position of the bubble instead of the mouse</li>
+<li>node - the node of the bubble that is related to the tooltip event</li>
+<li>origEvent - the original event object as thrown by jQuery</li>
+<li>target - the related Bubble object</li>
 </ul>
 <h2>Basic setup</h2>
 <ul>
@@ -143,21 +161,6 @@ h4 { font-family: sans; }
 </ul>
 </li>
 <li>Include bubble</li>
-</ul>
-<h2>Tooltips</h2>
-<p>In the current implementation, tooltips are not part of the BubbleTree. Instead, the visualization provides a simple API for adding custom tooltips.</p>
-<h3>Event Handler</h3>
-<p>The tooltip event handler can be set with the <em>tooltipCallback</em> property in the configuration (see above).
-The event handler must handle both the tooltip show and hide events. See index.html for an example implementation.</p>
-<h3>Event Properties</h3>
-<p>The following event properties are available</p>
-<ul>
-<li>type - can be "SHOW" or "HIDE"</li>
-<li>mousePos - object with numerical properties x and y, stores the actual mouse position at the time the tooltip event was thrown, relative to the container div</li>
-<li>bubblePos - same as mousePos, but stores the position of the bubble instead of the mouse</li>
-<li>node - the node of the bubble that is related to the tooltip event</li>
-<li>origEvent - the original event object as thrown by jQuery</li>
-<li>target - the related Bubble object</li>
 </ul>
 <h2>Custom Taxonomy Styling (e.g. Icons)</h2>
 <h3>Icon Specifications</h3>
