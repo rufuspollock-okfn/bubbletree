@@ -26,58 +26,57 @@ h4 { font-family: sans; }
 <p>The constructor of the bubble chart takes just one argument, the configuration object which contains all settings that can be set. This section will cover all available configuration variables.</p>
 <p>Example:</p>
 <pre><code>new OpenSpending.BubbleTree.Loader({
+    data: treeObj,
     container: '#bubbletree'
 });
 </code></pre>
-<h3>HTML Integration</h3>
-<ul>
-<li><em>container</em> - String, jQuery selector of the container element for the visualization, must be defined in HTML code, e.g. '#bubbletree-container'</li>
-</ul>
-<h3>Data Input</h3>
-<p>There are three different ways of putting data into the BubbleTree.</p>
-<p>See section <em>Custom Data Format</em> for details on the JS tree specification.</p>
-<ul>
-<li>data - can be either an object that stores the spending tree or a String that contains the path to a local JSON file.</li>
-</ul>
-<h4>Integration with OpenSpending API</h4>
-<p>If you want to connect the BubbleTree with OpenSpending data you might want to use the Aggregator class.</p>
-<pre><code>new OpenSpending.Aggregator({
-    apiUrl: "http://openspending.org/api",
-    dataset: "cra",
-    drilldowns: ["cofog1", "cofog2"],
-    cuts: ['year:2008'],
-    breakdown: 'region',
-    callback: function(data) {
-        new OpenSpending.BubbleTree({
-            data: data,
-            container: '#bubbletree',
-            //...
-        });
-    }
-});
+<h3>Data format</h3>
+<p>The BubbleTree expects the data in a linked tree structure. The core element in the tree are nodes which must at least consist of the properties <em>label</em> and <em>amount</em>:</p>
+<pre><code>rootNode = {
+    label: "Total budget",
+    amount: 1000000
+}
 </code></pre>
-<p>The following config variables can be used to change the data source:</p>
+<p>The child nodes then are (recursivly) inserted within the <em>children</em> array.</p>
+<pre><code>rootNode = {
+    label: "Total budget",
+    amount: 1000000,
+    children: [{
+        label: "Health",
+        amount: 650000
+    }, {
+        label: "Government",
+        amount: 350000
+    }]
+}
+</code></pre>
+<p>You can also give the nodes unique identifier by setting the <em>id</em> property.</p>
+<pre><code>node = {
+    id: "gov"
+    label: "Government",
+    amount: 350000
+}
+</code></pre>
+<p>Another way to identify the nodes is to assign them to a taxonomy by setting the <em>taxonomy</em> and <em>name</em> properties.</p>
+<pre><code>node = {
+    taxonomy: "cofog",
+    name: "05.3",
+    label: "Government",
+    amount: 350000
+}
+</code></pre>
+<h3>HTML Integration</h3>
+<p>You need to tell the BubbleTree at which point in the container HTML the visualization should be inserted. To do this, simply set the <em>container</em> property in configuration. The container can be either a HTML DOM node or a jQuery selector String </p>
 <ul>
-<li>apiUrl - String, url of a running OpenSpending API instance, e.g. "http://openspending.org/api"</li>
-<li>dataset - String, name of the used dataset, e.g. "israel"</li>
-<li>drilldowns - Array of drilldown taxonomies, e.g. ['primary', 'section', 'entity']</li>
-<li>cuts - Array of filters?, e.g. ['year:2010']</li>
-<li>breakdown - String, taxonomy for sub-breakdowns as displayed in the donut bubbles, e.g. 'cofog1'</li>
+<li><em>container</em> - String, jQuery selector of the container element for the visualization, must be defined in HTML code, e.g. '#bubbletree'</li>
 </ul>
-<p>For local testing purposes you can also use locally cached api call results by setting the <em>localApiCache</em> property.</p>
-<h4>Using a locally stored API result</h4>
-<ul>
-<li>localApiCache - String, url to a locally stored API output JSON</li>
-</ul>
+<p><strong>Note:</strong> The container element must be defined in the HTML page, the BubbleTree won't create it itself. </p>
 <h3>Display Properties</h3>
 <ul>
 <li>
 <p><em>bubbleType</em> - defines what class is used to render the bubbles. Possible values are plain, icon, donut. Can be either a String if the same type should be used for all bubbles or an array of strings if different bubble types should be used for different tree levels.</p>
 <p>config.bubbleType = 'plain'</p>
 <p>config.bubbleType = ['donut', 'icon', 'donut']; </p>
-</li>
-<li>
-<p><em>initYear</em> - Number, the year that is used to create the dynamic urls</p>
 </li>
 </ul>
 <h3>Custom Styling</h3>
@@ -99,6 +98,35 @@ h4 { font-family: sans; }
     }
 }
 </code></pre>
+<h2>Appendix</h2>
+<h3>Integration with OpenSpending API</h3>
+<p>If you want to connect the BubbleTree with OpenSpending data you might want to use the Aggregator class.</p>
+<pre><code>new OpenSpending.Aggregator({
+    apiUrl: "http://openspending.org/api",
+    dataset: "cra",
+    drilldowns: ["cofog1", "cofog2"],
+    cuts: ['year:2008'],
+    breakdown: 'region',
+    callback: function(data) {
+        new OpenSpending.BubbleTree.Loader({
+            data: data,
+            container: '#bubbletree'
+        });
+    }
+});
+</code></pre>
+<p>The following config variables can be used to change the data source:</p>
+<ul>
+<li>apiUrl - String, url of a running OpenSpending API instance, e.g. "http://openspending.org/api"</li>
+<li>dataset - String, name of the used dataset, e.g. "israel"</li>
+<li>drilldowns - Array of drilldown taxonomies, e.g. ['primary', 'section', 'entity']</li>
+<li>cuts - Array of filters?, e.g. ['year:2010']</li>
+<li>breakdown - String, taxonomy for sub-breakdowns as displayed in the donut bubbles, e.g. 'cofog1'</li>
+</ul>
+<p>For local testing purposes you can also use locally cached api call results by setting the <em>localApiCache</em> property.</p>
+<ul>
+<li>localApiCache - String, url to a locally stored API output JSON</li>
+</ul>
 <h3>Tooltips</h3>
 <ul>
 <li>tooltipCallback - Function that handles all tooltip events, see section Tooltips below for examples</li>
@@ -116,43 +144,6 @@ h4 { font-family: sans; }
 </li>
 <li>Include bubble</li>
 </ul>
-<h2>Custom Data Format</h2>
-<p>If you're using the BubbleTree with data that's not imported into the OpenSpending API, you can use either the config properties <em>localData</em> or <em>localDataPath</em>. Both take a JSON tree as input, which's node must have at least the following properties:</p>
-<pre><code>node = {
-    "label": "Health",
-    "amount": 1234567,
-    "children": []
-}
-</code></pre>
-<p>However, you may insert bubble styling properties (<em>color</em>, <em>icon</em>) directly as node properties. </p>
-<pre><code>node = {
-    "label": "Health",
-    "amount": 1234567,
-    "color": "#DD0000",
-    "icon": "icons/health.svg",
-    "children": []
-}
-</code></pre>
-<p>Also you can tell the BubbleChart that the budget item represented by the node is using a standard taxonomy (for which might already exists a stylesheet).</p>
-<pre><code>node = {
-    "label": "Health",
-    "amount": 1234567,
-    "taxonomy": "cofog",
-    "name": "07.1",
-    "children": []
-}
-</code></pre>
-<p>You may want to look at the example tree in <em>data/simple-tree.json</em> for an example of nested nodes. If you want to insert the data directly via config object, just assign the root node to the <em>localData</em> property:</p>
-<pre><code>var config = {
-    localData: {
-        "label": "Total",
-        "amount": 1000000,
-        "children": []
-    }
-};
-
-new OpenSpending.BubbleTree.Loader(config);
-</code></pre>
 <h2>Tooltips</h2>
 <p>In the current implementation, tooltips are not part of the BubbleTree. Instead, the visualization provides a simple API for adding custom tooltips.</p>
 <h3>Event Handler</h3>

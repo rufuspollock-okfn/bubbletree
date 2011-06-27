@@ -9,56 +9,57 @@ The constructor of the bubble chart takes just one argument, the configuration o
 Example:
 
 	new OpenSpending.BubbleTree.Loader({
+		data: treeObj,
 		container: '#bubbletree'
 	});
 
+### Data format
+
+The BubbleTree expects the data in a linked tree structure. The core element in the tree are nodes which must at least consist of the properties *label* and *amount*:
+
+	rootNode = {
+		label: "Total budget",
+		amount: 1000000
+	}
+	
+The child nodes then are (recursivly) inserted within the *children* array.
+
+	rootNode = {
+		label: "Total budget",
+		amount: 1000000,
+		children: [{
+			label: "Health",
+			amount: 650000
+		}, {
+			label: "Government",
+			amount: 350000
+		}]
+	}
+	
+You can also give the nodes unique identifier by setting the *id* property.
+
+	node = {
+		id: "gov"
+		label: "Government",
+		amount: 350000
+	}
+	
+Another way to identify the nodes is to assign them to a taxonomy by setting the *taxonomy* and *name* properties.
+
+	node = {
+		taxonomy: "cofog",
+		name: "05.3",
+		label: "Government",
+		amount: 350000
+	}
+	
 ### HTML Integration
 
-* *container* - String, jQuery selector of the container element for the visualization, must be defined in HTML code, e.g. '#bubbletree-container'
+You need to tell the BubbleTree at which point in the container HTML the visualization should be inserted. To do this, simply set the *container* property in configuration. The container can be either a HTML DOM node or a jQuery selector String 
 
-### Data Input
+* *container* - String, jQuery selector of the container element for the visualization, must be defined in HTML code, e.g. '#bubbletree'
 
-There are three different ways of putting data into the BubbleTree.
-
-See section *Custom Data Format* for details on the JS tree specification.
-
-* data - can be either an object that stores the spending tree or a String that contains the path to a local JSON file.
-
-#### Integration with OpenSpending API
-
-If you want to connect the BubbleTree with OpenSpending data you might want to use the Aggregator class.
-
-	new OpenSpending.Aggregator({
-		apiUrl: "http://openspending.org/api",
-		dataset: "cra",
-		drilldowns: ["cofog1", "cofog2"],
-		cuts: ['year:2008'],
-		breakdown: 'region',
-		callback: function(data) {
-			new OpenSpending.BubbleTree({
-				data: data,
-				container: '#bubbletree',
-				//...
-			});
-		}
-	});
-
-The following config variables can be used to change the data source:
-
-* apiUrl - String, url of a running OpenSpending API instance, e.g. "http://openspending.org/api"
-* dataset - String, name of the used dataset, e.g. "israel"
-* drilldowns - Array of drilldown taxonomies, e.g. ['primary', 'section', 'entity']
-* cuts - Array of filters?, e.g. ['year:2010']
-* breakdown - String, taxonomy for sub-breakdowns as displayed in the donut bubbles, e.g. 'cofog1'
-
-For local testing purposes you can also use locally cached api call results by setting the *localApiCache* property.
-
-
-
-#### Using a locally stored API result
-
-* localApiCache - String, url to a locally stored API output JSON
-
+**Note:** The container element must be defined in the HTML page, the BubbleTree won't create it itself. 
 
 
 ### Display Properties
@@ -69,9 +70,8 @@ For local testing purposes you can also use locally cached api call results by s
 		
 	config.bubbleType = ['donut', 'icon', 'donut']; 
 
-* *initYear* - Number, the year that is used to create the dynamic urls
-
 ### Custom Styling
+
 It is possible to change the default display properties of each bubble by setting up bubble styles. Bubble styles can be defined once for each taxonomy (e.g. COFOG) or for individual node ids. By now, you can use bubble styles to change the colors that come out of the API or to set up icon images for the bubbleType "icon". 
 * *bubbleStyles* - Object that holds bubble style declarations, grouped into taxonomies. 
 
@@ -93,9 +93,66 @@ There are two reserved words, that can't be used as taxonomy ids: *id* and *name
 		}
 	}
 
-### Tooltips
 
-* tooltipCallback - Function that handles all tooltip events, see section Tooltips below for examples
+
+## Appendix
+
+### Integration with OpenSpending API
+
+If you want to connect the BubbleTree with OpenSpending data you might want to use the Aggregator class.
+
+	new OpenSpending.Aggregator({
+		apiUrl: "http://openspending.org/api",
+		dataset: "cra",
+		drilldowns: ["cofog1", "cofog2"],
+		cuts: ['year:2008'],
+		breakdown: 'region',
+		callback: function(data) {
+			new OpenSpending.BubbleTree.Loader({
+				data: data,
+				container: '#bubbletree'
+			});
+		}
+	});
+
+The following config variables can be used to change the data source:
+
+* apiUrl - String, url of a running OpenSpending API instance, e.g. "http://openspending.org/api"
+* dataset - String, name of the used dataset, e.g. "israel"
+* drilldowns - Array of drilldown taxonomies, e.g. ['primary', 'section', 'entity']
+* cuts - Array of filters?, e.g. ['year:2010']
+* breakdown - String, taxonomy for sub-breakdowns as displayed in the donut bubbles, e.g. 'cofog1'
+
+For local testing purposes you can also use locally cached api call results by setting the *localApiCache* property.
+
+* localApiCache - String, url to a locally stored API output JSON
+
+
+### Tooltip integration
+
+In the current implementation, tooltips are not part of the BubbleTree. Instead, the visualization provides a simple API for adding custom tooltips.
+
+ * *initTooltip* - function that will initialize the tooltip for a given bubble.
+ 
+	function initTooltip(node, bubble) {
+		
+	}
+
+#### Event Handler
+The tooltip event handler can be set with the *tooltipCallback* property in the configuration (see above).
+The event handler must handle both the tooltip show and hide events. See index.html for an example implementation.
+
+#### Event Properties
+The following event properties are available
+
+* type - can be "SHOW" or "HIDE"
+* mousePos - object with numerical properties x and y, stores the actual mouse position at the time the tooltip event was thrown, relative to the container div
+* bubblePos - same as mousePos, but stores the position of the bubble instead of the mouse
+* node - the node of the bubble that is related to the tooltip event
+* origEvent - the original event object as thrown by jQuery
+* target - the related Bubble object
+
+
 
 ## Basic setup
 
@@ -107,67 +164,6 @@ There are two reserved words, that can't be used as taxonomy ids: *id* and *name
 	* Tween.js (<https://github.com/sole/tween.js>)
 	* vis4.js (<https://bitbucket.org/gka/vis4.js>)
 * Include bubble
-
-## Custom Data Format
-
-If you're using the BubbleTree with data that's not imported into the OpenSpending API, you can use either the config properties *localData* or *localDataPath*. Both take a JSON tree as input, which's node must have at least the following properties:
-
-	node = {
-		"label": "Health",
-		"amount": 1234567,
-		"children": []
-	}
-
-However, you may insert bubble styling properties (*color*, *icon*) directly as node properties. 
-
-	node = {
-		"label": "Health",
-		"amount": 1234567,
-		"color": "#DD0000",
-		"icon": "icons/health.svg",
-		"children": []
-	}
-	
-Also you can tell the BubbleChart that the budget item represented by the node is using a standard taxonomy (for which might already exists a stylesheet).
-
-	node = {
-		"label": "Health",
-		"amount": 1234567,
-		"taxonomy": "cofog",
-		"name": "07.1",
-		"children": []
-	}
-
-You may want to look at the example tree in *data/simple-tree.json* for an example of nested nodes. If you want to insert the data directly via config object, just assign the root node to the *localData* property:
-
-	var config = {
-		localData: {
-			"label": "Total",
-			"amount": 1000000,
-			"children": []
-		}
-	};
-	
-	new OpenSpending.BubbleTree.Loader(config);
-
-
-## Tooltips
-
-In the current implementation, tooltips are not part of the BubbleTree. Instead, the visualization provides a simple API for adding custom tooltips.
-
-### Event Handler
-The tooltip event handler can be set with the *tooltipCallback* property in the configuration (see above).
-The event handler must handle both the tooltip show and hide events. See index.html for an example implementation.
-
-### Event Properties
-The following event properties are available
-
-* type - can be "SHOW" or "HIDE"
-* mousePos - object with numerical properties x and y, stores the actual mouse position at the time the tooltip event was thrown, relative to the container div
-* bubblePos - same as mousePos, but stores the position of the bubble instead of the mouse
-* node - the node of the bubble that is related to the tooltip event
-* origEvent - the original event object as thrown by jQuery
-* target - the related Bubble object
 
 
 ## Custom Taxonomy Styling (e.g. Icons)
