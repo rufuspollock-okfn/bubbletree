@@ -47,7 +47,10 @@
 				}
 			};
 			
-			var map = new OpenSpending.Map('uk-map.svg', $('#map'));
+			var map = new OpenSpending.Map({
+				svg: 'uk.svg', 
+				container: $('#map')
+			});
 			
 			$('#maptypeswitch').click(function(e) {
 				if (!$(e.target).hasClass('active')) {

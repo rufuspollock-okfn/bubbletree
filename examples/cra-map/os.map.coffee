@@ -148,4 +148,4 @@ class OpenSpending.Map
 		return
 		
 	defaultTooltip: (map, node, subnode = null, population = undefined) ->
-		subnode.label + '<br />' + (if subnode? then subnode.famount else 'n/a')
+		subnode.label + '<br />' + (if subnode? then subnode.famount else 'n/a') if subnode?

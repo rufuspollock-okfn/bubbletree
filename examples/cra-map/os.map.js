@@ -167,7 +167,9 @@
       if (population == null) {
         population = void 0;
       }
-      return subnode.label + '<br />' + (subnode != null ? subnode.famount : 'n/a');
+      if (subnode != null) {
+        return subnode.label + '<br />' + (subnode != null ? subnode.famount : 'n/a');
+      }
     };
     return Map;
   })();
