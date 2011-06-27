@@ -27,7 +27,7 @@
 			
 			var $tooltip = $('<div class="tooltip">Tooltip</div>');
 			$tooltip.hide();
-			$('#bubbletree').append($tooltip);
+			$('.bubbletree').append($tooltip);
 			
 			var tooltip = function(event) {
 				if (event.type == 'SHOW') {
@@ -103,7 +103,7 @@
 					
 					new OpenSpending.BubbleTree.Loader({
 						data: data,
-						container: '#bubbletree',
+						container: '.bubbletree',
 						bubbleType: 'icon',
 						nodeClickCallback: onNodeClick,
 						firstNodeCallback: onNodeClick,
@@ -170,7 +170,7 @@
                                         
 	</script>
 	<style type="text/css">
-		#bubbletree-wrapper {
+		.bubbletree-wrapper {
 			width: 50%;
 		}
 		#map {
@@ -182,7 +182,7 @@
 		}
 		#header { display:none; top: 3%; left:0; text-align:center; width: 100%; bottom:auto; }
 		#footer { top: 3%; right:2%; text-align:right; position: absolute; font-size:12px; font-family: Graublau; }
-		#bubbletree .label .desc { font-size: 11px; } 
+		.bubbletree .label .desc { font-size: 11px; } 
 		#header .title { font-size:38px; }
 		#header .subtitle { font-size: 14px; }
 		#mapdesc { width: 50%; bottom: 10%; color: #333; left: 50%;
@@ -206,8 +206,8 @@
 	<!--<div id="menu">
 		Select year: <select id="year"></select>
 	</div>-->
-	<div id="bubbletree-wrapper">
-		<div id="bubbletree"></div>
+	<div class="bubbletree-wrapper">
+		<div class="bubbletree"></div>
 	</div>
 	<div id="map">
 	

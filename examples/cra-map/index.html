@@ -28,7 +28,7 @@
 			
 			var $tooltip = $('<div class="tooltip">Tooltip</div>');
 			$tooltip.hide();
-			$('#bubbletree').append($tooltip);
+			$('.bubbletree').append($tooltip);
 			
 			var tooltip = function(event) {
 				if (event.type == 'SHOW') {
@@ -78,7 +78,7 @@
 					
 					new OpenSpending.BubbleTree.Loader({
 						data: data,
-						container: '#bubbletree',
+						container: '.bubbletree',
 						bubbleType: 'icon',
 						nodeClickCallback: onNodeClick,
 						firstNodeCallback: onNodeClick,
@@ -100,7 +100,7 @@
                                         
 	</script>
 	<style type="text/css">
-		#bubbletree-wrapper {
+		.bubbletree-wrapper {
 			width: 57%;
 		}
 		#map {
@@ -131,8 +131,8 @@
 	<!--<div id="menu">
 		Select year: <select id="year"></select>
 	</div>-->
-	<div id="bubbletree-wrapper">
-		<div id="bubbletree"></div>
+	<div class="bubbletree-wrapper">
+		<div class="bubbletree"></div>
 	</div>
 	<div id="map">
 	
