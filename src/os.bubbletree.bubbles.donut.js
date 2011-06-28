@@ -57,8 +57,6 @@ OpenSpending.BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radi
 			breakdown.push(val);
 			bd.push(b);
 			
-			
-			
 			if (styles && styles.hasOwnProperty('name') && styles.name.hasOwnProperty(b.name) && styles.name[b.name].hasOwnProperty('opacity')) {
 				me.breakdownOpacities[bd.length-1] = styles.name[b.name].opacity;
 			}
@@ -68,15 +66,7 @@ OpenSpending.BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radi
 		
 		var showIcon = false; //this.bubbleRad * this.bc.bubbleScale > 30;
 		// create label
-		/*this.label = me.paper.text(me.pos.x, me.pos.y + (showIcon ? me.bubbleRad * 0.4: 0), utils.formatNumber(me.node.amount)+'\n'+me.node.label)
-			.attr({ 'font-family': 'Graublau,Georgia,serif', fill: '#fff', 'font-size': Math.max(4, me.bubbleRad * me.bc.bubbleScale * 0.25) });
-		*/
-		
-		/*if (showIcon) {
-			me.icon = me.paper.path("M17.081,4.065V3.137c0,0,0.104-0.872-0.881-0.872c-0.928,0-0.891,0.9-0.891,0.9v0.9C4.572,3.925,2.672,15.783,2.672,15.783c1.237-2.98,4.462-2.755,4.462-2.755c4.05,0,4.481,2.681,4.481,2.681c0.984-2.953,4.547-2.662,4.547-2.662c3.769,0,4.509,2.719,4.509,2.719s0.787-2.812,4.557-2.756c3.262,0,4.443,2.7,4.443,2.7v-0.058C29.672,4.348,17.081,4.065,17.081,4.065zM15.328,24.793c0,1.744-1.8,1.801-1.8,1.801c-1.885,0-1.8-1.801-1.8-1.801s0.028-0.928-0.872-0.928c-0.9,0-0.957,0.9-0.957,0.9c0,3.628,3.6,3.572,3.6,3.572c3.6,0,3.572-3.545,3.572-3.545V13.966h-1.744V24.793z")
-				.translate(me.pos.x, me.pos.y).attr({fill: "#fff", stroke: "none"});
-		}*/
-		
+
 		me.initialized = true;
 		
 		//me.show();
@@ -122,7 +112,7 @@ OpenSpending.BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radi
 
 		if (me.breakdown.length > 1) {
 			// draw breakdown chart
-			var i,x0,x1,x2,x3,y0,y1,y2,y3,ir = r*0.77, oa = -Math.PI * 0.5, da;
+			var i,x0,x1,x2,x3,y0,y1,y2,y3,ir = r*0.85, oa = -Math.PI * 0.5, da;
 			for (i in me.breakdown) {
 				da = me.breakdown[i] * Math.PI * 2;
 				x0 = x+Math.cos((oa))*ir; 
@@ -194,6 +184,10 @@ OpenSpending.BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radi
 		me.circle = me.paper.circle(me.pos.x, me.pos.y, r)
 			.attr({ stroke: false, fill: me.color });
 
+		if ($.isFunction(me.bc.config.initTooltip)) {
+			me.bc.config.initTooltip(me.node, me.circle.node);
+		}
+
 		me.dashedBorder = me.paper.circle(me.pos.x, me.pos.y,  r*0.85)
 			.attr({ stroke: '#fff', 'stroke-opacity': me.alpha * 0.4,  'stroke-dasharray': ". ", fill: false });
 		
@@ -218,7 +212,11 @@ OpenSpending.BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radi
 				var arc = me.paper.path("M 0 0 L 2 2")
 					.attr({ fill: '#fff', 'fill-opacity': Math.random()*0.4 + 0.3, stroke: '#fff'});
 				me.breakdownArcs[i] = arc;
-				$(arc.node).hover(me.arcHover.bind(me), me.arcUnhover.bind(me));
+				// $(arc.node).hover(me.arcHover.bind(me), me.arcUnhover.bind(me));
+				
+				if ($.isFunction(me.bc.config.initTooltip)) {
+					me.bc.config.initTooltip(me.node.breakdowns[i], arc.node);
+				}
 			}
 			
 			for (i in me.breakdownArcs) {

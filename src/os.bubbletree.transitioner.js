@@ -111,7 +111,7 @@ OpenSpending.BubbleTree.AnimatedTransitioner = function(duration) {
 		
 		for (i in me.layout.objects) {
 			obj = me.layout.objects[i];
-			if ($.isFunction(obj.draw)) obj.draw(); // the final draw	
+			if (obj && $.isFunction(obj.draw)) obj.draw(); // the final draw	
 		}
 		// now hide all objects marked for hiding
 		for (i in me.layout.toHide) {
