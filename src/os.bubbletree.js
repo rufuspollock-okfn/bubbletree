@@ -397,7 +397,7 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 			for (i in me.displayObjects) me.displayObjects[i].hideFlag = true;
 			
 		
-			if (node == root) {
+			if (node == root || node.parent == root && node.children.length < 2) {
 						
 				t.$(me).bubbleScale = 1.0;
 				
@@ -407,15 +407,20 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 
 				// make the root bubble visible
 				parent = getBubble(root);
+				
 				//parent.childRotation = 0;
 				
-				rad1 = a2rad(node.amount) + a2rad(node.maxChildAmount) + 20;
+				if (node != root) {
+					parent.childRotation = -node.centerAngle;
+				}
+				
+				rad1 = a2rad(root.amount) + a2rad(root.maxChildAmount) + 20;
 
 				ring = getRing(root);
 				t.$(ring).rad = rad1;
 
-				for (i in node.children) {
-					cn = node.children[i];
+				for (i in root.children) {
+					cn = root.children[i];
 					// adjust rad and angle for children
 					bubble = getBubble(cn);
 					t.$(bubble).angle = unify(cn.centerAngle + parent.childRotation);
