@@ -39,7 +39,7 @@ OpenSpending.BubbleTree.Loader = function(config) {
 			me.config
 		);
 		bubbleChart.setData(data);
-		
+		me.config.instance = bubbleChart;
 	};
 
 	if (!me.config.hasOwnProperty('data')) {

@@ -96,8 +96,38 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 	me.initData = function(root) {
 		var me = this;
 		root.level = 0;
+		me.preprocessData(root);
 		me.traverse(root, 0);
 		me.treeRoot = root;
+	};
+	
+	me.preprocessData = function(root) {
+		var me = this, maxNodes = me.config.maxNodesPerLevel;
+		if (maxNodes) {
+			if (maxNodes < root.children.length) {
+				// take the smallest nodes
+				// sort children
+				var tmp = me.sortChildren(root.children);
+				tmp.reverse();
+				var keep = [], move = [], moveAmount = 0, breakdown;
+				for (var i in root.children) {
+					if (i < maxNodes) {
+						keep.push(root.children[i]);
+					} else {
+						move.push(root.children[i]);
+						moveAmount += root.children[i].amount;
+					}
+				}
+				root.children = keep;
+				root.children.push({
+					'label': 'More',
+					'name': 'more',
+					'amount': moveAmount,
+					'children': move,
+					'breakdown': breakdown
+				});
+			}
+		}
 	};
 	
 	/*
@@ -169,7 +199,7 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 		node.maxChildAmount = 0;
 		
 		// sort children
-		node.children = me.sortChildren(node.children);
+		node.children = me.sortChildren(node.children, true);
 		
 		for (c in node.children) {
 			child = node.children[c];
@@ -188,14 +218,18 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 		}
 	};
 	
-	me.sortChildren = function(children) {
+	me.sortChildren = function(children, alternate) {
 		var tmp = [], odd = true;
 		children.sort(me.compareAmounts);
-		while (children.length > 0) {
-			tmp.push(odd ? children.pop() : children.shift());
-			odd = !odd;
+		if (alternate) {
+			while (children.length > 0) {
+				tmp.push(odd ? children.pop() : children.shift());
+				odd = !odd;
+			}
+			return tmp;
+		} else {
+			return children;
 		}
-		return tmp;
 	};
 	
 	me.compareAmounts = function(a, b) {
@@ -725,6 +759,19 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 		if ($.isFunction(me.config.nodeClickCallback)) {
 			me.config.nodeClickCallback(node);
 		}
+	};
+	
+	// removes all nodes
+	me.clean = function() {
+		var me = this, i;
+		$('.label').remove();
+		/*for (i in me.displayObjects) {
+			try {
+				if ($.isFunction(me.displayObjects[i].hide)) me.displayObjects[i].hide();
+			} catch (e) {
+			
+			}
+		}*/
 	};
 	
 	this.loop = function() {

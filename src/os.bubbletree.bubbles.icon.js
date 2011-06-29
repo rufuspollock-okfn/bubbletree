@@ -74,9 +74,16 @@ OpenSpending.BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radiu
 		me.dashedBorder = me.paper.circle(cx, cy, Math.min(r-3, r*0.95))
 			.attr({ stroke: '#ffffff', 'stroke-dasharray': "- " });
 	
+		if ($.isFunction(me.bc.config.initTooltip)) {
+			me.bc.config.initTooltip(me.node, me.circle.node);
+		}
 	
 		me.label = $('<div class="label"><div class="amount">'+utils.formatNumber(me.node.amount)+'</div><div class="desc">'+me.node.shortLabel+'</div></div>');
 		me.bc.$container.append(me.label);
+		
+		if ($.isFunction(me.bc.config.initTooltip)) {
+			me.bc.config.initTooltip(me.node, me.label[0]);
+		}
 		
 		// additional label
 		me.label2 = $('<div class="label2"><span>'+me.node.shortLabel+'</span></div>');

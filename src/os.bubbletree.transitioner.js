@@ -102,7 +102,11 @@ OpenSpending.BubbleTree.AnimatedTransitioner = function(duration) {
 	
 	me.onComplete = function(callback) {
 		var me = this;
-		if ($.isFunction(callback)) me.completeCallbacks.push(callback);
+		try {
+			if ($.isFunction(callback)) me.completeCallbacks.push(callback);
+		} catch (e) {
+			vis4.log(e);
+		}
 	};
 	
 	me._completed = function() {

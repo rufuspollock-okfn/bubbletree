@@ -48,8 +48,8 @@
 			var initTooltip = function(node, domnode) {
 				vis4.log($(domnode).tooltip);
 				vis4.log(node.label + ' - '+node.famount);
-				domnode.setAttribute('title', node.label + ' - '+node.famount);
-				domnode.setAttribute('tooltip', node.label + ' - '+node.famount);
+				//domnode.setAttribute('title', node.label + ' <b>'+node.famount);
+				domnode.setAttribute('tooltip', node.label+' &nbsp;<b>'+node.famount+'</b><br /><small>'+node.name+'</small>');
 				
 				vis4.log(domnode.getAttribute('tooltip'));
 				
@@ -69,9 +69,15 @@
 					new OpenSpending.BubbleTree.Loader({
 						data: data,
 						container: '.bubbletree',
-						tooltipCallback: tooltip,
+						//tooltipCallback: tooltip,
 						bubbleType: 'donut',
-						initTooltip: initTooltip
+						initTooltip: initTooltip,
+						maxNodesPerLevel: 12,
+						bubbleStyles: {
+							'id': {
+								'root': { color: '#884422' }
+							}
+						}
 					});
 				}
 			});
@@ -84,7 +90,7 @@
 </head>
 <body>
 	<div id="header"><a class="title">Uganda Budget</a>
-	<div class="subtitle">OpenSpending</div></div>
+	<div class="subtitle"></div></div>
 	<div class="bubbletree-wrapper">
 		<div class="bubbletree"></div>
 	</div>

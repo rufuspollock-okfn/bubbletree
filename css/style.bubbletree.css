@@ -43,3 +43,10 @@
 .bubbletree .label2 span {
 	background: #fff;
 }
+
+.loading {
+	z-index: 1000;
+	position: absolute;
+	width: 700px;
+	height: 400px;
+}
