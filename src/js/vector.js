@@ -1,8 +1,8 @@
 /*jshint undef: true, browser:true, jquery: true, devel: true */
-/*global OpenSpending */
+/*global BubbleTree */
 
 
-OpenSpending.BubbleTree.Vector = function(x,y) {
+BubbleTree.Vector = function(x,y) {
 	var me = this;
 	me.x = x; 
 	me.y = y;
@@ -10,7 +10,7 @@ OpenSpending.BubbleTree.Vector = function(x,y) {
 	/*
 	 * calculates the length of the vector
 	 */
-	this.length = function() {
+	me.length = function() {
 		var me = this;
 		return Math.sqrt(me.x*me.x + me.y * me.y);
 	};
@@ -18,7 +18,7 @@ OpenSpending.BubbleTree.Vector = function(x,y) {
 	/*
 	 * changes the length of the vector
 	 */
-	this.normalize = function(len) {
+	me.normalize = function(len) {
 		var me = this, l = me.length();
 		if (!len) len = 1.0;
 		me.x *= len/l;
@@ -28,8 +28,8 @@ OpenSpending.BubbleTree.Vector = function(x,y) {
 	/*
 	 * creates an exact copy of this vector
 	 */
-	this.clone = function() {
+	me.clone = function() {
 		var me = this;
-		return new OpenSpending.BubbleTree.Vector(me.x, me.y);
+		return new BubbleTree.Vector(me.x, me.y);
 	};
 };

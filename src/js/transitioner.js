@@ -1,5 +1,5 @@
 /*jshint undef: true, browser:true, jquery: true, devel: true */
-/*global Raphael, TWEEN, OpenSpending, vis4 */
+/*global Raphael, TWEEN, vis4, BubbleTree */
 
 /*
  * transforms the current display to a new layout
@@ -8,47 +8,8 @@
  * - a node appears at the beginning of the transition
  * - a node disappears at the end of the transtion
  */
-OpenSpending.BubbleTree.SimpleTransitioner = function() {
-	
-	var me = this;
-	
-	me.garbage = [];
-	
-	me.running = false;
-	
-	me.changeLayout = function(layout) { 
-		var i, o, props, p;
-		for (i in layout.objects) {
-			o = layout.objects[i];
-			if (o === undefined || o === null) continue;
-			props = layout.props[i];
-			for (p in props) {
-				o[p] = props[p];
-			}
-			if ($.isFunction(o.draw)) o.draw();
-			if (o.removable) {
-				me.garbage.push(o);
-			}
-		}
-		me.collectGarbage();
-	};
-	
-	/*
-	 * calls the remove() function on every object marked for
-	 * removal. will run right after the tween ends
-	 */
-	me.collectGarbage = function() {
-		var i, o, me = this;
-		for (i in me.garbage) {
-			o = me.garbage[i];
-			if ($.isFunction(o.remove)) o.remove();
-		}
-		me.garbage = [];
-	};
-	
-};
-
-OpenSpending.BubbleTree.AnimatedTransitioner = function(duration) {
+ 
+BubbleTree.Transitioner = function(duration) {
 	
 	var me = this;
 	

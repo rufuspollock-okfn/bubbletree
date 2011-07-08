@@ -1,17 +1,17 @@
 /*jshint undef: true, browser:true, jquery: true, devel: true */
-/*global OpenSpending, vis4 */
+/*global vis4 */
 
 /*
  * loads the data and initializes the bubblechart
  * you need to include the bubblechart.min.js first
  */
-OpenSpending.BubbleTree.Loader = function(config) {
+BubbleTree.Loader = function(config) {
 
 	var me = this;
 
 	me.config = config;
 
-	me.ns = OpenSpending.BubbleTree;
+	me.ns = BubbleTree;
 
 	/*
 	 * loads data from a local JSON file
@@ -35,7 +35,7 @@ OpenSpending.BubbleTree.Loader = function(config) {
 	me.run = function(data) {
 		var me = this;
 		// initialize bubble chart
-		var bubbleChart = new OpenSpending.BubbleTree(
+		var bubbleChart = new BubbleTree(
 			me.config
 		);
 		bubbleChart.setData(data);

@@ -1,19 +1,19 @@
 /*jshint undef: true, browser:true, jquery: true, devel: true */
-/*global Raphael, TWEEN, OpenSpending */
+/*global Raphael, TWEEN, BubbleTree */
 
-OpenSpending.BubbleTree.Utils = {};
+BubbleTree.Utils = {};
 
-OpenSpending.BubbleTree.Utils.log = function() {
+BubbleTree.Utils.log = function() {
 	try {
 		if (window.hasOwnProperty('console')) console.log.apply(this, arguments);
 	} catch (e) {}	
 };
 
-OpenSpending.BubbleTree.Utils.amount2rad = function(a) {
-	return Math.pow(Math.max(0, a) /OpenSpending.BubbleTree.a2radBase, 0.6);
+BubbleTree.Utils.amount2rad = function(a) {
+	return Math.pow(Math.max(0, a) /BubbleTree.a2radBase, 0.6);
 };
 
-OpenSpending.BubbleTree.Utils.formatNumber = function(n) {
+BubbleTree.Utils.formatNumber = function(n) {
 	var prefix = '';
 	if (n < 0) {
 		n = n*-1;

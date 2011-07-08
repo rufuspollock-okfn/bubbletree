@@ -1,12 +1,12 @@
 /*jshint undef: true, browser:true, jquery: true, devel: true */
-/*global OpenSpending, vis4 */
+/*global vis4 */
 /*
  * in JS there's no thing like mouse event capsulation, this
  * class will work around this. It makes it possible to set
  * events like click and hover for a group of objects that
  * belong together
  */
-OpenSpending.BubbleTree.MouseEventGroup = function(target, members) {
+BubbleTree.MouseEventGroup = function(target, members) {
 	
 	var me = this;
 	me.target = target; // e.g. instance of a bubble
