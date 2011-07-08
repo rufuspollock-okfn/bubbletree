@@ -3,23 +3,20 @@
 <head>
 	<meta charset="UTF-8"/>
 	<title>Berliner Senatshaushalt</title>
-	<script type="text/javascript" src="../../../../lib/vendor/jquery-1.5.2.min.js"></script>
-	<script type="text/javascript" src="../../../../lib/vendor/jquery.history.js"></script>
-	<script type="text/javascript" src="../../../../lib/vendor/jquery.tooltip.min.js"></script>
-	<script type="text/javascript" src="../../../../lib/vendor/raphael.js"></script>
-	<script type="text/javascript" src="../../../../lib/vendor/vis4.js"></script>
-	<script type="text/javascript" src="../../../../lib/aggregator.js"></script>
-	<script type="text/javascript" src="../../../../lib/vendor/Tween.js"></script>
-	<script type="text/javascript" src="../../bubbletree.min.js"></script>
+	<script type="text/javascript" src="../../lib/jquery-1.5.2.min.js"></script>
+	<script type="text/javascript" src="../../lib/jquery.history.js"></script>
+	<script type="text/javascript" src="../../lib/jquery.tooltip.min.js"></script>
+	<script type="text/javascript" src="../../lib/raphael.js"></script>
+	<script type="text/javascript" src="../../lib/vis4.js"></script>
+	<script type="text/javascript" src="../../lib/Tween.js"></script>
+	<script type="text/javascript" src="../../build/bubbletree.js"></script>
+	<script type="text/javascript" src="../../../openspendingjs/lib/aggregator.js"></script>	
+	<link rel="stylesheet" type="text/css" href="../../build/bubbletree.css" />
+	<script type="text/javascript" src="../../styles/cofog.js"></script>
 	
 	
-	<script type="text/javascript" src="os.map.js"></script>
+	<script type="text/javascript" src="svgmap.js"></script>
 	
-	<link rel="stylesheet" type="text/css" href="../../css/style.page.css" />
-	<link rel="stylesheet" type="text/css" href="../../css/style.bubbletree.css" />
-	<link rel="stylesheet" type="text/css" href="../../css/style.tooltips.css" />
-	
-	<script type="text/javascript" src="../../styles/style.cofog.js"></script>
 	
 	<script type="text/javascript">
        
@@ -29,26 +26,20 @@
 			$tooltip.hide();
 			$('.bubbletree').append($tooltip);
 			
-			var tooltip = function(event) {
-				if (event.type == 'SHOW') {
-					// show tooltip
-					$tooltip.css({ 
-						left: event.mousePos.x + 4, 
-						top: event.mousePos.y + 4 
-					});
-					$tooltip.html(event.node.label+' <b>'+event.node.famount+'</b>');
-					var bubble = event.target;
-					
-					$tooltip.show();
-				} else {
-					// hide tooltip
-					$tooltip.hide();
-				}
+			var getTooltip = function() {
+				return this.getAttribute('tooltip');
 			};
 			
-			var initTooltip = function(bubble, node) {
+			var initTooltip = function(node, domnode) {
+				vis4.log($(domnode).tooltip);
+				vis4.log(node.label + ' - '+node.famount);
+				//domnode.setAttribute('title', node.label + ' <b>'+node.famount);
+				domnode.setAttribute('tooltip', node.label+' &nbsp;<b>'+node.famount+'</b><br /><small>'+node.name+'</small>');
 				
-			}
+				vis4.log(domnode.getAttribute('tooltip'));
+				
+				$(domnode).tooltip({ delay: 100, bodyHandler: getTooltip });
+			};
 			
 			var mapTooltip = function(map, node, subnode, population) {
 				var value, unit;
@@ -70,7 +61,7 @@
 				return subnode.label + '<br /><b>'+value+'</b> '+unit +'<br/><small>'+node.taxonomy+' = '+node.name+'<br />'+subnode.taxonomy+' = '+subnode.name+'</small>';
 			};
 			
-			var map = new OpenSpending.Map({
+			var map = new SVGMap({
 				svg: 'berlin.svg', 
 				container: $('#map'),
 				tooltip: mapTooltip
@@ -144,19 +135,18 @@
 								
 								'200': { icon: 'styles/icons/social-systems.svg' },
 								'230': { icon: 'styles/icons/family.svg' },
-								'234': { icon: 'styles/icons/unemployment.svg' },
+								'234': { icon: 'styles/icons/unemployment.svg', shortLabel: 'Sozialhilfe, Asyl' },
+								'236': { shortLabel: 'Wohlfahrt' },
+								'237': { shortLabel: 'Unterhalt' },
 								'310': { icon: 'styles/icons/health.svg' },
 								'320': { icon: 'styles/icons/sports.svg' },
 								'330': { icon: 'styles/icons/environment.svg' },
 								
 								
-								'234': { icon: 'styles/icons/unemployment.svg' },
-								'234': { icon: 'styles/icons/unemployment.svg' },
-								
 								'700': { shortLabel: 'Verkehr' }
 							}
 						},
-						tooltipCallback: tooltip	
+						initTooltip: initTooltip	
 					})
 					
 				}
