@@ -1,13 +1,12 @@
 #!/bin/bash
 set -e
 SRC=src/js/*.js
-OUTFILE=bubbletree.min.js
+OUTFILE=build/bubbletree.js
 echo "Checking JS"
-for f in $SRC
+while read LINE
 do
-  #echo "Checking $f"
-  jshint $f --reporter src/buildtools/reporter.js
-done
+    jshint $LINE --reporter src/buildtools/reporter.js
+done < makefile
 
 echo "Combining JS files"
 DATE=`date +%s`
@@ -19,7 +18,7 @@ touch $TMPFILE
 while read LINE
 do
     cat $LINE >> $TMPFILE
-done < includes.txt
+done < makefile
 
 
 if [ "$1" == "debug" ]; then

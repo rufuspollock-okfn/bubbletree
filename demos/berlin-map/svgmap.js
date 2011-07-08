@@ -1,1 +1,1 @@
-../cra-map/os.map.js
+../cra-map/svgmap.js
