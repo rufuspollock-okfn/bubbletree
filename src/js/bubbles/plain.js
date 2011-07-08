@@ -1,12 +1,14 @@
 /*jshint undef: true, browser:true, jquery: true, devel: true */
-/*global Raphael, TWEEN, OpenSpending, vis4 */
+/*global Raphael, TWEEN, BubbleTree, vis4 */
+
+BubbleTree.Bubbles = BubbleTree.Bubbles || {};
 
 /*
  * represents a bubble
  */
-OpenSpending.BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radius, angle, color) {
+BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radius, angle, color) {
 
-	var ns = OpenSpending.BubbleTree, utils = ns.Utils, me = this;
+	var ns = BubbleTree, utils = ns.Utils, me = this;
 	me.className = "bubble";
 	me.node = node;
 	me.paper = bubblechart.paper;
