@@ -1,5 +1,5 @@
 /*!
- * OpenSpending BubbleTree 0.8
+ * BubbleTree 0.9
  *
  * Copyright (c) 2011 Gregor Aisch (http://driven-by-data.net)
  * Licensed under the MIT license
@@ -7,10 +7,7 @@
 /*jshint undef: true, browser:true, jquery: true, devel: true */
 /*global Raphael, TWEEN, vis4, vis4color, vis4loader */
 
-var OpenSpending = OpenSpending ? OpenSpending : {}; 
-
-
-OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
+var BubbleTree = function(config, onHover, onUnHover) {
 	
 	var me = this;
 	
@@ -33,7 +30,7 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 	 */
 	me.style = config.bubbleStyles;
 	
-	me.ns = OpenSpending.BubbleTree;
+	me.ns = BubbleTree;
 	
 	/*
 	 * hashmap of all nodes by url token
@@ -318,7 +315,7 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 	
 	/*
 	 * returns the bubble class for a given bubble class id
-	 * e.g. 'icon' > OpenSpending.BubbleTree.Bubbles.Icon
+	 * e.g. 'icon' > BubbleTree.Bubbles.Icon
 	 */
 	me.getBubbleType = function(id) {
 		var me = this, Bubbles = me.ns.Bubbles;
@@ -590,7 +587,7 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 				} 
 			}
 
-			tr = new ns.AnimatedTransitioner($.browser.msie || me.currentCenter == node ? 0 : 1000);
+			tr = new ns.Transitioner($.browser.msie || me.currentCenter == node ? 0 : 1000);
 			tr.changeLayout(t);
 			me.currentTransition = tr;
 			if (!me.currentCenter && $.isFunction(me.config.firstNodeCallback)) {
@@ -780,4 +777,4 @@ OpenSpending.BubbleTree = function(config, onHover, onUnHover) {
 	
 };
 
-OpenSpending.BubbleTree.Styles = {};
+BubbleTree.Styles = {};
