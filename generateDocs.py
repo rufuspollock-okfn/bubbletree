@@ -1,6 +1,6 @@
 # encoding: utf-8
 import markdown
-txt = open('readme.txt').read()
+txt = open('readme.md').read()
 content = markdown.markdown(txt);
 
 head = """

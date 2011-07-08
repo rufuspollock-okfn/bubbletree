@@ -25,7 +25,7 @@ h4 { font-family: sans; }
 <h2>Configuration vars</h2>
 <p>The constructor of the bubble chart takes just one argument, the configuration object which contains all settings that can be set. This section will cover all available configuration variables.</p>
 <p>Example:</p>
-<pre><code>new OpenSpending.BubbleTree.Loader({
+<pre><code>new BubbleTree.Loader({
     data: treeObj,
     container: '#bubbletree'
 });
@@ -84,8 +84,8 @@ h4 { font-family: sans; }
 <em> </em>bubbleStyles* - Object that holds bubble style declarations, grouped into taxonomies. </p>
 <p>Example:</p>
 <pre><code>config.bubbleStyles = {
-    'cofog': OpenSpending.BubbleTree.Styles.Cofog,
-    'itb-function': OpenSpending.BubbleTree.Styles.ItbFunction,
+    'cofog': BubbleTree.Styles.Cofog,
+    'itb-function': BubbleTree.Styles.ItbFunction,
 };
 </code></pre>
 <p>There are two reserved words, that can't be used as taxonomy ids: <em>id</em> and <em>name</em>. Both are used to directly apply styles to bubbles which don't belong to any taxonomy. In the following example, a color is defined for the node with the id "root". Also, all nodes with the name "italy-toscana" will get the color #dd333.</p>
@@ -101,14 +101,14 @@ h4 { font-family: sans; }
 <h2>Appendix</h2>
 <h3>Integration with OpenSpending API</h3>
 <p>If you want to connect the BubbleTree with OpenSpending data you might want to use the Aggregator class.</p>
-<pre><code>new OpenSpending.Aggregator({
-    apiUrl: "http://openspending.org/api",
+<pre><code>new Aggregator({
+    apiUrl: "http://org/api",
     dataset: "cra",
     drilldowns: ["cofog1", "cofog2"],
     cuts: ['year:2008'],
     breakdown: 'region',
     callback: function(data) {
-        new OpenSpending.BubbleTree.Loader({
+        new BubbleTree.Loader({
             data: data,
             container: '#bubbletree'
         });
@@ -117,7 +117,7 @@ h4 { font-family: sans; }
 </code></pre>
 <p>The following config variables can be used to change the data source:</p>
 <ul>
-<li>apiUrl - String, url of a running OpenSpending API instance, e.g. "http://openspending.org/api"</li>
+<li>apiUrl - String, url of a running OpenSpending API instance, e.g. "http://org/api"</li>
 <li>dataset - String, name of the used dataset, e.g. "israel"</li>
 <li>drilldowns - Array of drilldown taxonomies, e.g. ['primary', 'section', 'entity']</li>
 <li>cuts - Array of filters?, e.g. ['year:2010']</li>
