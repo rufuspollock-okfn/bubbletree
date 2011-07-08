@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-SRC=src/*.js
+SRC=src/js/*.js
 OUTFILE=bubbletree.min.js
 echo "Checking JS"
 for f in $SRC
