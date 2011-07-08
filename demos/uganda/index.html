@@ -26,34 +26,17 @@
 			$tooltip.hide();
 			
 			
-			var tooltip = function(event) {
-				if (event.type == 'SHOW') {
-					// show tooltip
-					$tooltip.css({ 
-						left: event.mousePos.x + 4, 
-						top: event.mousePos.y + 4 
-					});
-					$tooltip.html(event.node.label+' <b>'+event.node.famount+'</b>');
-					$tooltip.show();
-				} else {
-					// hide tooltip
-					$tooltip.hide();
-				}
-			};
 			
 			var getTooltip = function() {
 				return this.getAttribute('tooltip');
 			};
 			
 			var initTooltip = function(node, domnode) {
-				vis4.log($(domnode).tooltip);
-				vis4.log(node.label + ' - '+node.famount);
-				//domnode.setAttribute('title', node.label + ' <b>'+node.famount);
 				domnode.setAttribute('tooltip', node.label+' &nbsp;<b>'+node.famount+'</b><br /><small>'+node.name+'</small>');
 				
 				vis4.log(domnode.getAttribute('tooltip'));
 				
-				$(domnode).tooltip({ delay: 100, bodyHandler: getTooltip });
+				$(domnode).tooltip({ delay: 200, bodyHandler: getTooltip });
 			};
 			
 			new OpenSpending.Aggregator({
