@@ -8,7 +8,7 @@ The constructor of the bubble chart takes just one argument, the configuration o
 
 Example:
 
-	new OpenSpending.BubbleTree.Loader({
+	new BubbleTree.Loader({
 		data: treeObj,
 		container: '#bubbletree'
 	});
@@ -78,8 +78,8 @@ It is possible to change the default display properties of each bubble by settin
 Example:
 
 	config.bubbleStyles = {
-		'cofog': OpenSpending.BubbleTree.Styles.Cofog,
-		'itb-function': OpenSpending.BubbleTree.Styles.ItbFunction,
+		'cofog': BubbleTree.Styles.Cofog,
+		'itb-function': BubbleTree.Styles.ItbFunction,
 	};
 
 There are two reserved words, that can't be used as taxonomy ids: *id* and *name*. Both are used to directly apply styles to bubbles which don't belong to any taxonomy. In the following example, a color is defined for the node with the id "root". Also, all nodes with the name "italy-toscana" will get the color #dd333.
@@ -101,14 +101,14 @@ There are two reserved words, that can't be used as taxonomy ids: *id* and *name
 
 If you want to connect the BubbleTree with OpenSpending data you might want to use the Aggregator class.
 
-	new OpenSpending.Aggregator({
-		apiUrl: "http://openspending.org/api",
+	new Aggregator({
+		apiUrl: "http://org/api",
 		dataset: "cra",
 		drilldowns: ["cofog1", "cofog2"],
 		cuts: ['year:2008'],
 		breakdown: 'region',
 		callback: function(data) {
-			new OpenSpending.BubbleTree.Loader({
+			new BubbleTree.Loader({
 				data: data,
 				container: '#bubbletree'
 			});
@@ -117,7 +117,7 @@ If you want to connect the BubbleTree with OpenSpending data you might want to u
 
 The following config variables can be used to change the data source:
 
-* apiUrl - String, url of a running OpenSpending API instance, e.g. "http://openspending.org/api"
+* apiUrl - String, url of a running OpenSpending API instance, e.g. "http://org/api"
 * dataset - String, name of the used dataset, e.g. "israel"
 * drilldowns - Array of drilldown taxonomies, e.g. ['primary', 'section', 'entity']
 * cuts - Array of filters?, e.g. ['year:2010']
