@@ -1,5 +1,5 @@
 /*jshint undef: true, browser:true, jquery: true, devel: true */
-/*global Raphael, TWEEN, OpenSpending */
+/*global Raphael, TWEEN, BubbleTree */
 /*
  * represents a radial line
  */

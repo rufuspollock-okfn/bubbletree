@@ -1,5 +1,5 @@
 /*jshint undef: true, browser:true, jquery: true, devel: true */
-/*global vis4 */
+/*global vis4, BubbleTree */
 /*
  * in JS there's no thing like mouse event capsulation, this
  * class will work around this. It makes it possible to set

@@ -1,5 +1,5 @@
 /*jshint undef: true, browser:true, jquery: true, devel: true */
-/*global Raphael, TWEEN */
+/*global Raphael, TWEEN, BubbleTree */
 
 /*
  * stores visual attributes of all elements in the visualization

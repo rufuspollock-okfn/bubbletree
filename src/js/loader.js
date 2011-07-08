@@ -1,5 +1,5 @@
 /*jshint undef: true, browser:true, jquery: true, devel: true */
-/*global vis4 */
+/*global vis4, BubbleTree */
 
 /*
  * loads the data and initializes the bubblechart
