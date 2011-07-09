@@ -1,7 +1,7 @@
 Radial Bubble Tree
 ==================
 
-![bubble tree screenshot](http://driven-by-data.net/wp-content/uploads/2011/06/Bildschirmfoto-2011-07-02-um-23.02.50.png bubbletree screenshot left)
+![bubble tree screenshot](http://driven-by-data.net/wp-content/uploads/2011/06/Bildschirmfoto-2011-07-02-um-23.02.50.png bubbletree screenshot right)
 
 The BubbleTree can be used to display hierarchical (spending) data in an interactive visualization. The setup is easy and independent from the OpenSpending platform. However, there is an optional integration module to connect with data from the OpenSpending API.
 
