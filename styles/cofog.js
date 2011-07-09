@@ -3,9 +3,11 @@
  *
  */
  
-if (!OpenSpending || !OpenSpending.BubbleTree) window.alert('You must include the BubbleTree before including the styles');
+if (!BubbleTree) window.alert('You must include the BubbleTree before including the styles');
 
-OpenSpending.BubbleTree.Styles.Cofog = {
+BubbleTree.Styles = BubbleTree.Styles || {};
+
+BubbleTree.Styles.Cofog = {
 	'01': { icon: 'styles/icons/government-uk.svg', color: '#C75746' },
 	'01.1': { icon: 'styles/icons/legislative.svg' },
 	'01.1.1': { icon: 'styles/icons/legislative.svg' },

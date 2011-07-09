@@ -9,8 +9,7 @@
 	<script type="text/javascript" src="../../lib/vis4.js"></script>
 	<script type="text/javascript" src="../../lib/Tween.js"></script>
 	<script type="text/javascript" src="../../build/bubbletree.js"></script>
-	<script type="text/javascript" src="../../../openspendingjs/lib/aggregator.js"></script>
-	
+	<script type="text/javascript" src="../../../openspendingjs/lib/aggregator.js"></script>	
 	<link rel="stylesheet" type="text/css" href="../../build/bubbletree.css" />
 	<script type="text/javascript" src="../../styles/cofog.js"></script>
 	
@@ -41,14 +40,13 @@
 			};
 			
 			var dataLoaded = function(data) {
-				console.log('dataLoaded', data);
-				new OpenSpending.BubbleTree.Loader({
+				console.log('dataLoaded', JSON.stringify(data));
+				window.bubbleTree = new BubbleTree({
 					data: data,
 					container: '.bubbletree',
-					rootNodeLabel: 'Grant total',
 					bubbleType: 'icon',
 					bubbleStyles: {
-						'cofog': OpenSpending.BubbleTree.Styles.Cofog
+						'cofog': BubbleTree.Styles.Cofog
 					},
 					rootPath: '../../',
 					tooltipCallback: tooltip
@@ -59,6 +57,7 @@
 			new OpenSpending.Aggregator({
 				apiUrl: 'http://openspending.org/api',
 				dataset: 'cra',
+				rootNodeLabel: 'Grant total',
 				drilldowns: ['cofog1', 'cofog2', 'cofog3'],
 				cuts: ['year:2008'],
 				breakdown: 'region',
@@ -72,8 +71,10 @@
 	</script>
 </head>
 <body>
-	<div id="header"><a class="title">OpenSpending</a>
-	<div class="subtitle">UK Country Regional Analysis</div></div>
+	<div id="header">
+		<a class="title">OpenSpending</a>
+		<div class="subtitle">UK Country Regional Analysis</div>
+	</div>
 	<div class="bubbletree-wrapper">
 		<div class="bubbletree"></div>
 	</div>
