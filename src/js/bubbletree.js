@@ -62,7 +62,6 @@ var BubbleTree = function(config, onHover, onUnHover) {
 	
 	/*
 	 * @public loadData
-	 * @deprecated!
 	 */
 	me.loadData = function(url) {
 		$.ajax({
@@ -81,10 +80,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 		me.initPaper();
 		me.initBubbles();
 		me.initTween();
-		//me.navigateTo(me.treeRoot);
 		me.initHistory();
-		
-		//this.quickPrototype(data);
 	};
 	
 	/*
@@ -775,6 +771,18 @@ var BubbleTree = function(config, onHover, onUnHover) {
 		TWEEN.update();
 	};
 	
+	
+	if (!me.config.hasOwnProperty('data')) {
+		throw new Error('no data');
+	} 
+	
+	if (typeof me.config.data == "string") {
+		// use the given js object
+		me.loadData();
+	} else {
+		// load local tree json file
+		new vis4.DelayedTask(1000, me, me.setData, me.config.data);
+	}
 };
 
 BubbleTree.Styles = {};

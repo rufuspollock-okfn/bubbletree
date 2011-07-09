@@ -15,6 +15,7 @@ BubbleTree.Transitioner = function(duration) {
 	
 	me.duration = duration;
 	me.running = false;
+	me.completeCallbacks = [];
 	
 	me.changeLayout = function(layout) {
 		var i, o, props, p, me = this;
@@ -48,14 +49,14 @@ BubbleTree.Transitioner = function(duration) {
 				for (p in props) {
 					o[p] = props[p];
 				}
-				if ($.isFunction(o.draw)) o.draw();
+				if (o && $.isFunction(o.draw)) o.draw();
 			}
 		}
 		if (me.duration === 0) {
 			// redraw all
 			for (i in layout.objects) {
 				o = layout.objects[i];
-				if ($.isFunction(o.draw)) o.draw();
+				if (o && $.isFunction(o.draw)) o.draw();
 			}
 			me._completed();
 		}
@@ -66,7 +67,7 @@ BubbleTree.Transitioner = function(duration) {
 		try {
 			if ($.isFunction(callback)) me.completeCallbacks.push(callback);
 		} catch (e) {
-			vis4.log(e);
+			//vis4.log(e);
 		}
 	};
 	
@@ -81,7 +82,7 @@ BubbleTree.Transitioner = function(duration) {
 		// now hide all objects marked for hiding
 		for (i in me.layout.toHide) {
 			obj = me.layout.toHide[i];
-			if ($.isFunction(obj.hide)) obj.hide();
+			if (obj && $.isFunction(obj.hide)) obj.hide();
 		}
 		
 		for (i in callbacks) {
