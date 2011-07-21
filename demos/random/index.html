@@ -35,7 +35,7 @@
 					if (level == 2) child.color = vis4color.fromHex(node.color).lightness('*'+(.5+Math.random()*.5)).x;
 					amount -= child.amount;
 					node.children.push(child);
-					if (level < 4) generateRandomData(child, level+1);
+					if (level < 3) generateRandomData(child, level+1);
 				}
 				return node;
 			}
@@ -44,8 +44,6 @@
 				label: 'Random Names, Random Amounts',
 				amount: 100000000
 			});
-			
-			window.alert('nodeCount = '+ nodeCount);
 			
 			new BubbleTree({
 				data: data,
