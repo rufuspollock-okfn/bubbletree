@@ -76,6 +76,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 	 */
 	me.setData = function(data) {
 		var me = this;
+		if (!data) data = me.config.data; // IE fix
 		me.initData(data);
 		me.initPaper();
 		me.initBubbles();
