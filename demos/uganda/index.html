@@ -39,8 +39,8 @@
 				apiUrl: 'http://sandbox.openspending.org/api',
 				dataset: 'uganda',
 				drilldowns: ['swg', 'sector_objective'],
-				cuts: ['year:2005'],
-				// localApiCache: 'aggregate.json',
+				cuts: ['year:2005', 'spending_type:Disbursement'],
+				localApiCache: 'aggregate.json',
 				rootNodeLabel: 'Uganda Budget',
 				breakdown: 'spending_source_type',
 				callback: function(data) {
