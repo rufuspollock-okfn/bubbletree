@@ -1,12 +1,29 @@
 #!/bin/bash
+
+#
+# this is the make script for the BubbleTree
+# it requires installation of node.js with the following
+# modules installed:
+#
+# - jshint, for checking the js syntax
+# - uglify-js, for js minification
+# - markdown-js, for translation of readme.md to index.html
+#
+# Usage: 
+# just run ./make and be happy
+#
+#
+
 set -e
-SRC=src/js/*.js
 OUTFILE=build/bubbletree.js
-echo "Checking JS"
+MINFILE=build/bubbletree.min.js
+README=index.html
+
+echo "Checking JS files"
 while read LINE
 do
-    jshint $LINE --reporter src/buildtools/reporter.js
-done < makefile
+    jshint $LINE --reporter buildtools/reporter.js
+done < manifest
 
 echo "Combining JS files"
 DATE=`date +%s`
@@ -18,15 +35,20 @@ touch $TMPFILE
 while read LINE
 do
     cat $LINE >> $TMPFILE
-done < makefile
+done < manifest
 
+cp $TMPFILE $OUTFILE
 
-if [ "$1" == "debug" ]; then
-  cp $TMPFILE $OUTFILE
-else
-  echo "Minifying JS files"
-  uglifyjs -o $OUTFILE $TMPFILE
-fi
+echo "Compressing JS files"
+uglifyjs -o $MINFILE $TMPFILE
+
+echo "Updating index.html from readme"
+markdown readme.md -f $TMP/readme.html.body
+
+rm $README
+touch index.html
+cat buildtools/readme.html.head >> $README
+cat $TMP/readme.html.body >> $README
+cat buildtools/readme.html.foot >> $README
+
 rm -Rf $TMP
-
-python generateDocs.py

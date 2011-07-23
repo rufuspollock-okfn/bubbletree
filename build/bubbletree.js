@@ -3,4 +3,1831 @@
  *
  * Copyright (c) 2011 Gregor Aisch (http://driven-by-data.net)
  * Licensed under the MIT license
- *//*jshint undef: true, browser:true, jquery: true, devel: true *//*global Raphael, TWEEN, vis4, vis4color, vis4loader */var BubbleTree=function(a,b,c){var d=this;d.$container=$(a.container),d.config=a,d.config.hasOwnProperty("rootPath")||(d.config.rootPath=""),d.tooltip=a.tooltipCallback?a.tooltipCallback:function(){},d.style=a.bubbleStyles,d.ns=BubbleTree,d.nodesByUrlToken={},d.nodeList=[],d.iconsByUrlToken={},d.globalNodeCounter=0,d.displayObjects=[],d.bubbleScale=1,d.globRotation=0,d.currentYear=a.initYear,d.currentCenter=undefined,d.currentTransition=undefined,d.baseUrl="",d.loadData=function(a){$.ajax({url:a,dataType:"json",success:this.setData.bind(this)})},d.setData=function(a){var b=this;a||(a=b.config.data),b.initData(a),b.initPaper(),b.initBubbles(),b.initTween(),b.initHistory()},d.initData=function(a){var b=this;a.level=0,b.preprocessData(a),b.traverse(a,0),b.treeRoot=a},d.preprocessData=function(a){var b=this,c=b.config.maxNodesPerLevel;if(c&&c<a.children.length){var d=b.sortChildren(a.children);d.reverse();var e=[],f=[],g=0,h;for(var i in a.children)i<c?e.push(a.children[i]):(f.push(a.children[i]),g+=a.children[i].amount);a.children=e,a.children.push({label:"More",name:"more",amount:g,children:f,breakdown:h})}},d.traverse=function(a,b){var c,d,e,f=this,g,h=f.config.bubbleStyles;a.children||(a.children=[]),f.nodeList.push(a),a.famount=f.ns.Utils.formatNumber(a.amount),a.parent&&(a.level=a.parent.level+1);if(h){var i=["color","shortLabel","icon"];for(var j in i){var k=i[j];h.hasOwnProperty("id")&&h.id.hasOwnProperty(a.id)&&h.id[a.id].hasOwnProperty(k)?a[k]=h.id[a.id][k]:a.hasOwnProperty("name")&&h.hasOwnProperty("name")&&h.name.hasOwnProperty(a.name)&&h.name[a.name].hasOwnProperty(k)?a[k]=h.name[a.name][k]:a.hasOwnProperty("taxonomy")&&h.hasOwnProperty(a.taxonomy)&&h[a.taxonomy].hasOwnProperty(a.name)&&h[a.taxonomy][a.name].hasOwnProperty(k)&&(a[k]=h[a.taxonomy][a.name][k])}}a.color||(a.level>0?a.color=a.parent.color:a.color="#999999"),a.children.length<2&&(a.color=vis4color.fromHex(a.color).saturation("*.86").x),a.level>0&&(e=a.parent.children,e.length>1&&(a.left=e[(b-1+e.length)%e.length],a.right=e[(Number(b)+1)%e.length],a.right==a.left&&(a.right=undefined))),a.label!==undefined&&a.label!==""?g=a.label:a.token!==undefined&&a.token!==""?g=a.token:g=""+f.globalNodeCounter,f.globalNodeCounter++,a.urlToken=g.toLowerCase().replace(/\W/g,"-");while(f.nodesByUrlToken.hasOwnProperty(a.urlToken))a.urlToken+="-";f.nodesByUrlToken[a.urlToken]=a,a.maxChildAmount=0,a.children=f.sortChildren(a.children,!0);for(c in a.children)d=a.children[c],d.parent=a,a.maxChildAmount=Math.max(a.maxChildAmount,d.amount),f.traverse(d,c);if(a.breakdowns!==null){a.breakdownsByName={};for(c in a.breakdowns){var l=a.breakdowns[c];l.famount=f.ns.Utils.formatNumber(l.amount),l.name&&(a.breakdownsByName[l.name]=l)}}},d.sortChildren=function(a,b){var c=[],e=!0;a.sort(d.compareAmounts);if(b){while(a.length>0)c.push(e?a.pop():a.shift()),e=!e;return c}return a},d.compareAmounts=function(a,b){return a.amount>b.amount?1:a.amount==b.amount?0:-1},d.initPaper=function(){var a=this,b=a.$container,c=a.treeRoot,d=b.width(),e=b.height(),f=Raphael(b[0],d,e),g=Math.min(d,e)*.5-40,h,i=a.ns.Vector,j=new i(d*.5,e*.5);a.width=d,a.height=e,a.paper=f,h=Math.pow((Math.pow(c.amount,.6)+Math.pow(c.maxChildAmount,.6)*2)/g,1.6666666667),a.a2radBase=a.ns.a2radBase=h,a.origin=j,$(window).resize(a.onResize.bind(a))},d.onResize=function(){var a=this,b=a.$container,c=b.width(),d=b.height(),e=Math.min(c,d)*.5-40,f,g=a.treeRoot,h,i;a.paper.setSize(c,d),a.origin.x=c*.5,a.origin.y=d*.5,a.width=c,a.height=d,f=Math.pow((Math.pow(g.amount,.6)+Math.pow(g.maxChildAmount,.6)*2)/e,1.6666666667),a.a2radBase=a.ns.a2radBase=f;for(h in a.displayObjects)i=a.displayObjects[h],i.className=="bubble"&&(i.bubbleRad=a.ns.Utils.amount2rad(i.node.amount));a.currentCenter&&a.changeView(a.currentCenter.urlToken)},d.initTween=function(){this.tweenTimer=setInterval(this.loop,1e3/120)},d.initBubbles=function(){var a=this,b=a.treeRoot,c,d=!1,e=a.ns.Bubbles,f;a.bubbleClasses=[],a.config.hasOwnProperty("bubbleType")||(a.config.bubbleType=["plain"]),$.isArray(a.config.bubbleType)||(a.config.bubbleType=[a.config.bubbleType]);if($.isArray(a.config.bubbleType))for(c in a.config.bubbleType)a.config.bubbleType[c]=="icon"&&(d=!0),a.bubbleClasses.push(a.getBubbleType(a.config.bubbleType[c]));var g=a.createBubble(b,a.origin,0,0,b.color);a.traverseBubbles(g)},d.getBubbleType=function(a){var b=this,c=b.ns.Bubbles;switch(a){case"pie":return c.Pies;case"donut":return c.Donut;case"multi":return c.Multi;case"icon":return c.Icon;default:return c.Plain}},d.traverseBubbles=function(a){var b=this,c,d=b.ns.Utils.amount2rad,e,f,g,h,i=0,j=0,k,l,m=Math.PI*2;g=a.node.children;for(e in g)f=g[e],i+=d(f.amount);g.length>0&&(c=b.createRing(a.node,a.pos,0,{stroke:"#888","stroke-dasharray":"-"}));for(e in g)f=g[e],k=d(f.amount)/i*m,l=j+k*.5,isNaN(l)&&vis4.log(j,k,f.amount,i,m),f.centerAngle=l,h=b.createBubble(f,a.pos,0,l,f.color),j+=k,b.traverseBubbles(h)},d.createBubble=function(a,b,c,d,e){var f=this,g=f.ns,h,i,j,k=a.level;k=Math.min(k,f.bubbleClasses.length-1),j=new f.bubbleClasses[k](a,f,b,c,d,e),f.displayObjects.push(j);return j},d.createRing=function(a,b,c,d){var e=this,f=e.ns,g;g=new f.Ring(a,e,b,c,d),e.displayObjects.push(g);return g},d.changeView=function(a){var b=this,c=b.paper,d=Math.min(b.width,b.height)*.35,e=b.ns,f=e.Utils,g=b.origin,h={stroke:"#ccc","stroke-dasharray":"- "},i={stroke:"#ccc","stroke-dasharray":". "},j=f.amount2rad,k=b.treeRoot,l=b.nodesByUrlToken,m=l.hasOwnProperty(a)?l[a]:null,n=new e.Layout,o,p,q,r=Math.PI*2,s=b.getBubble.bind(b),t=b.getRing.bind(b),u=b.unifyAngle;if(m!==null){var v,w,x,y,z,A,B,C,D,E,F,G,H,I=!1,J=!1;for(q in b.displayObjects)b.displayObjects[q].hideFlag=!0;if(m==k||m.parent==k&&m.children.length<2){n.$(b).bubbleScale=1,n.$(g).x=b.width*.5,n.$(g).y=b.height*.5,v=s(k),m!=k&&(v.childRotation=-m.centerAngle),A=j(k.amount)+j(k.maxChildAmount)+20,F=t(k),n.$(F).rad=A;for(q in k.children)z=k.children[q],o=s(z),n.$(o).angle=u(z.centerAngle+v.childRotation),n.$(o).rad=A}else{var K=m;m.children.length<2&&(m=m.parent),G=d/(j(m.amount)+j(m.maxChildAmount)*2),n.$(b).bubbleScale=G,v=s(m),b.currentCenter&&b.currentCenter==m.left?J=!0:b.currentCenter&&b.currentCenter==m.right&&(I=!0);var L=b.shortestAngleTo;n.$(v).angle=L(v.angle,0),A=(j(m.amount)+j(m.maxChildAmount))*G+20,F=t(m),n.$(F).rad=A,w=s(m.parent),w.childRotation=-m.centerAngle;var M=w;while(M&&M.node.parent)M=s(M.node.parent,!0),n.$(M).rad=0;n.$(w).rad=0;var N=b.width*.5;B=0-Math.max(N*.8-G*(j(m.parent.amount)+j(Math.max(m.amount*1.15+m.maxChildAmount*1.15,m.left.amount*.85,m.right.amount*.85))),G*j(m.parent.amount)*-1+N*.15)+N,vis4.log("rad (parent) = "+B,"   rad (center) = ",A);if(m.left&&m.right)var O=G*j(Math.max(m.left.amount,m.right.amount));H=A+B,n.$(g).x=b.width*.5-B-(m!=K?A*.35:0),n.$(g).y=b.height*.5,vis4.log("o.x = "+g.x,"    t.$(o).x = "+n.$(g).x),new vis4.DelayedTask(1500,vis4,vis4.log,g,w.pos),B+=b.width*.1,F=t(m.parent),n.$(F).rad=B,n.$(v).rad=B;var P=0-(m!=K?K.centerAngle+v.childRotation:0);for(q in m.children)z=m.children[q],o=s(z),n.$(o).angle=b.shortestAngleTo(o.angle,z.centerAngle+v.childRotation+P),n.$(o).rad=A;var Q=b.height*.07;m.left&&(x=m.left,D=j(x.amount)*G,E=r-Math.asin((b.paper.height*.5+D-Q)/B),o=s(x),n.$(o).rad=B,n.$(o).angle=L(o.angle,E)),m.right&&(x=m.right,D=j(x.amount)*G,E=Math.asin((b.paper.height*.5+D-Q)/B),o=s(x),n.$(o).rad=B,n.$(o).angle=L(o.angle,E)),m=K}for(q in b.displayObjects){var R=b.displayObjects[q];R.hideFlag&&R.visible?(n.$(R).alpha=0,R.className=="bubble"&&R.node.level>1&&(n.$(R).rad=0),n.hide(R)):R.hideFlag||(n.$(R).alpha=1,R.visible||(R.alpha=0,n.show(R)))}p=new e.Transitioner($.browser.msie||b.currentCenter==m?0:1e3),p.changeLayout(n),b.currentTransition=p,!b.currentCenter&&$.isFunction(b.config.firstNodeCallback)&&b.config.firstNodeCallback(m),b.currentCenter=m,vis4.log("currentNode = "+b.currentCenter)}else f.log("node "+a+" not found")},d.unifyAngle=function(a){var b=Math.PI,c=b*2;while(a>=c)a-=c;while(a<0)a+=c;return a},d.shortestAngle=function(a,b){var c=function(a){return Math.round(a/Math.PI*180)+""},e=Math.PI,f=e*2,g=d.unifyAngle;a=g(a),b=g(b);var h=b-a;h>e&&(h-=f),h<-e&&(h+=f);return h},d.shortestAngleTo=function(a,b){return a+d.shortestAngle(a,b)},d.shortestLeftTurn=function(a,b){var c=d.shortestAngle(a,b);c>0&&(c=c-Math.PI*2);return a+c},d.shortestRightTurn=function(a,b){var c=d.shortestAngle(a,b);c<0&&(c=Math.PI*2+c);return a+c},d.getBubble=function(a,b){return this.getDisplayObject("bubble",a,b)},d.getRing=function(a){return this.getDisplayObject("ring",a)},d.getDisplayObject=function(a,b,c){var d=this,e,f;for(e in d.displayObjects){f=d.displayObjects[e];if(f.className!=a)continue;if(f.node==b){c||(f.hideFlag=!1);return f}}vis4.log(a+" not found for node",b)},d.initHistory=function(){$.history.init(d.urlChanged.bind(d),{unescape:",/"})},d.freshUrl="",d.urlChanged=function(a){var b=this,c=b.currentTransition;b.freshUrl||a.indexOf("/~/")&&(b.baseUrl=a.substr(0,a.indexOf("/~/"))),b.freshUrl=a,c&&c.running?(vis4.log("transition is running at the moment, adding listener"),c.onComplete(b.changeUrl.bind(b))):b.changeUrl()},d.changeUrl=function(){var a=this,b=a.freshUrl.split("/"),c=b[b.length-1],d;a.freshUrl===""&&a.navigateTo(a.treeRoot),a.nodesByUrlToken.hasOwnProperty(c)?(d=a.getUrlForNode(a.nodesByUrlToken[c]),a.freshUrl!=d?$.history.load(d):a.navigateTo(a.nodesByUrlToken[c],!0)):a.navigateTo(a.treeRoot)},d.navigateTo=function(a,b){vis4.log("bc.navigateTo(",a,",",b,")");var c=this;b?c.changeView(a.urlToken):$.history.load(c.getUrlForNode(a))},d.getUrlForNode=function(a){var b=[];b.push(a.urlToken);while(a.parent)b.push(a.parent.urlToken),a=a.parent;b.reverse();return d.baseUrl+"/~/"+b.join("/")},d.onNodeClick=function(a){$.isFunction(d.config.nodeClickCallback)&&d.config.nodeClickCallback(a)},d.clean=function(){var a=this,b;$(".label").remove()},this.loop=function(){TWEEN.update()};if(!d.config.hasOwnProperty("data"))throw new Error("no data");typeof d.config.data=="string"?d.loadData():new vis4.DelayedTask(1e3,d,d.setData,d.config.data)};BubbleTree.Styles={},BubbleTree.Layout=function(){var a=this;a.objects=[],a.props=[],a.toHide=[],a.toShow=[],a.$=function(a){var b=this,c,d,e;for(c in b.objects){d=b.objects[c];if(d==a)return b.props[c]}b.objects.push(a),e={},b.props.push(e);return e},a.show=function(a){var b=this;b.toShow.push(a)},a.hide=function(a){var b=this;b.toHide.push(a)}},BubbleTree.Line=function(a,b,c,d,e,f){this.bc=a,this.o=c,this.angle=d,this.fromRad=e,this.attr=b,this.toRad=f,this.getXY=function(){this.x1=this.o.x+Math.cos(this.angle)*this.fromRad,this.y1=this.o.y-Math.sin(this.angle)*this.fromRad,this.x2=this.o.x+Math.cos(this.angle)*this.toRad,this.y2=this.o.y-Math.sin(this.angle)*this.toRad},this.init=function(){this.getXY(),console.log("foo","M"+this.x1+" "+this.y1+"L"+this.x2+" "+this.y2,b),this.path=this.bc.paper.path("M"+this.x1+" "+this.y1+"L"+this.x2+" "+this.y2).attr(this.attr)},this.draw=function(){this.getXY(),this.path.attr({path:"M"+this.x1+" "+this.y1+"L"+this.x2+" "+this.y2})},this.init()},BubbleTree.Loader=function(a){var b=this;b.config=a,b.ns=BubbleTree,b.loadData=function(){var a=this,b=a.config.data;console.log("loading url ",b),$.ajax({url:b,context:a,dataType:"json",success:function(a){this.run(a)}})},b.run=function(a){var b=this,c=new BubbleTree(b.config);c.setData(a),b.config.instance=c},!!b.config.hasOwnProperty("data"),typeof b.config.data=="string"?b.loadData():b.run(b.config.data)},BubbleTree.MouseEventGroup=function(a,b){var c=this;c.target=a,c.members=b,c.click=function(a){var b=this,c=b.members,d,e;b.clickCallback=a;for(d in c)e=c[d],$(e).click(b.handleClick.bind(b))},c.handleClick=function(a){var b=this;b.clickCallback({target:b.target,origEvent:a,mouseEventGroup:b})},c.hover=function(a){var b=this,c=b.members,d,e;b.hoverCallback=a;for(d in c)e=c[d],$(e).hover(b.handleMemberHover.bind(b),b.handleMemberUnHover.bind(b))},c.unhover=function(a){var b=this;b.unhoverCallback=a},c.wasHovering=!1,c.mouseIsOver=!1,c.handleMemberHover=function(a){var b=this;new vis4.DelayedTask(25,b,b.handleMemberHoverDelayed,a)},c.handleMemberHoverDelayed=function(a){var b=this;b.mouseIsOver=!0,b.wasHovering||(b.wasHovering=!0,$.isFunction(b.hoverCallback)&&b.hoverCallback({target:b.target,origEvent:a,mouseEventGroup:b}))},c.handleMemberUnHover=function(a){var b=this;b.mouseIsOver=!1,new vis4.DelayedTask(40,b,b.handleMemberUnHoverDelayed,a)},c.handleMemberUnHoverDelayed=function(a){var b=this;b.mouseIsOver||(b.wasHovering=!1,$.isFunction(b.unhoverCallback)&&b.unhoverCallback({target:b.target,origEvent:a,mouseEventGroup:b}))},c.addMember=function(a){var b=this;b.hoverCallback&&$(a).hover(b.handleMemberHover.bind(b),b.handleMemberUnHover.bind(b)),b.members.push(a)},c.removeMember=function(a){var b=this,c=b.members,d,e=[];b.clickCallback&&$(a).unbind("click"),b.hoverCallback&&$(a).unbind("mouseenter mouseleave");for(d in c)c[d]!=a&&e.push(c[d]);b.members=e}},BubbleTree.Ring=function(a,b,c,d,e){var f=this;f.className="ring",f.rad=d,f.bc=b,f.attr=e,f.origin=c,f.alpha=1,f.visible=!1,f.node=a,f.init=function(){},f.draw=function(){var a=this,b=a.origin;!a.visible||a.circle.attr({cx:b.x,cy:b.y,r:a.rad,"stroke-opacity":a.alpha})},f.hide=function(){var a=this;a.circle.remove(),a.visible=!1},f.show=function(){var a=this;a.circle=a.bc.paper.circle(c.x,c.y,a.rad).attr(a.attr),a.visible=!0,a.circle.toBack()},f.init()},BubbleTree.Transitioner=function(a){var b=this;b.duration=a,b.running=!1,b.completeCallbacks=[],b.changeLayout=function(a){var b,c,d,e,f=this;f.running=!0,f.layout=a;for(b in a.toShow)c=a.toShow[b],$.isFunction(c.show)&&c.show();for(b in a.objects){c=a.objects[b];if(c===undefined||c===null)continue;d=a.props[b];if(f.duration>0){var g=new TWEEN.Tween(c),h={};for(e in d)h[e]=d[e];g.to(h,f.duration),g.easing(TWEEN.Easing.Exponential.EaseOut),$.isFunction(c.draw)&&g.onUpdate(c.draw.bind(c)),b==a.objects.length-1&&g.onComplete(f._completed.bind(f)),g.start()}else{for(e in d)c[e]=d[e];c&&$.isFunction(c.draw)&&c.draw()}}if(f.duration===0){for(b in a.objects)c=a.objects[b],c&&$.isFunction(c.draw)&&c.draw();f._completed()}},b.onComplete=function(a){var b=this;try{$.isFunction(a)&&b.completeCallbacks.push(a)}catch(c){}},b._completed=function(){var a=this,b=a.completeCallbacks,c,d;a.running=!1;for(c in a.layout.objects)d=a.layout.objects[c],d&&$.isFunction(d.draw)&&d.draw();for(c in a.layout.toHide)d=a.layout.toHide[c],d&&$.isFunction(d.hide)&&d.hide();for(c in b)b[c]()}},BubbleTree.Utils={},BubbleTree.Utils.log=function(){try{window.hasOwnProperty("console")&&console.log.apply(this,arguments)}catch(a){}},BubbleTree.Utils.amount2rad=function(a){return Math.pow(Math.max(0,a)/BubbleTree.a2radBase,.6)},BubbleTree.Utils.formatNumber=function(a){var b="";a<0&&(a=a*-1,b="-");return a>=1e12?b+Math.round(a/1e11)/10+"t":a>=1e9?b+Math.round(a/1e8)/10+"b":a>=1e6?b+Math.round(a/1e5)/10+"m":a>=1e3?b+Math.round(a/100)/10+"k":b+a},BubbleTree.Vector=function(a,b){var c=this;c.x=a,c.y=b,c.length=function(){var a=this;return Math.sqrt(a.x*a.x+a.y*a.y)},c.normalize=function(a){var b=this,c=b.length();a||(a=1),b.x*=a/c,b.y*=a/c},c.clone=function(){var a=this;return new BubbleTree.Vector(a.x,a.y)}},BubbleTree.Bubbles=BubbleTree.Bubbles||{},BubbleTree.Bubbles.Donut=function(a,b,c,d,e,f){var g=BubbleTree,h=g.Utils,i=this;i.className="bubble",i.node=a,i.paper=b.paper,i.origin=c,i.bc=b,i.rad=d,i.angle=e,i.color=f,i.alpha=1,i.visible=!1,i.ns=g,i.bubbleRad=h.amount2rad(this.node.amount),i.childRotation=0,i.getXY=function(){var a=this,b=a.origin,c=a.angle,d=a.rad;a.pos.x=b.x+Math.cos(c)*d,a.pos.y=b.y-Math.sin(c)*d},i.init=function(){var a=this;a.pos=new a.ns.Vector(0,0),a.getXY();var b=[],c,d,e,f=[],g=a.bc.config.bubbleStyles;a.node.shortLabel||(a.node.shortLabel=a.node.label.length>50?a.node.label.substr(0,30)+"...":a.node.label),a.breakdownOpacities=[.2,.7,.45,.6,.35];for(d in a.node.breakdowns)c=a.node.breakdowns[d],c.famount=h.formatNumber(c.amount),e=c.amount/a.node.amount,b.push(e),f.push(c),g&&g.hasOwnProperty("name")&&g.name.hasOwnProperty(c.name)&&g.name[c.name].hasOwnProperty("opacity")&&(a.breakdownOpacities[f.length-1]=g.name[c.name].opacity);a.node.breakdowns=f,a.breakdown=b;var i=!1;a.initialized=!0},i.onclick=function(a){var b=this;b.bc.navigateTo(b.node)},i.onhover=function(a){var b=this,c=b.bc.$container[0];a.node=b.node,a.target=b,a.bubblePos={x:b.pos.x,y:b.pos.y},a.mousePos={x:a.origEvent.pageX-c.offsetLeft,y:a.origEvent.pageY-c.offsetTop},a.type="SHOW",b.bc.tooltip(a)},i.onunhover=function(a){var b=this,c=b.bc.$container[0];a.node=b.node,a.target=b,a.type="HIDE",a.bubblePos={x:b.pos.x,y:b.pos.y},a.mousePos={x:a.origEvent.pageX-c.offsetLeft,y:a.origEvent.pageY-c.offsetTop},b.bc.tooltip(a)},this.draw=function(){var a=this,b=Math.max(5,a.bubbleRad*a.bc.bubbleScale),c=a.pos.x,d=a.pos.y,e=a.getXY(),f=b>20,g=a.pos.x,h=a.pos.y;if(!!a.visible){a.circle.attr({cx:g,cy:h,r:b,"fill-opacity":a.alpha}),a.node.children.length>1?a.dashedBorder.attr({cx:g,cy:h,r:b*.85,"stroke-opacity":a.alpha*.8}):a.dashedBorder.attr({"stroke-opacity":0});if(a.breakdown.length>1){var i,j,k,l,m,n,o,p,q,r=b*.85,s=-Math.PI*.5,t;for(i in a.breakdown){t=a.breakdown[i]*Math.PI*2,j=g+Math.cos(s)*r,n=h+Math.sin(s)*r,k=g+Math.cos(s+t)*r,o=h+Math.sin(s+t)*r,l=g+Math.cos(s+t)*b,p=h+Math.sin(s+t)*b,m=g+Math.cos(s)*b,q=h+Math.sin(s)*b,s+=t;var u="M"+j+" "+n+" A"+r+","+r+" 0 "+(t>Math.PI?"1,1":"0,1")+" "+k+","+o+" L"+l+" "+p+" A"+b+","+b+" 0 "+(t>Math.PI?"1,0":"0,0")+" "+m+" "+q+" Z";a.breakdownArcs[i].attr({path:u,"stroke-opacity":a.alpha*.2,"fill-opacity":a.breakdownOpacities[i]*a.alpha})}}f?(a.label.show(),b<40?(a.label.find(".desc").hide(),a.label2.show()):(a.label.find(".desc").show(),a.label2.hide())):(a.label.hide(),a.label2.show()),a.label.css({width:2*b*.9+"px",opacity:a.alpha}),a.label.css({left:a.pos.x-b*.9+"px",top:a.pos.y-a.label.height()*.53+"px"});var v=Math.max(80,3*b);a.label2.css({width:v+"px",opacity:a.alpha}),a.label2.css({left:g-v*.5+"px",top:h+b+"px"})}},this.hide=function(){var a=this,b;a.circle.remove(),a.dashedBorder.remove(),a.label.remove(),a.label2.remove(),a.visible=!1;for(b in a.breakdownArcs)a.breakdownArcs[b].remove()},i.show=function(){var a=this,b,c=Math.max(5,a.bubbleRad*a.bc.bubbleScale);a.circle=a.paper.circle(a.pos.x,a.pos.y,c).attr({stroke:!1,fill:a.color}),$.isFunction(a.bc.config.initTooltip)&&a.bc.config.initTooltip(a.node,a.circle.node),a.dashedBorder=a.paper.circle(a.pos.x,a.pos.y,c*.85).attr({stroke:"#fff","stroke-opacity":a.alpha*.4,"stroke-dasharray":". ",fill:!1}),a.label=$('<div class="label"><div class="amount">'+h.formatNumber(a.node.amount)+'</div><div class="desc">'+a.node.shortLabel+"</div></div>"),a.bc.$container.append(a.label),a.node.children.length>1&&($(a.circle.node).css({cursor:"pointer"}),$(a.label).css({cursor:"pointer"})),a.label2=$('<div class="label2"><span>'+a.node.shortLabel+"</span></div>"),a.bc.$container.append(a.label2);var d=[a.circle.node,a.label];if(a.breakdown.length>1){a.breakdownArcs={};for(b in a.breakdown){var e=a.paper.path("M 0 0 L 2 2").attr({fill:"#fff","fill-opacity":Math.random()*.4+.3,stroke:"#fff"});a.breakdownArcs[b]=e,$.isFunction(a.bc.config.initTooltip)&&a.bc.config.initTooltip(a.node.breakdowns[b],e.node)}for(b in a.breakdownArcs)$(a.breakdownArcs[b].node).click(a.onclick.bind(a))}var f=new a.ns.MouseEventGroup(a,d);f.click(a.onclick.bind(a)),f.hover(a.onhover.bind(a)),f.unhover(a.onunhover.bind(a)),a.visible=!0},i.arcHover=function(a){var b=this,c=b.bc.$container[0],d,e=b.breakdownArcs,f,g=b.node.breakdowns;for(d in e)if(e[d].node==a.target){a.node=g[d],a.bubblePos={x:b.pos.x,y:b.pos.y},a.mousePos={x:a.pageX-c.offsetLeft,y:a.pageY-c.offsetTop},a.target=b,a.type="SHOW",b.bc.tooltip(a);return}vis4.log("cant find the breakdown node")},i.arcUnhover=function(a){var b=this,c=b.bc.$container[0],d,e=b.breakdownArcs,f,g=b.node.breakdowns;for(d in e)if(e[d].node==a.target){a.node=g[d],a.bubblePos={x:b.pos.x,y:b.pos.y},a.mousePos={x:a.pageX-c.offsetLeft,y:a.pageY-c.offsetTop},a.type="HIDE",a.target=b,b.bc.tooltip(a);return}vis4.log("cant find the breakdown node")},i.init()},BubbleTree.Bubbles=BubbleTree.Bubbles||{},BubbleTree.Bubbles.Icon=function(a,b,c,d,e,f){var g=BubbleTree,h=g.Utils,i=this;i.className="bubble",i.node=a,i.paper=b.paper,i.origin=c,i.bc=b,i.rad=d,i.angle=e,i.color=f,i.alpha=1,i.visible=!1,i.ns=g,i.pos=g.Vector(0,0),i.bubbleRad=h.amount2rad(this.node.amount),i.iconLoaded=!1,i.childRotation=0,i.getXY=function(){var a=this,b=a.origin,c=a.angle,d=a.rad;a.pos===undefined&&(a.pos=new a.ns.Vector(0,0)),a.pos.x=b.x+Math.cos(c)*d,a.pos.y=b.y-Math.sin(c)*d},i.init=function(){var a=this;a.getXY(),a.hasIcon=a.node.hasOwnProperty("icon"),a.node.shortLabel||(a.node.shortLabel=a.node.label.length>50?a.node.label.substr(0,30)+"...":a.node.label),a.initialized=!0},i.show=function(){var a=this,b,c=a.pos.x,d,e=a.pos.y,f=Math.max(5,a.bubbleRad*a.bc.bubbleScale);a.circle=a.paper.circle(c,e,f).attr({stroke:!1,fill:a.color}),a.dashedBorder=a.paper.circle(c,e,Math.min(f-3,f*.95)).attr({stroke:"#ffffff","stroke-dasharray":"- "}),$.isFunction(a.bc.config.initTooltip)&&a.bc.config.initTooltip(a.node,a.circle.node),a.label=$('<div class="label"><div class="amount">'+h.formatNumber(a.node.amount)+'</div><div class="desc">'+a.node.shortLabel+"</div></div>"),a.bc.$container.append(a.label),$.isFunction(a.bc.config.initTooltip)&&a.bc.config.initTooltip(a.node,a.label[0]),a.label2=$('<div class="label2"><span>'+a.node.shortLabel+"</span></div>"),a.bc.$container.append(a.label2),a.node.children.length>0&&($(a.circle.node).css({cursor:"pointer"}),$(a.label).css({cursor:"pointer"}));var g=[a.circle.node,a.label,a.dashedBorder.node],i=new a.ns.MouseEventGroup(a,g);i.click(a.onclick.bind(a)),i.hover(a.onhover.bind(a)),i.unhover(a.onunhover.bind(a)),a.mgroup=i,a.visible=!0,a.hasIcon&&(a.iconLoaded?a.displayIcon():a.loadIcon())},i.loadIcon=function(){var a=this,b=new vis4loader;b.add(a.bc.config.rootPath+a.node.icon),b.load(a.iconLoadComplete.bind(a))},i.iconLoadComplete=function(a){var b=this,c,d,e;c=a.items[0].data,b.iconPathData=[],e=c.getElementsByTagName("path");for(d in e)e[d]&&$.isFunction(e[d].getAttribute)&&b.iconPathData.push(String(e[d].getAttribute("d")));b.iconLoaded=!0,b.displayIcon()},i.displayIcon=function(){var a=this,b,c;a.iconPaths=[];for(b in a.iconPathData)c=a.paper.path(a.iconPathData[b]).attr({fill:"#fff",stroke:"none"}).translate(-50,-50),a.iconPaths.push(c),a.mgroup.addMember(c.node)},i.removeIcon=function(){var a=this,b,c;for(b in a.iconPaths)a.iconPaths[b].remove();a.iconPaths=[]},i.draw=function(){var a=this,b=Math.max(5,a.bubbleRad*a.bc.bubbleScale),c=a.pos.x,d=a.pos.y,e=a.getXY(),f=a.pos.x,g=a.pos.y,h=a.hasIcon&&b>15,i=a.hasIcon?b>40:b>20,j,k,l,m,n;if(!!a.visible){a.circle.attr({cx:f,cy:g,r:b,"fill-opacity":a.alpha}),a.node.children.length>1?a.dashedBorder.attr({cx:a.pos.x,cy:a.pos.y,r:Math.min(b-3,b-4),"stroke-opacity":a.alpha*.9}):a.dashedBorder.attr({"stroke-opacity":0}),i?(a.label.show(),h&&b<70||!h&&b<40?(a.label.find(".desc").hide(),a.label2.show()):(a.label.find(".desc").show(),a.label2.hide())):(a.label.hide(),a.label2.show()),n=h?g+b*.77-a.label.height():g-a.label.height()*.5,a.label.css({width:(h?b*1.2:2*b)+"px",opacity:a.alpha}),a.label.css({left:(h?f-b*.6:f-b)+"px",top:n+"px"});var o=Math.max(80,3*b);a.label2.css({width:o+"px",opacity:a.alpha}),a.label2.css({left:f-o*.5+"px",top:g+b+"px"});if(a.hasIcon)if(h){l=(b-(i?a.label.height()*.5:0))/60;for(j in a.iconPaths)k=a.iconPaths[j],m="scale("+l+") translate("+f/l+", "+(g+(i?a.label.height()*-0.5:0))/l+")",k.node.setAttribute("transform",m),k.attr({"fill-opacity":a.alpha})}else for(j in a.iconPaths)k=a.iconPaths[j],k.attr({"fill-opacity":0})}},i.hide=function(){var a=this,b;a.circle.remove(),a.dashedBorder.remove(),a.label.remove(),a.label2.remove(),a.visible=!1,a.hasIcon&&a.removeIcon()},i.onclick=function(a){var b=this;b.bc.onNodeClick(b.node),b.bc.navigateTo(b.node)},i.onhover=function(a){var b=this,c=b.bc.$container[0];a.node=b.node,a.bubblePos={x:b.pos.x,y:b.pos.y},a.mousePos={x:a.origEvent.pageX-c.offsetLeft,y:a.origEvent.pageY-c.offsetTop},a.type="SHOW",a.target=b,b.bc.tooltip(a)},i.onunhover=function(a){var b=this,c=b.bc.$container[0];a.node=b.node,a.type="HIDE",a.target=b,a.bubblePos={x:b.pos.x,y:b.pos.y},a.mousePos={x:a.origEvent.pageX-c.offsetLeft,y:a.origEvent.pageY-c.offsetTop},b.bc.tooltip(a)},i.init()},BubbleTree.Bubbles=BubbleTree.Bubbles||{},BubbleTree.Bubbles.Plain=function(a,b,c,d,e,f){var g=BubbleTree,h=g.Utils,i=this;i.className="bubble",i.node=a,i.paper=b.paper,i.origin=c,i.bc=b,i.rad=d,i.angle=e,i.color=f,i.alpha=1,i.visible=!1,i.ns=g,i.pos=g.Vector(0,0),i.bubbleRad=h.amount2rad(this.node.amount),i.container=i.bc.$container,i.childRotation=0,i.getXY=function(){var a=this,b=a.origin,c=a.angle,d=a.rad;a.pos===undefined&&(a.pos=new a.ns.Vector(0,0)),a.pos.x=b.x+Math.cos(c)*d,a.pos.y=b.y-Math.sin(c)*d},i.init=function(){var a=this;a.getXY();var b=!1;a.node.shortLabel||(a.node.shortLabel=a.node.label.length>50?a.node.label.substr(0,30)+"...":a.node.label),a.initialized=!0},i.onclick=function(a){var b=this;b.bc.onNodeClick(b.node),b.bc.navigateTo(b.node)},i.onhover=function(a){var b=this,c=b.bc.$container[0];a.node=b.node,a.target=b,a.bubblePos={x:b.pos.x,y:b.pos.y},a.mousePos={x:a.origEvent.pageX-c.offsetLeft,y:a.origEvent.pageY-c.offsetTop},a.type="SHOW",b.bc.tooltip(a)},i.onunhover=function(a){var b=this,c=b.bc.$container[0];a.node=b.node,a.type="HIDE",a.target=b,a.bubblePos={x:b.pos.x,y:b.pos.y},a.mousePos={x:a.origEvent.pageX-c.offsetLeft,y:a.origEvent.pageY-c.offsetTop},b.bc.tooltip(a)},i.draw=function(){var a=this,b=Math.max(5,a.bubbleRad*a.bc.bubbleScale),c=a.pos.x,d=a.pos.y,e=a.getXY(),f=b>20,g=a.pos.x,h=a.pos.y;if(!!a.visible){a.circle.attr({cx:a.pos.x,cy:a.pos.y,r:b,"fill-opacity":a.alpha}),a.node.children.length>1?a.dashedBorder.attr({cx:a.pos.x,cy:a.pos.y,r:b-4,"stroke-opacity":a.alpha*.9}):a.dashedBorder.attr({"stroke-opacity":0}),f?(a.label.show(),b<40?(a.label.find(".desc").hide(),a.label2.show()):(a.label.find(".desc").show(),a.label2.hide())):(a.label.hide(),a.label2.show()),a.label.css({width:2*b+"px",opacity:a.alpha}),a.label.css({left:a.pos.x-b+"px",top:a.pos.y-a.label.height()*.5+"px"});var i=Math.max(80,3*b);a.label2.css({width:i+"px",opacity:a.alpha}),a.label2.css({left:g-i*.5+"px",top:h+b+"px"})}},i.hide=function(){var a=this,b;a.circle.remove(),a.dashedBorder.remove(),a.label.remove(),a.label2.remove(),a.visible=!1},i.show=function(){var a=this,b,c=a.pos.x,d=a.pos.y,e=Math.max(5,a.bubbleRad*a.bc.bubbleScale);a.circle=a.paper.circle(c,d,e).attr({stroke:!1,fill:a.color}),a.dashedBorder=a.paper.circle(c,d,e-3).attr({stroke:"#ffffff","stroke-dasharray":"- "}),a.label=$('<div class="label"><div class="amount">'+h.formatNumber(a.node.amount)+'</div><div class="desc">'+a.node.shortLabel+"</div></div>"),a.container.append(a.label),a.node.children.length>0&&($(a.circle.node).css({cursor:"pointer"}),$(a.label).css({cursor:"pointer"})),a.label2=$('<div class="label2"><span>'+a.node.shortLabel+"</span></div>"),a.container.append(a.label2);var f=[a.circle.node,a.label,a.dashedBorder.node],g=new a.ns.MouseEventGroup(a,f);g.click(a.onclick.bind(a)),g.hover(a.onhover.bind(a)),g.unhover(a.onunhover.bind(a)),a.visible=!0},i.init()}
+ */
+/*jshint undef: true, browser:true, jquery: true, devel: true */
+/*global Raphael, TWEEN, vis4, vis4color, vis4loader */
+
+var BubbleTree = function(config, onHover, onUnHover) {
+	
+	var me = this;
+	
+	me.$container = $(config.container);	
+	
+	me.config = config;
+	
+	if (!me.config.hasOwnProperty('rootPath')) me.config.rootPath = '';
+	
+	/*
+	 * this function is called when the user hovers a bubble
+	 */
+	//me.onHover = onHover;
+	
+	//me.onUnHover = onUnHover;
+	me.tooltip = config.tooltipCallback ? config.tooltipCallback : function() {};
+	
+	/*
+	 * stylesheet JSON that contains colors and icons for the bubbles
+	 */
+	me.style = config.bubbleStyles;
+	
+	me.ns = BubbleTree;
+	
+	/*
+	 * hashmap of all nodes by url token
+	 */
+	me.nodesByUrlToken = {};
+	
+	/*
+	 * flat array of all nodes
+	 */
+	me.nodeList = [];
+	
+	me.iconsByUrlToken = {};
+	
+	me.globalNodeCounter = 0;
+	
+	me.displayObjects = [];
+	
+	me.bubbleScale = 1;
+	
+	me.globRotation = 0;
+	
+	me.currentYear = config.initYear;
+	
+	me.currentCenter = undefined;
+	
+	me.currentTransition = undefined;
+	
+	me.baseUrl = '';
+	
+	/*
+	 * @public loadData
+	 */
+	me.loadData = function(url) {
+		$.ajax({
+			url: url,
+			dataType: 'json',
+			success: this.setData.bind(this)
+		});
+	};
+	
+	/*
+	 * is either called directly or by $.ajax when data json file is loaded
+	 */
+	me.setData = function(data) {
+		var me = this;
+		if (!data) data = me.config.data; // IE fix
+		me.initData(data);
+		me.initPaper();
+		me.initBubbles();
+		me.initTween();
+		me.initHistory();
+	};
+	
+	/*
+	 * initializes the data tree, adds links to parent node for easier traversal etc
+	 */
+	me.initData = function(root) {
+		var me = this;
+		root.level = 0;
+		me.preprocessData(root);
+		me.traverse(root, 0);
+		me.treeRoot = root;
+	};
+	
+	me.preprocessData = function(root) {
+		var me = this, maxNodes = me.config.maxNodesPerLevel;
+		if (maxNodes) {
+			if (maxNodes < root.children.length) {
+				// take the smallest nodes
+				// sort children
+				var tmp = me.sortChildren(root.children);
+				tmp.reverse();
+				var keep = [], move = [], moveAmount = 0, breakdown;
+				for (var i in root.children) {
+					if (i < maxNodes) {
+						keep.push(root.children[i]);
+					} else {
+						move.push(root.children[i]);
+						moveAmount += root.children[i].amount;
+					}
+				}
+				root.children = keep;
+				root.children.push({
+					'label': 'More',
+					'name': 'more',
+					'amount': moveAmount,
+					'children': move,
+					'breakdown': breakdown
+				});
+			}
+		}
+	};
+	
+	/*
+	 * used for recursive tree traversal
+	 */
+	me.traverse = function(node, index) {
+		var c, child, pc, me = this, urlTokenSource, styles = me.config.bubbleStyles;
+		
+		if (!node.children) node.children = [];
+		
+		// store node in flat node list
+		me.nodeList.push(node);
+		
+		node.famount = me.ns.Utils.formatNumber(node.amount);
+		if (node.parent) node.level = node.parent.level + 1;
+		
+		if (styles) {
+		
+			var props = ['color', 'shortLabel', 'icon'];
+		
+			for (var p in props) {
+				var prop = props[p];
+				
+				if (styles.hasOwnProperty('id') && styles.id.hasOwnProperty(node.id) && styles.id[node.id].hasOwnProperty(prop)) {
+					// use color by id
+					node[prop] = styles.id[node.id][prop];
+				} else if (node.hasOwnProperty('name') && styles.hasOwnProperty('name') && styles.name.hasOwnProperty(node.name) && styles.name[node.name].hasOwnProperty(prop)) {
+					// use color by id
+					node[prop] = styles.name[node.name][prop];
+				} else if (node.hasOwnProperty('taxonomy') && styles.hasOwnProperty(node.taxonomy) && styles[node.taxonomy].hasOwnProperty(node.name) && styles[node.taxonomy][node.name].hasOwnProperty(prop)) {
+					node[prop] = styles[node.taxonomy][node.name][prop];
+				}
+			}
+		} 
+		
+		if (!node.color) {
+			// use color from parent node if no other match available
+			if (node.level > 0) node.color = node.parent.color;
+			else node.color = '#999999';
+		}
+		// lighten up the color if there are no children
+		if (node.children.length < 2) {
+			node.color = vis4color.fromHex(node.color).saturation('*.86').x;
+		}
+		
+		if (node.level > 0) {
+			pc = node.parent.children;
+			if (pc.length > 1) {	
+				node.left = pc[(index-1+pc.length) % pc.length];
+				node.right = pc[(Number(index)+1) % pc.length];
+				if (node.right == node.left) node.right = undefined;
+			}
+		}
+		if (node.label !== undefined && node.label !== "") {
+			urlTokenSource = node.label;
+		} else if (node.token !== undefined && node.token !== "") {
+			urlTokenSource = node.token;
+		} else {
+			urlTokenSource = ''+me.globalNodeCounter;
+		}
+		
+		me.globalNodeCounter++;
+		
+		node.urlToken = urlTokenSource.toLowerCase().replace(/\W/g, "-");
+		while (me.nodesByUrlToken.hasOwnProperty(node.urlToken)) {
+			node.urlToken += '-';
+		} 
+		me.nodesByUrlToken[node.urlToken] = node;
+		node.maxChildAmount = 0;
+		
+		// sort children
+		node.children = me.sortChildren(node.children, true);
+		
+		for (c in node.children) {
+			child = node.children[c];
+			child.parent = node;
+			node.maxChildAmount = Math.max(node.maxChildAmount, child.amount);
+			me.traverse(child, c);
+		}
+		
+		if (node.breakdowns !== null) {
+			node.breakdownsByName = {};
+			for (c in node.breakdowns) {
+				var bd = node.breakdowns[c];
+				bd.famount = me.ns.Utils.formatNumber(bd.amount);
+				if (bd.name) node.breakdownsByName[bd.name] = bd;
+			}
+		}
+	};
+	
+	me.sortChildren = function(children, alternate) {
+		var tmp = [], odd = true;
+		children.sort(me.compareAmounts);
+		if (alternate) {
+			while (children.length > 0) {
+				tmp.push(odd ? children.pop() : children.shift());
+				odd = !odd;
+			}
+			return tmp;
+		} else {
+			return children;
+		}
+	};
+	
+	me.compareAmounts = function(a, b) {
+		if (a.amount > b.amount) return 1;
+		if (a.amount == b.amount) return 0;
+		return -1;
+	};
+	
+	/*
+	 * initializes all that RaphaelJS stuff
+	 */
+	me.initPaper = function() {
+		var me = this, $c = me.$container, rt = me.treeRoot,
+			w = $c.width(), h = $c.height(),
+			paper = Raphael($c[0], w, h),
+			maxRad = Math.min(w, h) * 0.5 - 40,
+			base, Vector = me.ns.Vector,
+			origin = new Vector(w * 0.5, h * 0.5); // center
+			
+		me.width = w;
+		me.height = h;
+		me.paper = paper;
+		base = Math.pow((Math.pow(rt.amount, 0.6) + Math.pow(rt.maxChildAmount, 0.6)*2) / maxRad, 1.6666666667);
+		me.a2radBase = me.ns.a2radBase = base;
+		
+		me.origin = origin;
+		
+		$(window).resize(me.onResize.bind(me));
+	};
+	
+	me.onResize = function() {
+		var me = this, $c = me.$container, w = $c.width(), h = $c.height(), 
+			maxRad = Math.min(w, h) * 0.5 - 40, base, rt = me.treeRoot, b, obj;
+		me.paper.setSize(w, h);
+		me.origin.x = w * 0.5;
+		me.origin.y = h * 0.5;
+		me.width = w;
+		me.height = h;
+		base = Math.pow((Math.pow(rt.amount, 0.6) + Math.pow(rt.maxChildAmount, 0.6)*2) / maxRad, 1.6666666667);
+		me.a2radBase = me.ns.a2radBase = base;
+		
+		for (b in me.displayObjects) {
+			obj = me.displayObjects[b];
+			if (obj.className == "bubble") {
+				obj.bubbleRad = me.ns.Utils.amount2rad(obj.node.amount);
+			}
+		}
+		// vis4.log(me);
+		if (me.currentCenter) {
+			me.changeView(me.currentCenter.urlToken);
+		}
+	};
+	
+	/*
+	 * initializes the Tweening engine
+	 */
+	me.initTween = function() {
+		this.tweenTimer = setInterval(this.loop, 1000/120);
+	};
+	
+	/*
+	 * creates instances for all bubbles in the dataset. the bubbles will
+	 * remain invisble until they enter the stage via changeView()
+	 */
+	me.initBubbles = function() {
+		//vis4.log('initBubbles');
+		var me = this, rt = me.treeRoot, i, icons = false, Bubbles = me.ns.Bubbles, bubbleClass;
+		
+		me.bubbleClasses = [];
+		
+		// defaults to plain bubble
+		if (!me.config.hasOwnProperty('bubbleType')) me.config.bubbleType = ['plain'];
+		// convert to array if neccessairy
+		if (!$.isArray(me.config.bubbleType)) me.config.bubbleType = [me.config.bubbleType];
+		
+		if ($.isArray(me.config.bubbleType)) {
+			for (i in me.config.bubbleType) {
+				if (me.config.bubbleType[i] == 'icon') icons = true;
+				me.bubbleClasses.push(me.getBubbleType(me.config.bubbleType[i]));
+			}
+		}
+		
+		var rootBubble = me.createBubble(rt, me.origin, 0, 0, rt.color);
+		me.traverseBubbles(rootBubble);
+	};
+	
+	/*
+	 * returns the bubble class for a given bubble class id
+	 * e.g. 'icon' > BubbleTree.Bubbles.Icon
+	 */
+	me.getBubbleType = function(id) {
+		var me = this, Bubbles = me.ns.Bubbles;
+		// chosse one of them for the vis
+		switch (id) {
+			case 'pie': return Bubbles.Pies;
+			case 'donut': return Bubbles.Donut;
+			case 'multi': return Bubbles.Multi;
+			case 'icon': return Bubbles.Icon;
+			default: return Bubbles.Plain;
+		}
+	};
+
+	/*
+	 * iterates over the complete tree and creates a bubble for
+	 * each node
+	 */
+	me.traverseBubbles = function(parentBubble) {
+		var me = this, ring,
+			a2rad = me.ns.Utils.amount2rad,
+			i, c, children, childBubble, childRadSum = 0, oa = 0, da, ca, twopi = Math.PI * 2;
+		children = parentBubble.node.children;
+		
+		// sum radii of all children
+		for (i in children) {
+			c = children[i];
+			childRadSum += a2rad(c.amount);
+		}
+		
+		if (children.length > 0) {
+			// create ring
+			ring = me.createRing(parentBubble.node, parentBubble.pos, 0, { stroke: '#888', 'stroke-dasharray': "-" });
+		}
+		
+		for (i in children) {
+			c = children[i];
+		
+			da = a2rad(c.amount) / childRadSum * twopi;
+			ca = oa + da*0.5;
+		
+			if (isNaN(ca)) vis4.log(oa, da, c.amount, childRadSum, twopi);
+		
+			c.centerAngle = ca;
+		
+			childBubble = me.createBubble(c, parentBubble.pos, 0, ca, c.color);
+			// für jedes kind einen bubble anlegen und mit dem parent verbinden
+			oa += da;
+			
+			me.traverseBubbles(childBubble);
+		}
+
+	};
+	
+		
+	/*
+	 * creates a new bubble for a given node. the bubble type will be chosen
+	 * by the level of the node
+	 */
+	me.createBubble = function(node, origin, rad, angle, color) {
+		var me = this, ns = me.ns, i, b, bubble, classIndex = node.level;
+		classIndex = Math.min(classIndex, me.bubbleClasses.length-1);
+		
+		bubble = new me.bubbleClasses[classIndex](node, me, origin, rad, angle, color);
+		me.displayObjects.push(bubble);
+		return bubble;
+	};
+	
+	me.createRing = function(node, origin, rad, attr) {
+		var me = this, ns = me.ns, ring;
+		ring = new ns.Ring(node, me, origin, rad, attr);
+		me.displayObjects.push(ring);
+		return ring;
+	};
+	
+	/*
+	 * is called every time the user changes the view
+	 * each view is defined by the selected node (which is displayed 
+	 */
+	me.changeView = function(token) {
+		var me = this, 
+			paper = me.paper,
+			maxRad = Math.min(me.width, me.height) * 0.35,
+			ns = me.ns, 
+			utils = ns.Utils, 
+			o = me.origin,
+			l1attr = { stroke: '#ccc', 'stroke-dasharray': "- " },
+			l2attr = { stroke: '#ccc', 'stroke-dasharray': ". " },
+			a2rad = utils.amount2rad,
+			root = me.treeRoot, 
+			nodesByUrlToken = me.nodesByUrlToken, 
+			node = nodesByUrlToken.hasOwnProperty(token) ? nodesByUrlToken[token] : null,
+			t = new ns.Layout(), 
+			bubble, tr, i, twopi = Math.PI * 2,
+			getBubble = me.getBubble.bind(me), getRing = me.getRing.bind(me),
+			unify = me.unifyAngle;
+		
+		if (node !== null) {
+		
+			// what do you we have to do here?
+			// - find out the origin position
+			// -
+		
+			var parent, grandpa, sibling, c, cn, rad1, rad2, rad, srad, sang, ring, tgtScale, 
+				radSum, leftTurn = false, rightTurn = false;
+		
+			
+			
+			// initially we will mark all bubbles and rings for hiding
+			// get....() will set this flag to false 
+			for (i in me.displayObjects) me.displayObjects[i].hideFlag = true;
+			
+		
+			if (node == root || node.parent == root && node.children.length < 2) {
+						
+				t.$(me).bubbleScale = 1.0;
+				
+				// move origin to center
+				t.$(o).x = me.width * 0.5;
+				t.$(o).y = me.height * 0.5;
+
+				// make the root bubble visible
+				parent = getBubble(root);
+				
+				//parent.childRotation = 0;
+				
+				if (node != root) {
+					parent.childRotation = -node.centerAngle;
+				}
+				
+				rad1 = a2rad(root.amount) + a2rad(root.maxChildAmount) + 20;
+
+				ring = getRing(root);
+				t.$(ring).rad = rad1;
+
+				for (i in root.children) {
+					cn = root.children[i];
+					// adjust rad and angle for children
+					bubble = getBubble(cn);
+					t.$(bubble).angle = unify(cn.centerAngle + parent.childRotation);
+					t.$(bubble).rad = rad1;
+				}
+				
+			} else { 
+			
+				// node is not the root node
+	
+				var origNode = node; // save the reference of the node..
+
+				if (node.children.length < 2) { // ..because if it has no children..
+					node = node.parent;         // ..we center on its parent
+				} 
+				
+				tgtScale = maxRad / (a2rad(node.amount) + a2rad(node.maxChildAmount)*2);
+				t.$(me).bubbleScale = tgtScale;
+				
+				parent = getBubble(node);
+				
+				if (me.currentCenter && me.currentCenter == node.left) rightTurn = true;
+				else if (me.currentCenter && me.currentCenter == node.right) leftTurn = true;
+				
+				var sa = me.shortestAngleTo;
+				//if (leftTurn) sa = me.shortestLeftTurn;
+				//if (rightTurn) sa = me.shortestRightTurn;
+
+				t.$(parent).angle = sa(parent.angle, 0);
+				
+				// find the sum of all radii from node to root
+				rad1 = (a2rad(node.amount) + a2rad(node.maxChildAmount)) * tgtScale + 20;
+
+				ring = getRing(node);
+				t.$(ring).rad = rad1;
+
+				grandpa = getBubble(node.parent);
+				grandpa.childRotation = -node.centerAngle;
+				
+				var maybeRoot = grandpa;
+				
+				while (maybeRoot && maybeRoot.node.parent) {
+					maybeRoot = getBubble(maybeRoot.node.parent, true);
+					t.$(maybeRoot).rad = 0;
+				}
+				
+				t.$(grandpa).rad = 0;
+				// 
+				var hw = me.width * 0.5;
+				
+				rad2 = 0 - Math.max(
+					//hw *0.8 - tgtScale * (a2rad(node.parent.amount)+a2rad(node.amount)), // maximum visible part
+					hw * 0.8 - tgtScale * (a2rad(node.parent.amount) + a2rad(Math.max(node.amount*1.15 + node.maxChildAmount*1.15, node.left.amount * 0.85, node.right.amount * 0.85))),
+					tgtScale*a2rad(node.parent.amount)*-1 + hw*0.15 // minimum visible part
+				) + hw;
+				
+				vis4.log('rad (parent) = '+rad2,'   rad (center) = ',rad1);
+				
+				if (node.left && node.right) {
+					var maxSiblSize = tgtScale * a2rad(Math.max(node.left.amount, node.right.amount));
+				}
+		
+				//rad2 = hw - (tgtScale*a2rad(node.parent.amount)*-1+ hw*0.15);
+
+				radSum = rad1 + rad2;
+				
+				t.$(o).x = me.width * 0.5 - rad2 - (node != origNode ? rad1 * 0.35: 0);
+				t.$(o).y = me.height * 0.5;
+				
+				vis4.log('o.x = '+o.x,'    t.$(o).x = '+t.$(o).x);
+				
+				new vis4.DelayedTask(1500, vis4, vis4.log, o, grandpa.pos);
+				
+				rad2 += me.width * 0.1;
+				
+				ring = getRing(node.parent);
+				t.$(ring).rad = rad2;
+				
+				t.$(parent).rad = rad2;
+				
+				var ao = 0-(node != origNode ? origNode.centerAngle + parent.childRotation: 0);
+				// children
+				for (i in node.children) {
+					cn = node.children[i];
+					// adjust rad and angle for children
+					bubble = getBubble(cn);
+					t.$(bubble).angle = me.shortestAngleTo(bubble.angle, cn.centerAngle + parent.childRotation + ao);
+					t.$(bubble).rad = rad1;
+				}
+				
+				// left and right sibling
+				
+				var siblCut = me.height * 0.07;
+				
+				if (node.left) {
+					sibling = node.left;
+					srad = a2rad(sibling.amount)*tgtScale;
+					sang = twopi - Math.asin((me.paper.height*0.5 + srad - siblCut) / rad2);
+					
+					bubble = getBubble(sibling);
+					t.$(bubble).rad = rad2;
+					t.$(bubble).angle = sa(bubble.angle, sang);
+				}
+				if (node.right) {
+					sibling = node.right;
+					srad = a2rad(sibling.amount)*tgtScale;
+					sang = Math.asin((me.paper.height*0.5 + srad - siblCut) / rad2);
+					
+					bubble = getBubble(sibling);
+					t.$(bubble).rad = rad2;
+					t.$(bubble).angle = sa(bubble.angle, sang);
+				}
+				
+				node = origNode;
+			}
+			
+			// now we're going to check all hides and shows
+			for (i in me.displayObjects) {
+				var obj = me.displayObjects[i];
+				if (obj.hideFlag && obj.visible) {
+					// bubble is on stage but shouldn't
+					t.$(obj).alpha = 0; // let it disappear
+					if (obj.className == "bubble" && obj.node.level > 1) t.$(obj).rad = 0; // move to center
+					//else t.$(obj).rad = 
+					t.hide(obj); // remove from stage afterwards
+				} else if (!obj.hideFlag) {
+					// bubble is not on stage but should
+					t.$(obj).alpha = 1; 
+					if (!obj.visible) {
+						obj.alpha = 0;
+						t.show(obj);
+					}
+				} 
+			}
+
+			tr = new ns.Transitioner($.browser.msie || me.currentCenter == node ? 0 : 1000);
+			tr.changeLayout(t);
+			me.currentTransition = tr;
+			if (!me.currentCenter && $.isFunction(me.config.firstNodeCallback)) {
+				me.config.firstNodeCallback(node);
+			}
+			me.currentCenter = node;
+			vis4.log('currentNode = '+me.currentCenter);
+						
+		} else {
+			utils.log('node '+token+' not found');
+		}
+		// step1: 
+		
+		// step2: 
+	};
+	
+	me.unifyAngle = function(a) {
+		var pi = Math.PI, twopi = pi * 2;
+		while (a >= twopi) a -= twopi;
+		while (a < 0) a += twopi;
+		return a;
+	};
+	
+	me.shortestAngle = function(f, t) {
+		var deg = function(a) { return Math.round(a/Math.PI*180)+''; };
+		var pi = Math.PI, twopi = pi * 2, unify= me.unifyAngle;
+		f = unify(f);
+		t = unify(t);
+		var sa = t - f;
+		if (sa > pi) sa -= twopi;
+		if (sa < -pi) sa += twopi;
+		
+		return sa;
+	};
+	
+	me.shortestAngleTo = function(f, t) {
+		return f+me.shortestAngle(f, t);
+	};
+	
+	me.shortestLeftTurn = function(f, t) {
+		var sa = me.shortestAngle(f, t);
+		if (sa > 0) sa = sa - Math.PI*2;
+		return f+sa;
+	};
+	
+	me.shortestRightTurn = function(f, t) {
+		var sa = me.shortestAngle(f, t);
+		if (sa < 0) sa = Math.PI*2 + sa;
+		return f+sa;
+	};
+
+	
+	/*
+	 * returns the instance of a bubble for a given node
+	 */
+	me.getBubble = function(node, keepHidden) {
+		return this.getDisplayObject('bubble', node, keepHidden);
+	};
+	
+	/*
+	 * 
+	 */
+	me.getRing = function(node) {
+		return this.getDisplayObject('ring', node);
+	};
+	
+	me.getDisplayObject = function(className, node, keepHidden) {
+		var me = this, i, o;
+		for (i in me.displayObjects) {
+			o = me.displayObjects[i];
+			if (o.className != className) continue;
+			if (o.node == node) {
+				if (!keepHidden) o.hideFlag = false;
+				return o;
+			}
+		}
+		vis4.log(className+' not found for node', node);
+	};
+	
+	/*
+	me.createRing = function(t, origin, rad, attr) {
+		var me = this, ns = me.ns, 
+			ring = new ns.Ring(me, origin, attr, rad);
+		ring.toBack();
+		me.rings.push(ring);
+		t.$(ring).rad = rad;
+		return ring;
+	};
+	*/
+	
+	me.initHistory = function() {
+		$.history.init(me.urlChanged.bind(me), { unescape: ",/" });
+	};
+	
+	me.freshUrl = '';
+	
+	/*
+	 * callback for every url change, either initiated by user or
+	 * by this class itself
+	 */
+	me.urlChanged = function(hash) {
+		var me = this, tr = me.currentTransition;
+		
+		if (!me.freshUrl) {
+			// setting an url for the very first time
+			if (hash.indexOf('/~/')) {
+				me.baseUrl = hash.substr(0, hash.indexOf('/~/'));
+			}
+		}
+		me.freshUrl = hash;
+		
+		if (tr && tr.running) {
+			vis4.log('transition is running at the moment, adding listener');
+			tr.onComplete(me.changeUrl.bind(me));
+		} else {
+			me.changeUrl();
+		}
+	};
+	
+	/*
+	 * this function initiate the action which follows the url change
+	 */
+	me.changeUrl = function() {
+		var me = this, parts = me.freshUrl.split('/'), token = parts[parts.length-1], url;
+		
+		// var urlParts = me.freshUrl.split('/~/');
+		
+		
+		if (me.freshUrl === "") me.navigateTo(me.treeRoot);
+		
+		if (me.nodesByUrlToken.hasOwnProperty(token)) {
+			url = me.getUrlForNode(me.nodesByUrlToken[token]);
+			if (me.freshUrl != url) {
+				// node found but url not perfect
+				$.history.load(url);
+			} else {
+				me.navigateTo(me.nodesByUrlToken[token], true);
+			}
+		} else {
+			me.navigateTo(me.treeRoot);
+		}
+	};
+	
+	me.navigateTo = function(node, fromUrlChange) {
+		vis4.log('bc.navigateTo(',node,',',fromUrlChange,')');
+		var me = this;
+		if (fromUrlChange) me.changeView(node.urlToken);
+		else $.history.load(me.getUrlForNode(node));
+	};
+	
+	/*
+	 * creates a valid url for a given node, e.g. /2010/health/medical-supplies
+	 */
+	me.getUrlForNode = function(node) {
+		var parts = [];
+		parts.push(node.urlToken);
+		while (node.parent) {
+			parts.push(node.parent.urlToken);
+			node = node.parent;
+		}
+		parts.reverse();
+		return me.baseUrl+'/~/'+parts.join('/');
+	};
+	
+	me.onNodeClick = function(node) {
+		if ($.isFunction(me.config.nodeClickCallback)) {
+			me.config.nodeClickCallback(node);
+		}
+	};
+	
+	// removes all nodes
+	me.clean = function() {
+		var me = this, i;
+		$('.label').remove();
+		/*for (i in me.displayObjects) {
+			try {
+				if ($.isFunction(me.displayObjects[i].hide)) me.displayObjects[i].hide();
+			} catch (e) {
+			
+			}
+		}*/
+	};
+	
+	this.loop = function() {
+		TWEEN.update();
+	};
+	
+	
+	if (!me.config.hasOwnProperty('data')) {
+		throw new Error('no data');
+	} 
+	
+	if (typeof me.config.data == "string") {
+		// use the given js object
+		me.loadData();
+	} else {
+		// load local tree json file
+		new vis4.DelayedTask(1000, me, me.setData, me.config.data);
+	}
+};
+
+BubbleTree.Styles = {};/*jshint undef: true, browser:true, jquery: true, devel: true */
+/*global Raphael, TWEEN, BubbleTree */
+
+/*
+ * stores visual attributes of all elements in the visualization
+ * 
+ */
+BubbleTree.Layout = function() {
+
+	var me = this;
+	me.objects = [];
+	me.props = [];
+	me.toHide = [];
+	me.toShow = [];
+	
+	/*
+	 * flare-style transitioner syntax
+	 *
+	 * if you have an object bubble, you can easily change its properties with
+	 * 
+	 * var l = new OpenSpendings.BubbleTree.Layout();
+	 * l.$(bubble).radius = 30;
+	 * l.$(bubble).angle = 3.14;
+	 */
+	me.$ = function(obj) {
+		var me = this, i, o, p;
+		for (i in me.objects) {
+			o = me.objects[i];
+			if (o == obj) return me.props[i];
+		}
+		me.objects.push(obj);
+		p = {};
+		me.props.push(p);
+		return p;
+	};
+	
+	/*
+	 * use me function to mark objects that should be shown before
+	 * the transition
+	 */
+	me.show = function(obj) {
+		var me = this;
+		me.toShow.push(obj);
+	};
+	
+	
+	/*
+	 * use me function to mark objects that should be hidden after
+	 * the transition
+	 */
+	me.hide = function(obj) {
+		var me = this;
+		me.toHide.push(obj);
+	};
+	
+};/*jshint undef: true, browser:true, jquery: true, devel: true */
+/*global Raphael, TWEEN, BubbleTree */
+/*
+ * represents a radial line
+ */
+BubbleTree.Line = function(bc, attr, origin, angle, fromRad, toRad) {
+	this.bc = bc;
+	this.o = origin;
+	this.angle = angle;
+	this.fromRad = fromRad;
+	this.attr = attr;
+	this.toRad = toRad;
+	
+	this.getXY = function() {
+		this.x1 = this.o.x + Math.cos(this.angle) * this.fromRad; 
+		this.y1 = this.o.y -Math.sin(this.angle) * this.fromRad;
+		this.x2 = this.o.x + Math.cos(this.angle) * this.toRad; 
+		this.y2 = this.o.y  -Math.sin(this.angle) * this.toRad;
+	};
+	
+	this.init = function() {
+		this.getXY();
+		console.log("foo", "M"+this.x1+" "+this.y1+"L"+this.x2+" "+this.y2, attr);
+		this.path = this.bc.paper.path(
+			"M"+this.x1+" "+this.y1+"L"+this.x2+" "+this.y2
+		).attr(this.attr);
+	};
+	
+	this.draw = function() {
+		//console.log('line.draw()', this.angle, this.fromRad, this.toRad);
+		//console.log(this.x1, this);
+		this.getXY();
+		//console.log(this.x1);
+		this.path.attr({ path: "M"+this.x1+" "+this.y1+"L"+this.x2+" "+this.y2 });
+	};
+	
+	
+	this.init();
+	
+};/*jshint undef: true, browser:true, jquery: true, devel: true */
+/*global vis4, BubbleTree */
+
+/*
+ * loads the data and initializes the bubblechart
+ * you need to include the bubblechart.min.js first
+ */
+BubbleTree.Loader = function(config) {
+
+	var me = this;
+
+	me.config = config;
+
+	me.ns = BubbleTree;
+
+	/*
+	 * loads data from a local JSON file
+	 */
+	me.loadData = function() {
+		var me = this, url = me.config.data;
+		console.log('loading url ',url);
+		$.ajax({
+			url: url,
+			context: me,
+			dataType: 'json',
+			success: function(data) {
+				this.run(data);
+			}
+		});
+	};
+
+	/*
+	 * run will be called by dataLoaded once, well, the data is loaded
+	 */
+	me.run = function(data) {
+		var me = this;
+		// initialize bubble chart
+		var bubbleChart = new BubbleTree(
+			me.config
+		);
+		bubbleChart.setData(data);
+		me.config.instance = bubbleChart;
+	};
+
+	if (!me.config.hasOwnProperty('data')) {
+		//console.error('BubbleTree Error: no data set', me.config);
+	}
+	if (typeof me.config.data == "string") {
+		// use the given js object
+		me.loadData();
+	} else {
+		// load local tree json file
+		me.run(me.config.data);
+	}
+};
+
+/*jshint undef: true, browser:true, jquery: true, devel: true */
+/*global vis4, BubbleTree */
+/*
+ * in JS there's no thing like mouse event capsulation, this
+ * class will work around this. It makes it possible to set
+ * events like click and hover for a group of objects that
+ * belong together
+ */
+BubbleTree.MouseEventGroup = function(target, members) {
+	
+	var me = this;
+	me.target = target; // e.g. instance of a bubble
+	me.members = members; // e.g. raphael nodes or html elements
+	
+	/*
+	 * public interface for setting click handlers
+	 */
+	me.click = function(callback) {
+		var me = this, members = me.members, i, mem;
+		me.clickCallback = callback;
+		for (i in members) {
+			mem = members[i];
+			$(mem).click(me.handleClick.bind(me));
+		}
+	};
+	
+	me.handleClick = function(evt) {
+		var me = this;
+		me.clickCallback({ target: me.target, origEvent: evt, mouseEventGroup: me });
+	};
+	
+	/*
+	 *
+	 */
+	me.hover = function(callback) {
+		var me = this, members = me.members, i, mem;
+		me.hoverCallback = callback;
+		for (i in members) {
+			mem = members[i];
+			$(mem).hover(me.handleMemberHover.bind(me), me.handleMemberUnHover.bind(me));
+		}
+	};
+	
+	/*
+	 * public interface for setting unhover callback
+	 */
+	me.unhover = function(callback) {
+		var me = this;
+		me.unhoverCallback = callback;
+	};
+	
+	/*
+	 * stores wether the mouse currently hover over any
+	 * object in our members list. this is used to check
+	 * wether a occuring hover event is an actual hover
+	 * event.
+	 */
+	me.wasHovering = false;
+	me.mouseIsOver = false;
+	
+	me.handleMemberHover = function(evt) {
+		var me = this;
+		// since we don't know which event will receive first, the unhover of the member
+		// the mouse is leaving or the hover of the member the mouse is entering, we will
+		// delay the final check a bit
+		new vis4.DelayedTask(25, me, me.handleMemberHoverDelayed, evt);	
+		
+	};
+
+	/*
+	 * will be called after all unhover events are processed
+	 */
+	me.handleMemberHoverDelayed = function(evt) {
+		var me = this;
+		// this will eventually override the false set by handleMemberUnHover a few
+		// milliseconds ok. Exactly what we want!
+		me.mouseIsOver = true;
+				
+		if (!me.wasHovering) {
+			// the target is newly hovered
+			
+			me.wasHovering = true;
+			if ($.isFunction(me.hoverCallback)) {
+				me.hoverCallback({ target: me.target, origEvent: evt, mouseEventGroup: me });
+			}
+		} // else can be ignored, no news
+	};
+	
+
+	me.handleMemberUnHover = function(evt) {
+		var me = this;
+		me.mouseIsOver = false;
+		// we need to wait a bit to find out if this is a real unhover event
+		// or just the change to another element in the member list
+		// so we need to delay the final check a bit (let's say 30ms)
+		new vis4.DelayedTask(40, me, me.handleMemberUnHoverDelayed, evt);	
+	};
+	
+	me.handleMemberUnHoverDelayed = function(evt) {
+		var me = this;
+		if (!me.mouseIsOver) {
+			// well, finally no nasty hover event has disturbed our good unhover
+			// process, so we can assume that this is a real unhover event
+			
+			me.wasHovering = false;
+			if ($.isFunction(me.unhoverCallback)) {
+				me.unhoverCallback({ target: me.target, origEvent: evt, mouseEventGroup: me });
+			}
+		}
+	};
+		
+	/*
+	 * this function is used for later addition of member objects like dynamic tooltips
+	 */
+	me.addMember = function(mem) {
+		var me = this;
+		// if (me.clickCallback && noClick) $(mem).click(me.handleClick.bind(me));
+		if (me.hoverCallback) $(mem).hover(me.handleMemberHover.bind(me), me.handleMemberUnHover.bind(me));
+		me.members.push(mem);
+	};
+	
+	/*
+	 * this function is used for later removal of member objects like dynamic tooltips
+	 */
+	me.removeMember = function(mem) {
+		var me = this, members = me.members, i, tmp = [];
+		if (me.clickCallback) $(mem).unbind('click');
+		if (me.hoverCallback) $(mem).unbind('mouseenter mouseleave');
+		for (i in members) {
+			if (members[i] != mem) tmp.push(members[i]);
+		}
+		me.members = tmp;
+		
+	};
+};
+/*jshint undef: true, browser:true, jquery: true, devel: true */
+/*global Raphael, TWEEN, BubbleTree */
+
+/*
+ * represents a ring
+ */
+BubbleTree.Ring = function(node, bc, o, rad, attr) {
+	
+	var me = this;
+	me.className = "ring";
+	me.rad = rad;
+	me.bc = bc;
+	me.attr = attr;
+	me.origin = o;
+	me.alpha = 1;
+	me.visible = false;
+	me.node = node;
+	
+	me.init = function() {
+		//var o = me.origin;
+	};
+	
+	me.draw = function() {
+		var me = this, o = me.origin;
+		if (!me.visible) return;
+		me.circle.attr({ cx: o.x, cy: o.y, r: me.rad, 'stroke-opacity': me.alpha });
+	};
+	
+	/*
+	 * removes all raphael nodes from stage
+	 */
+	me.hide = function() {
+		var me = this;
+		me.circle.remove();
+		me.visible = false;
+	};
+	
+	me.show = function() {
+		var me = this;
+		me.circle = me.bc.paper.circle(o.x, o.y, me.rad).attr(me.attr);
+		me.visible = true;
+		me.circle.toBack();
+	};
+	
+	
+	me.init();
+};/*jshint undef: true, browser:true, jquery: true, devel: true */
+/*global Raphael, TWEEN, vis4, BubbleTree */
+
+/*
+ * transforms the current display to a new layout
+ * while transitioning, there are several possible cases:
+ * - a node exists both before and after the transition
+ * - a node appears at the beginning of the transition
+ * - a node disappears at the end of the transtion
+ */
+ 
+BubbleTree.Transitioner = function(duration) {
+	
+	var me = this;
+	
+	me.duration = duration;
+	me.running = false;
+	me.completeCallbacks = [];
+	
+	me.changeLayout = function(layout) {
+		var i, o, props, p, me = this;
+		me.running = true;
+		me.layout = layout;
+		
+		// at first show all objects that are marked for showing
+		for (i in layout.toShow) {
+			o = layout.toShow[i];
+			if ($.isFunction(o.show)) o.show();
+		}
+		
+		for (i in layout.objects) {
+			o = layout.objects[i];
+			if (o === undefined || o === null) continue;
+			props = layout.props[i];
+			
+			if (me.duration > 0) {
+				var tween = new TWEEN.Tween(o), toProps = {};
+				
+				for (p in props) {
+					//o[p] = props[p];
+					toProps[p] = props[p];
+				}
+				tween.to(toProps, me.duration);
+				tween.easing(TWEEN.Easing.Exponential.EaseOut);
+				if ($.isFunction(o.draw)) tween.onUpdate(o.draw.bind(o));
+				if (i == layout.objects.length-1) tween.onComplete(me._completed.bind(me));
+				tween.start();
+			} else {
+				for (p in props) {
+					o[p] = props[p];
+				}
+				if (o && $.isFunction(o.draw)) o.draw();
+			}
+		}
+		if (me.duration === 0) {
+			// redraw all
+			for (i in layout.objects) {
+				o = layout.objects[i];
+				if (o && $.isFunction(o.draw)) o.draw();
+			}
+			me._completed();
+		}
+	};
+	
+	me.onComplete = function(callback) {
+		var me = this;
+		try {
+			if ($.isFunction(callback)) me.completeCallbacks.push(callback);
+		} catch (e) {
+			//vis4.log(e);
+		}
+	};
+	
+	me._completed = function() {
+		var me = this, callbacks = me.completeCallbacks, i, obj;
+		me.running = false;
+		
+		for (i in me.layout.objects) {
+			obj = me.layout.objects[i];
+			if (obj && $.isFunction(obj.draw)) obj.draw(); // the final draw	
+		}
+		// now hide all objects marked for hiding
+		for (i in me.layout.toHide) {
+			obj = me.layout.toHide[i];
+			if (obj && $.isFunction(obj.hide)) obj.hide();
+		}
+		
+		for (i in callbacks) {
+			callbacks[i]();
+		}
+	};
+	
+};/*jshint undef: true, browser:true, jquery: true, devel: true */
+/*global Raphael, TWEEN, BubbleTree */
+
+BubbleTree.Utils = {};
+
+BubbleTree.Utils.log = function() {
+	try {
+		if (window.hasOwnProperty('console')) console.log.apply(this, arguments);
+	} catch (e) {}	
+};
+
+BubbleTree.Utils.amount2rad = function(a) {
+	return Math.pow(Math.max(0, a) /BubbleTree.a2radBase, 0.6);
+};
+
+BubbleTree.Utils.formatNumber = function(n) {
+	var prefix = '';
+	if (n < 0) {
+		n = n*-1;
+		prefix = '-';
+	}
+	if (n >= 1000000000000) return prefix+Math.round(n / 100000000000)/10 + 't';
+	if (n >= 1000000000) return prefix+Math.round(n / 100000000)/10 + 'b';
+	if (n >= 1000000) return prefix+Math.round(n / 100000)/10 + 'm';
+	if (n >= 1000) return prefix+Math.round(n / 100)/10 + 'k';
+	else return prefix+n;
+	
+};
+/*jshint undef: true, browser:true, jquery: true, devel: true */
+/*global BubbleTree */
+
+
+BubbleTree.Vector = function(x,y) {
+	var me = this;
+	me.x = x; 
+	me.y = y;
+	
+	/*
+	 * calculates the length of the vector
+	 */
+	me.length = function() {
+		var me = this;
+		return Math.sqrt(me.x*me.x + me.y * me.y);
+	};
+	
+	/*
+	 * changes the length of the vector
+	 */
+	me.normalize = function(len) {
+		var me = this, l = me.length();
+		if (!len) len = 1.0;
+		me.x *= len/l;
+		me.y *= len/l;
+	};
+	
+	/*
+	 * creates an exact copy of this vector
+	 */
+	me.clone = function() {
+		var me = this;
+		return new BubbleTree.Vector(me.x, me.y);
+	};
+};/*jshint undef: true, browser:true, jquery: true, devel: true */
+/*global Raphael, TWEEN, BubbleTree, vis4 */
+
+BubbleTree.Bubbles = BubbleTree.Bubbles || {};
+/*
+ * represents a bubble
+ */
+BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, color) {
+
+	var ns = BubbleTree, utils = ns.Utils, me = this;
+	me.className = "bubble";
+	me.node = node;
+	me.paper = bubblechart.paper;
+	me.origin = origin;
+	me.bc = bubblechart;
+	me.rad = radius;
+	me.angle = angle;
+	me.color = color;
+	me.alpha = 1;
+	me.visible = false;
+	me.ns = ns;
+	me.bubbleRad = utils.amount2rad(this.node.amount);
+	
+	/*
+	 * child rotation is just used from outside to layout possible child bubbles
+	 */
+	me.childRotation = 0;
+	
+	
+	/*
+	 * convertes polar coordinates to x,y
+	 */
+	me.getXY = function() {
+		var me = this, o = me.origin, a = me.angle, r = me.rad;
+		me.pos.x = o.x + Math.cos(a) * r;
+		me.pos.y = o.y - Math.sin(a) * r;
+	};
+	
+	/*
+	 * inistalizes the bubble
+	 */
+	me.init = function() {
+		var me = this;
+		me.pos = new me.ns.Vector(0,0);
+		me.getXY();
+		
+		var breakdown = [], b, i, val, bd = [], styles = me.bc.config.bubbleStyles;
+		
+		if (!me.node.shortLabel) me.node.shortLabel = me.node.label.length > 50 ? me.node.label.substr(0, 30)+'...' : me.node.label;
+		
+		me.breakdownOpacities = [0.2, 0.7, 0.45, 0.6, 0.35];
+		
+		for (i in me.node.breakdowns) {
+			b = me.node.breakdowns[i];
+			b.famount = utils.formatNumber(b.amount);
+			val = b.amount / me.node.amount;
+			breakdown.push(val);
+			bd.push(b);
+			
+			if (styles && styles.hasOwnProperty('name') && styles.name.hasOwnProperty(b.name) && styles.name[b.name].hasOwnProperty('opacity')) {
+				me.breakdownOpacities[bd.length-1] = styles.name[b.name].opacity;
+			}
+		}
+		me.node.breakdowns = bd;
+		me.breakdown = breakdown;
+		
+		var showIcon = false; //this.bubbleRad * this.bc.bubbleScale > 30;
+		// create label
+
+		me.initialized = true;
+		
+		//me.show();
+	};
+	
+	/*
+	 *
+	 */
+	me.onclick = function(e) {
+		var me = this;
+
+		me.bc.navigateTo(me.node);
+		
+	};
+		
+	me.onhover = function(e) {
+		var me = this, c = me.bc.$container[0];
+		e.node = me.node;
+		e.target = me;
+		e.bubblePos = { x:me.pos.x, y: me.pos.y };
+		e.mousePos = { x:e.origEvent.pageX - c.offsetLeft, y: e.origEvent.pageY - c.offsetTop };
+		e.type = 'SHOW';
+		me.bc.tooltip(e);
+	};
+	
+	me.onunhover = function(e) {
+		var me = this, c = me.bc.$container[0];
+		e.node = me.node;
+		e.target = me;
+		e.type = 'HIDE';
+		e.bubblePos = { x:me.pos.x, y: me.pos.y };
+		e.mousePos = { x:e.origEvent.pageX - c.offsetLeft, y: e.origEvent.pageY - c.offsetTop };
+		me.bc.tooltip(e);
+	};
+	
+	this.draw = function() {
+		var me = this, r = Math.max(5, me.bubbleRad * me.bc.bubbleScale), ox = me.pos.x, oy = me.pos.y, devnull = me.getXY(), showLabel = r > 20, x = me.pos.x, y = me.pos.y;
+		if (!me.visible) return;
+		
+		me.circle.attr({ cx: x, cy: y, r: r, 'fill-opacity': me.alpha });
+		if (me.node.children.length > 1) me.dashedBorder.attr({ cx: x, cy: y, r: r*0.85, 'stroke-opacity': me.alpha * 0.8 });
+		else me.dashedBorder.attr({ 'stroke-opacity': 0 });
+
+		if (me.breakdown.length > 1) {
+			// draw breakdown chart
+			var i,x0,x1,x2,x3,y0,y1,y2,y3,ir = r*0.85, oa = -Math.PI * 0.5, da;
+			for (i in me.breakdown) {
+				da = me.breakdown[i] * Math.PI * 2;
+				x0 = x+Math.cos((oa))*ir; 
+				y0 = y+Math.sin((oa))*ir;
+				x1 = x+Math.cos((oa+da))*ir;
+				y1 = y+Math.sin((oa+da))*ir;
+				x2 = x+Math.cos((oa+da))*r;
+				y2 = y+Math.sin((oa+da))*r;
+				x3 = x+Math.cos((oa))*r;
+				y3 = y+Math.sin((oa))*r;
+				oa += da;
+				
+				var path = "M"+x0+" "+y0+" A"+ir+","+ir+" 0 "+(da > Math.PI ? "1,1" : "0,1")+" "+x1+","+y1+" L"+x2+" "+y2+" A"+r+","+r+" 0 "+(da > Math.PI ? "1,0" : "0,0")+" "+x3+" "+y3+" Z";
+				
+				me.breakdownArcs[i].attr({ path: path, 'stroke-opacity': me.alpha*0.2, 'fill-opacity': me.breakdownOpacities[i]*me.alpha });
+			}
+		}
+
+		//me.label.attr({ x: me.pos.x, y: me.pos.y, 'font-size': Math.max(4, me.bubbleRad * me.bc.bubbleScale * 0.25) });
+		if (!showLabel) {
+			me.label.hide();
+			me.label2.show();
+		} else {
+			me.label.show();
+			if (r < 40) {
+				me.label.find('.desc').hide();
+				me.label2.show();
+			} else {
+				// full label
+				me.label.find('.desc').show();
+				me.label2.hide();
+			}
+		}
+		
+		me.label.css({ width: 2*r*0.9+'px', opacity: me.alpha });
+		me.label.css({ left: (me.pos.x-r*0.9)+'px', top: (me.pos.y-me.label.height()*0.53)+'px' });
+	
+		var w = Math.max(80, 3*r);
+		me.label2.css({ width: w+'px', opacity: me.alpha });
+		me.label2.css({ left: (x - w*0.5)+'px', top: (y + r)+'px' });
+	
+	};
+	
+	/*
+	 * removes all visible elements from the page
+	 */
+	this.hide = function() {
+		var me = this, i;
+		me.circle.remove();
+		me.dashedBorder.remove();
+		me.label.remove();
+		me.label2.remove();
+		
+		//me.bc.$container
+		me.visible = false;
+		for (i in me.breakdownArcs) {
+			me.breakdownArcs[i].remove();
+		}
+		
+		//if (me.icon) me.icon.remove();
+	};
+	
+	/*
+	 * adds all visible elements to the page
+	 */
+	me.show = function() {
+		var me = this, i, r = Math.max(5, me.bubbleRad * me.bc.bubbleScale);
+		
+		me.circle = me.paper.circle(me.pos.x, me.pos.y, r)
+			.attr({ stroke: false, fill: me.color });
+
+		if ($.isFunction(me.bc.config.initTooltip)) {
+			me.bc.config.initTooltip(me.node, me.circle.node);
+		}
+
+		me.dashedBorder = me.paper.circle(me.pos.x, me.pos.y,  r*0.85)
+			.attr({ stroke: '#fff', 'stroke-opacity': me.alpha * 0.4,  'stroke-dasharray': ". ", fill: false });
+		
+		me.label = $('<div class="label"><div class="amount">'+utils.formatNumber(me.node.amount)+'</div><div class="desc">'+me.node.shortLabel+'</div></div>');
+		me.bc.$container.append(me.label);
+		
+		if (me.node.children.length > 1) {
+			$(me.circle.node).css({ cursor: 'pointer'});
+			$(me.label).css({ cursor: 'pointer'});
+		}	
+		
+		// additional label
+		me.label2 = $('<div class="label2"><span>'+me.node.shortLabel+'</span></div>');
+		me.bc.$container.append(me.label2);
+		
+		var list = [me.circle.node, me.label];
+		
+		if (me.breakdown.length > 1) {
+			me.breakdownArcs = {};
+			
+			for (i in me.breakdown) {
+				var arc = me.paper.path("M 0 0 L 2 2")
+					.attr({ fill: '#fff', 'fill-opacity': Math.random()*0.4 + 0.3, stroke: '#fff'});
+				me.breakdownArcs[i] = arc;
+				// $(arc.node).hover(me.arcHover.bind(me), me.arcUnhover.bind(me));
+				
+				if ($.isFunction(me.bc.config.initTooltip)) {
+					me.bc.config.initTooltip(me.node.breakdowns[i], arc.node);
+				}
+			}
+			
+			for (i in me.breakdownArcs) {
+				// we dont add the breakdown arcs to the list 'cause
+				// we want them to fire different mouse over events
+				// list.push(me.breakdownArcs[i].node);
+				$(me.breakdownArcs[i].node).click(me.onclick.bind(me));
+			}
+		}
+		
+		var mgroup = new me.ns.MouseEventGroup(me, list);
+		mgroup.click(me.onclick.bind(me));
+		mgroup.hover(me.onhover.bind(me));
+		mgroup.unhover(me.onunhover.bind(me));
+		
+		me.visible = true;
+		
+	};
+	
+	
+	me.arcHover = function(e) {
+		var me = this, c = me.bc.$container[0], i, 
+			arcs = me.breakdownArcs, node, 
+			bd = me.node.breakdowns;
+			
+		for (i in arcs) {
+			if (arcs[i].node == e.target) {
+				e.node = bd[i];
+				e.bubblePos = { x:me.pos.x, y: me.pos.y };
+				e.mousePos = { x:e.pageX - c.offsetLeft, y: e.pageY - c.offsetTop };
+				e.target = me;
+				e.type = 'SHOW';
+				me.bc.tooltip(e);
+				return;
+			}
+		}
+		
+		vis4.log('cant find the breakdown node');
+	};
+	
+	me.arcUnhover = function(e) {
+		var me = this, c = me.bc.$container[0], i, 
+			arcs = me.breakdownArcs, node, 
+			bd = me.node.breakdowns;
+			
+		for (i in arcs) {
+			if (arcs[i].node == e.target) {
+				e.node = bd[i];
+				e.bubblePos = { x:me.pos.x, y: me.pos.y };
+				e.mousePos = { x:e.pageX - c.offsetLeft, y: e.pageY - c.offsetTop };
+				e.type = 'HIDE';
+				e.target = me;
+				me.bc.tooltip(e);
+				return;
+			}
+		}
+		
+		vis4.log('cant find the breakdown node');
+	};
+	
+	me.init();
+};/*jshint undef: true, browser:true, jquery: true, devel: true */
+/*global Raphael, TWEEN, BubbleTree, vis4, vis4loader */
+
+BubbleTree.Bubbles = BubbleTree.Bubbles || {};
+
+/*
+ * represents a bubble
+ */
+BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, color) {
+
+	var ns = BubbleTree, utils = ns.Utils, me = this;
+	me.className = "bubble";
+	me.node = node;
+	me.paper = bubblechart.paper;
+	me.origin = origin;
+	me.bc = bubblechart;
+	me.rad = radius;
+	me.angle = angle;
+	me.color = color;
+	me.alpha = 1;
+	me.visible = false;
+	me.ns = ns;
+	me.pos = ns.Vector(0,0);
+	me.bubbleRad = utils.amount2rad(this.node.amount);
+	
+	me.iconLoaded = false;
+	
+	/*
+	 * child rotation is just used from outside to layout possible child bubbles
+	 */
+	me.childRotation = 0;
+	
+	
+	/*
+	 * convertes polar coordinates to x,y
+	 */
+	me.getXY = function() {
+		var me = this, o = me.origin, a = me.angle, r = me.rad;
+		if (me.pos === undefined) me.pos = new me.ns.Vector(0,0);
+		me.pos.x = o.x + Math.cos(a) * r;
+		me.pos.y = o.y - Math.sin(a) * r;
+	};
+	
+	/*
+	 * inistalizes the bubble
+	 */
+	me.init = function() {
+		var me = this;
+		me.getXY();
+		
+		me.hasIcon = me.node.hasOwnProperty('icon');
+		
+		if (!me.node.shortLabel) me.node.shortLabel = me.node.label.length > 50 ? me.node.label.substr(0, 30)+'...' : me.node.label;
+		
+		/*if (showIcon) {
+			me.icon = me.paper.path("M17.081,4.065V3.137c0,0,0.104-0.872-0.881-0.872c-0.928,0-0.891,0.9-0.891,0.9v0.9C4.572,3.925,2.672,15.783,2.672,15.783c1.237-2.98,4.462-2.755,4.462-2.755c4.05,0,4.481,2.681,4.481,2.681c0.984-2.953,4.547-2.662,4.547-2.662c3.769,0,4.509,2.719,4.509,2.719s0.787-2.812,4.557-2.756c3.262,0,4.443,2.7,4.443,2.7v-0.058C29.672,4.348,17.081,4.065,17.081,4.065zM15.328,24.793c0,1.744-1.8,1.801-1.8,1.801c-1.885,0-1.8-1.801-1.8-1.801s0.028-0.928-0.872-0.928c-0.9,0-0.957,0.9-0.957,0.9c0,3.628,3.6,3.572,3.6,3.572c3.6,0,3.572-3.545,3.572-3.545V13.966h-1.744V24.793z")
+				.translate(me.pos.x, me.pos.y).attr({fill: "#fff", stroke: "none"});
+		}*/
+		
+		
+		me.initialized = true;
+		
+		//me.show();
+	};
+	
+	
+	/*
+	 * adds all visible elements to the page
+	 */
+	me.show = function() {
+		var me = this, i, cx = me.pos.x, icon, cy = me.pos.y, r = Math.max(5, me.bubbleRad * me.bc.bubbleScale);
+				
+		me.circle = me.paper.circle(cx, cy, r)
+			.attr({ stroke: false, fill: me.color });
+
+		me.dashedBorder = me.paper.circle(cx, cy, Math.min(r-3, r*0.95))
+			.attr({ stroke: '#ffffff', 'stroke-dasharray': "- " });
+	
+		if ($.isFunction(me.bc.config.initTooltip)) {
+			me.bc.config.initTooltip(me.node, me.circle.node);
+		}
+	
+		me.label = $('<div class="label"><div class="amount">'+utils.formatNumber(me.node.amount)+'</div><div class="desc">'+me.node.shortLabel+'</div></div>');
+		me.bc.$container.append(me.label);
+		
+		if ($.isFunction(me.bc.config.initTooltip)) {
+			me.bc.config.initTooltip(me.node, me.label[0]);
+		}
+		
+		// additional label
+		me.label2 = $('<div class="label2"><span>'+me.node.shortLabel+'</span></div>');
+		me.bc.$container.append(me.label2);
+		
+		if (me.node.children.length > 0) {
+			$(me.circle.node).css({ cursor: 'pointer'});
+			$(me.label).css({ cursor: 'pointer'});
+		}	
+		
+		var list = [me.circle.node, me.label, me.dashedBorder.node];
+
+		var mgroup = new me.ns.MouseEventGroup(me, list);
+		mgroup.click(me.onclick.bind(me));
+		mgroup.hover(me.onhover.bind(me));
+		mgroup.unhover(me.onunhover.bind(me));
+		me.mgroup = mgroup;
+		
+		me.visible = true;
+		
+		if (me.hasIcon) {
+			if (!me.iconLoaded) me.loadIcon();
+			else me.displayIcon();
+		} 
+	};	
+	
+	/*
+	 * will load the icon as soon as needed
+	 */
+	me.loadIcon = function() {
+		var me = this, ldr = new vis4loader();
+		ldr.add(me.bc.config.rootPath + me.node.icon);
+		ldr.load(me.iconLoadComplete.bind(me));
+	};
+	
+	/*
+	 * on complete handler for icon loading process
+	 */
+	me.iconLoadComplete = function(ldr) {
+		var me = this, svg, j, paths;
+		svg = ldr.items[0].data;
+		me.iconPathData = [];
+		paths = svg.getElementsByTagName('path');
+		for (j in paths) {
+			if (paths[j] && $.isFunction(paths[j].getAttribute)) {
+				me.iconPathData.push(String(paths[j].getAttribute('d')));
+			}
+		}
+		me.iconLoaded = true;
+		me.displayIcon();
+	};
+	
+	/*
+	 * will display the icon, create the svg path element, etc
+	 */
+	me.displayIcon = function() {
+		var me = this, i, path;
+		me.iconPaths = [];
+		for (i in me.iconPathData) {
+			path = me.paper.path(me.iconPathData[i])
+				.attr({fill: "#fff", stroke: "none"})
+				.translate(-50, -50);
+			me.iconPaths.push(path);
+			me.mgroup.addMember(path.node);
+		}
+	};
+	
+	/*
+	 * will remove the icon from stage
+	 */
+	me.removeIcon = function() {
+		var me = this, i, path;
+		for (i in me.iconPaths) {
+			me.iconPaths[i].remove();
+		}
+		me.iconPaths = [];
+	};
+	
+	
+	me.draw = function() {
+		var me = this, 
+			r = Math.max(5, me.bubbleRad * me.bc.bubbleScale), 
+			ox = me.pos.x, 
+			oy = me.pos.y, 
+			devnull = me.getXY(), 
+			x = me.pos.x, y = me.pos.y, 
+			showIcon = me.hasIcon && r > 15,
+			showLabel = me.hasIcon ? r > 40 : r > 20,
+			i, path, scale, transform, ly;
+		
+		if (!me.visible) return;
+		
+		me.circle.attr({ cx: x, cy: y, r: r, 'fill-opacity': me.alpha });
+		if (me.node.children.length > 1) me.dashedBorder.attr({ cx: me.pos.x, cy: me.pos.y, r: Math.min(r-3, r-4), 'stroke-opacity': me.alpha * 0.9 });
+		else me.dashedBorder.attr({ 'stroke-opacity': 0 });
+		
+
+		//me.label.attr({ x: me.pos.x, y: me.pos.y, 'font-size': Math.max(4, me.bubbleRad * me.bc.bubbleScale * 0.25) });
+		if (!showLabel) {
+			me.label.hide();
+			me.label2.show();
+		} else {
+			me.label.show();
+			if ((showIcon && r < 70) || (!showIcon && r < 40)) {
+				me.label.find('.desc').hide();
+				me.label2.show();
+			} else {
+				// full label
+				me.label.find('.desc').show();
+				me.label2.hide();
+			}
+		}
+		
+		ly = showIcon ? y+r*0.77-me.label.height() : y-me.label.height()*0.5; 
+		me.label.css({ width: (showIcon ? r*1.2 : 2*r)+'px', opacity: me.alpha });
+		me.label.css({ left: (showIcon ? x - r*0.6 : x-r)+'px', top: ly+'px' });
+		
+		var w = Math.max(80, 3*r);
+		me.label2.css({ width: w+'px', opacity: me.alpha });
+		me.label2.css({ left: (x - w*0.5)+'px', top: (y + r)+'px' });
+		
+		
+		//if (me.icon) me.icon.translate(me.pos.x - ox, me.pos.y - oy);
+		if (me.hasIcon) {
+			if (showIcon) {
+				scale = (r - (showLabel ? me.label.height()*0.5 : 0)) / 60;
+				for (i in me.iconPaths) {
+					path = me.iconPaths[i];
+					//path.translate(me.pos.x - ox, me.pos.y - oy);
+					
+					transform = "scale("+scale+") translate("+(x/scale)+", "+((y+(showLabel ? me.label.height()*-0.5 : 0))/scale)+")";
+					path.node.setAttribute("transform", transform);
+					path.attr({ 'fill-opacity': me.alpha });
+				}
+			} else {
+				for (i in me.iconPaths) {
+					path = me.iconPaths[i];
+					path.attr({ 'fill-opacity': 0 });
+				}
+			}
+		} 
+	};
+	
+	/*
+	 * removes all visible elements from the page
+	 */
+	me.hide = function() {
+		var me = this, i;
+		me.circle.remove();
+		me.dashedBorder.remove();
+		me.label.remove();
+		me.label2.remove();
+		
+		//me.bc.$container
+		me.visible = false;
+		if (me.hasIcon) me.removeIcon();
+	};
+
+	/*
+	 *
+	 */
+	me.onclick = function(e) {
+		var me = this;
+		me.bc.onNodeClick(me.node);
+		//if (me.node.children.length > 1) {
+			me.bc.navigateTo(me.node);
+		//}
+	};
+	
+	me.onhover = function(e) {
+		var me = this, c = me.bc.$container[0];
+		e.node = me.node;
+		e.bubblePos = { x:me.pos.x, y: me.pos.y };
+		e.mousePos = { x:e.origEvent.pageX - c.offsetLeft, y: e.origEvent.pageY - c.offsetTop };
+		e.type = 'SHOW';
+		e.target = me;
+		me.bc.tooltip(e);
+	};
+	
+	me.onunhover = function(e) {
+		var me = this, c = me.bc.$container[0];
+		e.node = me.node;
+		e.type = 'HIDE';
+		e.target = me;
+		e.bubblePos = { x:me.pos.x, y: me.pos.y };
+		e.mousePos = { x:e.origEvent.pageX - c.offsetLeft, y: e.origEvent.pageY - c.offsetTop };
+		me.bc.tooltip(e);
+	};
+	
+	
+	me.init();
+};
