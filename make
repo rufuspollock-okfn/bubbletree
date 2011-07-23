@@ -51,4 +51,22 @@ cat buildtools/readme.html.head >> $README
 cat $TMP/readme.html.body >> $README
 cat buildtools/readme.html.foot >> $README
 
+
+# create index file for demos
+DEMOS=demos/*
+
+touch $TMP/demos.md
+rm demos/index.html
+for f in $DEMOS
+do
+  # take action on each file. $f store current file name
+  echo "* [${f:6}](${f:6}/index.html)" >> $TMP/demos.md
+done
+markdown $TMP/demos.md -f $TMP/demos.html.body
+touch demos/index.html
+cat  buildtools/demos.html.head > demos/index.html
+cat  $TMP/demos.html.body >> demos/index.html
+cat  buildtools/demos.html.foot >> demos/index.html
+
+# remove temporary folder
 rm -Rf $TMP
