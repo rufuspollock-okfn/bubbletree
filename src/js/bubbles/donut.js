@@ -49,6 +49,7 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 		if (!me.node.shortLabel) me.node.shortLabel = me.node.label.length > 50 ? me.node.label.substr(0, 30)+'...' : me.node.label;
 		
 		me.breakdownOpacities = [0.2, 0.7, 0.45, 0.6, 0.35];
+		me.breakdownColors = [false, false, false, false, false, false, false, false, false, false];
 		
 		for (i in me.node.breakdowns) {
 			b = me.node.breakdowns[i];
@@ -59,6 +60,11 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 			
 			if (styles && styles.hasOwnProperty('name') && styles.name.hasOwnProperty(b.name) && styles.name[b.name].hasOwnProperty('opacity')) {
 				me.breakdownOpacities[bd.length-1] = styles.name[b.name].opacity;
+			}
+			
+			if (styles && styles.hasOwnProperty('name') && styles.name.hasOwnProperty(b.name) && styles.name[b.name].hasOwnProperty('color')) {
+				me.breakdownColors[bd.length-1] = styles.name[b.name].color;
+				me.breakdownOpacities[bd.length-1] = 1;
 			}
 		}
 		me.node.breakdowns = bd;
@@ -209,8 +215,9 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 			me.breakdownArcs = {};
 			
 			for (i in me.breakdown) {
-				var arc = me.paper.path("M 0 0 L 2 2")
-					.attr({ fill: '#fff', 'fill-opacity': Math.random()*0.4 + 0.3, stroke: '#fff'});
+				var col = me.breakdownColors[i] ? me.breakdownColors[i] : '#fff', 
+					arc = me.paper.path("M 0 0 L 2 2")
+					.attr({ fill: col, 'fill-opacity': Math.random()*0.4 + 0.3, stroke: '#fff'});
 				me.breakdownArcs[i] = arc;
 				// $(arc.node).hover(me.arcHover.bind(me), me.arcUnhover.bind(me));
 				
