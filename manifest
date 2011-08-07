@@ -7,6 +7,6 @@ src/js/ring.js
 src/js/transitioner.js
 src/js/utils.js
 src/js/vector.js
+src/js/bubbles/plain.js
 src/js/bubbles/donut.js
 src/js/bubbles/icon.js
-src/js/bubbles/plain.js
