@@ -9,7 +9,7 @@
 	<script type="text/javascript" src="../../lib/vis4.js"></script>
 	<script type="text/javascript" src="../../lib/Tween.js"></script>
 	<script type="text/javascript" src="../../build/bubbletree.js"></script>
-	<script type="text/javascript" src="https://raw.github.com/okfn/openspendingjs/master/lib/aggregator.js"></script>	
+	<script type="text/javascript" src="http://assets.openspending.org/openspendingjs/master/lib/aggregator.js"></script>	
 	<link rel="stylesheet" type="text/css" href="../../build/bubbletree.css" />
 	<script type="text/javascript" src="../../styles/cofog.js"></script>
 	
@@ -40,7 +40,7 @@
 			};
 			
 			var dataLoaded = function(data) {
-				console.log('dataLoaded', JSON.stringify(data));
+				// console.log('dataLoaded', JSON.stringify(data));
 				window.bubbleTree = new BubbleTree({
 					data: data,
 					container: '.bubbletree',
@@ -49,6 +49,7 @@
 						'cofog': BubbleTree.Styles.Cofog
 					},
 					rootPath: '../../',
+					maxNodesPerLevel: 10,
 					tooltipCallback: tooltip
 				});
 			};
