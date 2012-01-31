@@ -1,5 +1,5 @@
 /*!
- * BubbleTree 0.9
+ * BubbleTree 0.9.1
  *
  * Copyright (c) 2011 Gregor Aisch (http://driven-by-data.net)
  * Licensed under the MIT license
