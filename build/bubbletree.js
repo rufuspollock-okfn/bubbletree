@@ -4,7 +4,7 @@
  * Copyright (c) 2011 Gregor Aisch (http://driven-by-data.net)
  * Licensed under the MIT license
  */
-/*jshint undef: true, browser:true, jquery: true, devel: true */
+/*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
 /*global Raphael, TWEEN, vis4, vis4color, vis4loader */
 
 var BubbleTree = function(config, onHover, onUnHover) {
@@ -75,6 +75,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 	 * is either called directly or by $.ajax when data json file is loaded
 	 */
 	me.setData = function(data) {
+		console.log('setData!'); 
 		var me = this;
 		if (!data) data = me.config.data; // IE fix
 		me.initData(data);
@@ -786,7 +787,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 	}
 };
 
-BubbleTree.Styles = {};/*jshint undef: true, browser:true, jquery: true, devel: true */
+BubbleTree.Styles = {};/*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
 /*global Raphael, TWEEN, BubbleTree */
 
 /*
@@ -880,7 +881,7 @@ BubbleTree.Line = function(bc, attr, origin, angle, fromRad, toRad) {
 	
 	this.init();
 	
-};/*jshint undef: true, browser:true, jquery: true, devel: true */
+};/*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
 /*global vis4, BubbleTree */
 
 /*
@@ -936,7 +937,7 @@ BubbleTree.Loader = function(config) {
 	}
 };
 
-/*jshint undef: true, browser:true, jquery: true, devel: true */
+/*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
 /*global vis4, BubbleTree */
 /*
  * in JS there's no thing like mouse event capsulation, this
@@ -1071,7 +1072,7 @@ BubbleTree.MouseEventGroup = function(target, members) {
 		
 	};
 };
-/*jshint undef: true, browser:true, jquery: true, devel: true */
+/*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
 /*global Raphael, TWEEN, BubbleTree */
 
 /*
@@ -1237,7 +1238,7 @@ BubbleTree.Utils.formatNumber = function(n) {
 	else return prefix+n;
 	
 };
-/*jshint undef: true, browser:true, jquery: true, devel: true */
+/*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
 /*global BubbleTree */
 
 
@@ -1271,7 +1272,7 @@ BubbleTree.Vector = function(x,y) {
 		var me = this;
 		return new BubbleTree.Vector(me.x, me.y);
 	};
-};/*jshint undef: true, browser:true, jquery: true, devel: true */
+};/*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
 /*global Raphael, TWEEN, BubbleTree, vis4 */
 
 BubbleTree.Bubbles = BubbleTree.Bubbles || {};
@@ -1453,7 +1454,7 @@ BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radius, angle, co
 	
 	me.init();
 };
-/*jshint undef: true, browser:true, jquery: true, devel: true */
+/*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
 /*global Raphael, TWEEN, BubbleTree, vis4 */
 
 BubbleTree.Bubbles = BubbleTree.Bubbles || {};
@@ -1740,7 +1741,7 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 	};
 	
 	me.init();
-};/*jshint undef: true, browser:true, jquery: true, devel: true */
+};/*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
 /*global Raphael, TWEEN, BubbleTree, vis4, vis4loader */
 
 BubbleTree.Bubbles = BubbleTree.Bubbles || {};

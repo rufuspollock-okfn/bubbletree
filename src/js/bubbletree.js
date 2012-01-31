@@ -4,7 +4,7 @@
  * Copyright (c) 2011 Gregor Aisch (http://driven-by-data.net)
  * Licensed under the MIT license
  */
-/*jshint undef: true, browser:true, jquery: true, devel: true */
+/*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
 /*global Raphael, TWEEN, vis4, vis4color, vis4loader */
 
 var BubbleTree = function(config, onHover, onUnHover) {
@@ -75,6 +75,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 	 * is either called directly or by $.ajax when data json file is loaded
 	 */
 	me.setData = function(data) {
+		console.log('setData!'); 
 		var me = this;
 		if (!data) data = me.config.data; // IE fix
 		me.initData(data);

@@ -1,6 +1,6 @@
 module.exports = {
     reporter: function reporter(results) {
-        var sys = require('sys'),
+        var sys = require('util'),
             len = results.length,
             str = '',
             file, error;
