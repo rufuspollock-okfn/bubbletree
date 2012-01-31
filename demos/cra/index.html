@@ -46,10 +46,11 @@
 					container: '.bubbletree',
 					bubbleType: 'icon',
 					bubbleStyles: {
-						'cofog': BubbleTree.Styles.Cofog
+						'cofog-1': BubbleTree.Styles.Cofog,
+						'cofog-2': BubbleTree.Styles.Cofog,
+						'cofog-3': BubbleTree.Styles.Cofog
 					},
 					rootPath: '../../',
-					maxNodesPerLevel: 10,
 					tooltipCallback: tooltip
 				});
 			};
@@ -57,12 +58,12 @@
 			// call openspending api for data
 			new OpenSpending.Aggregator({
 				apiUrl: 'http://openspending.org/api',
-				dataset: 'cra',
+				dataset: 'ukgov-finances-cra',
 				rootNodeLabel: 'Grant total',
 				drilldowns: ['cofog1', 'cofog2', 'cofog3'],
 				cuts: ['year:2008'],
 				breakdown: 'region',
-				localApiCache: 'aggregate.json',
+				// localApiCache: 'aggregate.json',
 				callback: dataLoaded
 			});
 			
