@@ -109,7 +109,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 						keep.push(root.children[i]);
 					} else {
 						move.push(root.children[i]);
-						moveAmount += root.children[i].amount;
+						moveAmount += Math.max(0, root.children[i].amount);
 					}
 				}
 				root.children = keep;
@@ -129,6 +129,8 @@ var BubbleTree = function(config, onHover, onUnHover) {
 	 */
 	me.traverse = function(node, index) {
 		var c, child, pc, me = this, urlTokenSource, styles = me.config.bubbleStyles;
+		
+		//if (node.amount <= 0) return;
 		
 		if (!node.children) node.children = [];
 		
@@ -193,7 +195,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 		node.maxChildAmount = 0;
 		
 		// sort children
-		node.children = me.sortChildren(node.children, true);
+		node.children = me.sortChildren(node.children, true, me.config.sortBy);
 		
 		for (c in node.children) {
 			child = node.children[c];
@@ -212,9 +214,14 @@ var BubbleTree = function(config, onHover, onUnHover) {
 		}
 	};
 	
-	me.sortChildren = function(children, alternate) {
+	me.sortChildren = function(children, alternate, sortBy) {
 		var tmp = [], odd = true;
-		children.sort(me.compareAmounts);
+		if (sortBy == 'label') {
+			sortBy = me.compareLabels;
+			alternate = false;
+		} else sortBy = me.compateAmounts;
+		
+		children.sort(sortBy);
 		if (alternate) {
 			while (children.length > 0) {
 				tmp.push(odd ? children.pop() : children.shift());
@@ -226,9 +233,21 @@ var BubbleTree = function(config, onHover, onUnHover) {
 		}
 	};
 	
+	/*
+	 * compares two items by amount
+	 */
 	me.compareAmounts = function(a, b) {
 		if (a.amount > b.amount) return 1;
 		if (a.amount == b.amount) return 0;
+		return -1;
+	};
+	
+	/*
+	 * compares to item by label
+	 */
+	me.compareLabels = function(a, b) {
+		if (a.label > b.label) return 1;
+		if (a.label == b.label) return 0;
 		return -1;
 	};
 	

@@ -21,8 +21,6 @@
 			$('.bubble-chart').append($tooltip);
 			$tooltip.hide();
 			
-			
-			
 			var getTooltip = function() {
 				return this.getAttribute('tooltip');
 			};
@@ -36,13 +34,13 @@
 			};
 			
 			new OpenSpending.Aggregator({
-				apiUrl: 'http://sandbox.openspending.org/api',
-				dataset: 'uganda',
+				apiUrl: 'http://openspending.org/api',
+				dataset: 'ugandabudget',
 				drilldowns: ['swg', 'sector_objective'],
-				cuts: ['year:2005', 'spending_type:Disbursement'],
-				localApiCache: 'aggregate.json',
+				//cuts: ['year:2005', 'spending_type:Disbursement'],
+				// localApiCache: 'aggregate.json',
 				rootNodeLabel: 'Uganda Budget',
-				breakdown: 'spending_source_type',
+				//breakdown: 'spending_source_type',
 				callback: function(data) {
 					
 					new BubbleTree({
