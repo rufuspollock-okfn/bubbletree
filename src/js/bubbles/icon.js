@@ -215,10 +215,17 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 				for (i in me.iconPaths) {
 					path = me.iconPaths[i];
 					//path.translate(me.pos.x - ox, me.pos.y - oy);
-					
-					transform = "scale("+scale+") translate("+(x/scale)+", "+((y+(showLabel ? me.label.height()*-0.5 : 0))/scale)+")";
+					if (Raphael.version[0] == "1") {
+						transform = "scale("+scale+") translate("+(x/scale)+", "+((y+(showLabel ? me.label.height()*-0.5 : 0))/scale)+")";
+						
+					} else {
+						// version > 1
+						transform = "scale("+scale+") translate("+(x/scale-50)+", "+((y+(showLabel ? me.label.height()*-0.5 : 0))/scale-50)+")";
+						
+					}
 					path.node.setAttribute("transform", transform);
 					path.attr({ 'fill-opacity': me.alpha });
+					
 				}
 			} else {
 				for (i in me.iconPaths) {
