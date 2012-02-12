@@ -1889,7 +1889,9 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 		var me = this, svg, j, paths;
 		svg = ldr.items[0].data;
 		me.iconPathData = [];
-		paths = svg.getElementsByTagName('path');
+		//if (typeof(svg) == "string") svg = $(svg)[0];
+		svg = $(svg);
+		paths = $('path', svg); //svg.getElementsByTagName('path');
 		for (j in paths) {
 			if (paths[j] && $.isFunction(paths[j].getAttribute)) {
 				me.iconPathData.push(String(paths[j].getAttribute('d')));
