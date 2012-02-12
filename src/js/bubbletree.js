@@ -15,6 +15,8 @@ var BubbleTree = function(config, onHover, onUnHover) {
 	
 	me.config = config;
 	
+	console.log(me.config.clearColors);
+	
 	if (!me.config.hasOwnProperty('rootPath')) me.config.rootPath = '';
 	
 	/*
@@ -140,6 +142,8 @@ var BubbleTree = function(config, onHover, onUnHover) {
 		node.famount = me.ns.Utils.formatNumber(node.amount);
 		if (node.parent) node.level = node.parent.level + 1;
 		
+		if (me.config.clearColors === true) node.color = false;
+		
 		if (styles) {
 		
 			var props = ['color', 'shortLabel', 'icon'];
@@ -158,7 +162,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 				}
 			}
 		} 
-		
+
 		if (!node.color) {
 			// use color from parent node if no other match available
 			if (node.level > 0) node.color = node.parent.color;
@@ -730,8 +734,6 @@ var BubbleTree = function(config, onHover, onUnHover) {
 		var me = this, parts = me.freshUrl.split('/'), token = parts[parts.length-1], url;
 		
 		// var urlParts = me.freshUrl.split('/~/');
-		
-		
 		if (me.freshUrl === "") me.navigateTo(me.treeRoot);
 		
 		if (me.nodesByUrlToken.hasOwnProperty(token)) {
@@ -790,7 +792,6 @@ var BubbleTree = function(config, onHover, onUnHover) {
 	this.loop = function() {
 		TWEEN.update();
 	};
-	
 	
 	if (!me.config.hasOwnProperty('data')) {
 		throw new Error('no data');
