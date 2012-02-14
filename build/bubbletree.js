@@ -14,9 +14,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 	me.$container = $(config.container);	
 	
 	me.config = config;
-	
-	console.log(me.config.clearColors);
-	
+		
 	if (!me.config.hasOwnProperty('rootPath')) me.config.rootPath = '';
 	
 	/*
@@ -528,7 +526,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 					tgtScale*a2rad(node.parent.amount)*-1 + hw*0.15 // minimum visible part
 				) + hw;
 				
-				vis4.log('rad (parent) = '+rad2,'   rad (center) = ',rad1);
+				//vis4.log('rad (parent) = '+rad2,'   rad (center) = ',rad1);
 				
 				if (node.left && node.right) {
 					var maxSiblSize = tgtScale * a2rad(Math.max(node.left.amount, node.right.amount));
@@ -541,7 +539,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 				t.$(o).x = me.width * 0.5 - rad2 - (node != origNode ? rad1 * 0.35: 0);
 				t.$(o).y = me.height * 0.5;
 				
-				vis4.log('o.x = '+o.x,'    t.$(o).x = '+t.$(o).x);
+				//vis4.log('o.x = '+o.x,'    t.$(o).x = '+t.$(o).x);
 				
 				new vis4.DelayedTask(1500, vis4, vis4.log, o, grandpa.pos);
 				
@@ -614,7 +612,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 				me.config.firstNodeCallback(node);
 			}
 			me.currentCenter = node;
-			vis4.log('currentNode = '+me.currentCenter);
+			// vis4.log('currentNode = '+me.currentCenter);
 						
 		} else {
 			utils.log('node '+token+' not found');
@@ -750,10 +748,14 @@ var BubbleTree = function(config, onHover, onUnHover) {
 	};
 	
 	me.navigateTo = function(node, fromUrlChange) {
-		vis4.log('bc.navigateTo(',node,',',fromUrlChange,')');
+		// vis4.log('bc.navigateTo(',node,',',fromUrlChange,')');
 		var me = this;
 		if (fromUrlChange) me.changeView(node.urlToken);
 		else $.history.load(me.getUrlForNode(node));
+		//
+		$('.label, .label2', me.$container).removeClass('current');
+		$('.label2.'+node.id, me.$container).addClass('current');
+		$('.label.'+node.id, me.$container).addClass('current');
 	};
 	
 	/*
@@ -1842,7 +1844,7 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 			me.bc.config.initTooltip(me.node, me.circle.node);
 		}
 	
-		me.label = $('<div class="label"><div class="amount">'+utils.formatNumber(me.node.amount)+'</div><div class="desc">'+me.node.shortLabel+'</div></div>');
+		me.label = $('<div class="label '+me.node.id+'"><div class="amount">'+utils.formatNumber(me.node.amount)+'</div><div class="desc">'+me.node.shortLabel+'</div></div>');
 		me.bc.$container.append(me.label);
 		
 		if ($.isFunction(me.bc.config.initTooltip)) {
@@ -1850,7 +1852,7 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 		}
 		
 		// additional label
-		me.label2 = $('<div class="label2"><span>'+me.node.shortLabel+'</span></div>');
+		me.label2 = $('<div class="label2 '+me.node.id+'"><span>'+me.node.shortLabel+'</span></div>');
 		me.bc.$container.append(me.label2);
 		
 		if (me.node.children.length > 0) {

@@ -1,8 +1,9 @@
 /*!
- * BubbleTree 0.9.1
+ * BubbleTree
  *
  * Copyright (c) 2011 Gregor Aisch (http://driven-by-data.net)
  * Licensed under the MIT license
+ *
  */
 /*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
 /*global Raphael, TWEEN, vis4, vis4color, vis4loader */
@@ -11,12 +12,12 @@ var BubbleTree = function(config, onHover, onUnHover) {
 	
 	var me = this;
 	
+	me.version = "1.0.1";
+	
 	me.$container = $(config.container);	
 	
 	me.config = config;
-	
-	console.log(me.config.clearColors);
-	
+		
 	if (!me.config.hasOwnProperty('rootPath')) me.config.rootPath = '';
 	
 	/*
@@ -528,7 +529,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 					tgtScale*a2rad(node.parent.amount)*-1 + hw*0.15 // minimum visible part
 				) + hw;
 				
-				vis4.log('rad (parent) = '+rad2,'   rad (center) = ',rad1);
+				//vis4.log('rad (parent) = '+rad2,'   rad (center) = ',rad1);
 				
 				if (node.left && node.right) {
 					var maxSiblSize = tgtScale * a2rad(Math.max(node.left.amount, node.right.amount));
@@ -541,7 +542,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 				t.$(o).x = me.width * 0.5 - rad2 - (node != origNode ? rad1 * 0.35: 0);
 				t.$(o).y = me.height * 0.5;
 				
-				vis4.log('o.x = '+o.x,'    t.$(o).x = '+t.$(o).x);
+				//vis4.log('o.x = '+o.x,'    t.$(o).x = '+t.$(o).x);
 				
 				new vis4.DelayedTask(1500, vis4, vis4.log, o, grandpa.pos);
 				
@@ -614,7 +615,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 				me.config.firstNodeCallback(node);
 			}
 			me.currentCenter = node;
-			vis4.log('currentNode = '+me.currentCenter);
+			// vis4.log('currentNode = '+me.currentCenter);
 						
 		} else {
 			utils.log('node '+token+' not found');
@@ -750,10 +751,14 @@ var BubbleTree = function(config, onHover, onUnHover) {
 	};
 	
 	me.navigateTo = function(node, fromUrlChange) {
-		vis4.log('bc.navigateTo(',node,',',fromUrlChange,')');
+		// vis4.log('bc.navigateTo(',node,',',fromUrlChange,')');
 		var me = this;
 		if (fromUrlChange) me.changeView(node.urlToken);
 		else $.history.load(me.getUrlForNode(node));
+		//
+		$('.label, .label2', me.$container).removeClass('current');
+		$('.label2.'+node.id, me.$container).addClass('current');
+		$('.label.'+node.id, me.$container).addClass('current');
 	};
 	
 	/*
