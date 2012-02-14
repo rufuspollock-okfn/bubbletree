@@ -203,7 +203,7 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 		if (me.node.children.length > 1) {
 			$(me.circle.node).css({ cursor: 'pointer'});
 			$(me.label).css({ cursor: 'pointer'});
-		}	
+		}
 		
 		// additional label
 		me.label2 = $('<div class="label2 '+me.node.id+'"><span>'+me.node.shortLabel+'</span></div>');

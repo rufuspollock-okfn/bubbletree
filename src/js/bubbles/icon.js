@@ -75,7 +75,7 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 
 		me.dashedBorder = me.paper.circle(cx, cy, Math.min(r-3, r*0.95))
 			.attr({ stroke: '#ffffff', 'stroke-dasharray': "- " });
-	
+		
 		if ($.isFunction(me.bc.config.initTooltip)) {
 			me.bc.config.initTooltip(me.node, me.circle.node);
 		}
@@ -96,20 +96,23 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 			$(me.label).css({ cursor: 'pointer'});
 		}	
 		
-		var list = [me.circle.node, me.label, me.dashedBorder.node];
-
-		var mgroup = new me.ns.MouseEventGroup(me, list);
+		/*var 
+		list=[me.circle.node, me.label, me.dashedBorder.node],
+		mgroup = new me.ns.MouseEventGroup(me, list);
 		mgroup.click(me.onclick.bind(me));
 		mgroup.hover(me.onhover.bind(me));
 		mgroup.unhover(me.onunhover.bind(me));
 		me.mgroup = mgroup;
+		*/
 		
 		me.visible = true;
 		
 		if (me.hasIcon) {
 			if (!me.iconLoaded) me.loadIcon();
 			else me.displayIcon();
-		} 
+		} else {
+			me.addOverlay();
+		}
 	};	
 	
 	/*
@@ -127,13 +130,13 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 	me.iconLoadComplete = function(ldr) {
 		var me = this, svg, j, paths;
 		svg = ldr.items[0].data;
-		me.iconPathData = [];
+		me.iconPathData = '';
 		//if (typeof(svg) == "string") svg = $(svg)[0];
 		svg = $(svg);
 		paths = $('path', svg); //svg.getElementsByTagName('path');
 		for (j in paths) {
 			if (paths[j] && $.isFunction(paths[j].getAttribute)) {
-				me.iconPathData.push(String(paths[j].getAttribute('d')));
+				me.iconPathData += String(paths[j].getAttribute('d'))+' ';
 			}
 		}
 		me.iconLoaded = true;
@@ -146,12 +149,52 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 	me.displayIcon = function() {
 		var me = this, i, path;
 		me.iconPaths = [];
-		for (i in me.iconPathData) {
-			path = me.paper.path(me.iconPathData[i])
-				.attr({fill: "#fff", stroke: "none"})
-				.translate(-50, -50);
-			me.iconPaths.push(path);
-			me.mgroup.addMember(path.node);
+		
+		path = me.paper.path(me.iconPathData);
+		path.attr({fill: "#fff", stroke: "none"}).translate(-50, -50);
+		me.iconPaths.push(path);
+		//me.mgroup.addMember(path.node);
+		
+		me.addOverlay();
+	};
+	
+	/*
+	 * adds an invisible bubble on top for seamless 
+	 * event handling
+	 */
+	me.addOverlay = function() {
+		// add invisible overlay circle
+		var me = this;
+		
+		me.overlay = me.paper.circle(me.circle.attrs.cx, me.circle.attrs.cy, me.circle.attrs.r)
+			.attr({ stroke: false, fill: '#fff', 'fill-opacity': 0});
+		
+		if (Raphael.svg) {
+			me.overlay.node.setAttribute('class', me.node.id);
+		}
+		$(me.overlay.node).css({ cursor: 'pointer'});
+		
+		$(me.overlay.node).click(me.onclick.bind(me));
+		$(me.label).click(me.onclick.bind(me));
+		$(me.label2).click(me.onclick.bind(me));
+		
+		if ($.isPlainObject(me.bc.tooltip)) {
+			// use q-tip tooltips
+			var tt = me.bc.tooltip.content(me.node);
+			$(me.overlay.node).qtip({
+				position: { 
+					target: 'mouse', 
+					viewport: $(window), 
+					adjust: { x:7, y:7 }
+				},
+				show: { 
+					delay: me.bc.tooltip.delay || 100 
+				},
+				content: {
+					title: tt[0],
+					text: tt[1]
+				}
+			});
 		}
 	};
 	
@@ -181,6 +224,9 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 		if (!me.visible) return;
 		
 		me.circle.attr({ cx: x, cy: y, r: r, 'fill-opacity': me.alpha });
+		if(me.overlay)
+			me.overlay.attr({ cx: x, cy: y, r: Math.max(10,r)});
+			
 		if (me.node.children.length > 1) me.dashedBorder.attr({ cx: me.pos.x, cy: me.pos.y, r: Math.min(r-3, r-4), 'stroke-opacity': me.alpha * 0.9 });
 		else me.dashedBorder.attr({ 'stroke-opacity': 0 });
 		
@@ -251,6 +297,7 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 		//me.bc.$container
 		me.visible = false;
 		if (me.hasIcon) me.removeIcon();
+		if (me.overlay) me.overlay.remove();
 	};
 
 	/*

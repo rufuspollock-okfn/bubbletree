@@ -178,5 +178,25 @@ BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radius, angle, co
 		
 	};
 	
+	/*
+	 * adds an invisible bubble on top for seamless 
+	 * event handling
+	 */
+	me.addOverlay = function() {
+		// add invisible overlay circle
+		var me = this;
+		
+		me.overlay = me.paper.circle(me.circle.attrs.cx, me.circle.attrs.cy, me.circle.attrs.r)
+			.attr({ stroke: false, fill: '#fff', 'opacity': 0});
+		
+		if (Raphael.svg) {
+			me.overlay.node.setAttribute('class', me.node.id);
+		}
+		$(me.overlay.node).css({ cursor: 'pointer'});
+		$(me.overlay.node).click(me.onclick.bind(me));
+		
+		$(me.label).click(me.onclick.bind(me));
+	};
+	
 	me.init();
 };

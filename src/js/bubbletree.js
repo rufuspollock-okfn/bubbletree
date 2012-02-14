@@ -1,5 +1,5 @@
 /*!
- * BubbleTree
+ * BubbleTree 2.0.0
  *
  * Copyright (c) 2011 Gregor Aisch (http://driven-by-data.net)
  * Licensed under the MIT license
@@ -12,7 +12,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 	
 	var me = this;
 	
-	me.version = "1.0.1";
+	me.version = "2.0.0";
 	
 	me.$container = $(config.container);	
 	
@@ -27,6 +27,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 	
 	//me.onUnHover = onUnHover;
 	me.tooltip = config.tooltipCallback ? config.tooltipCallback : function() {};
+	if (config.tooltip) me.tooltip = config.tooltip;
 	
 	/*
 	 * stylesheet JSON that contains colors and icons for the bubbles
