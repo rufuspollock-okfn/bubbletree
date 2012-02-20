@@ -150,9 +150,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 		
 			var props = ['color', 'shortLabel', 'icon'];
 		
-			for (var p in props) {
-				var prop = props[p];
-				
+			$.each(props, function (p, prop) {
 				if (styles.hasOwnProperty('id') && styles.id.hasOwnProperty(node.id) && styles.id[node.id].hasOwnProperty(prop)) {
 					// use color by id
 					node[prop] = styles.id[node.id][prop];
@@ -162,7 +160,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 				} else if (node.hasOwnProperty('taxonomy') && styles.hasOwnProperty(node.taxonomy) && styles[node.taxonomy].hasOwnProperty(node.name) && styles[node.taxonomy][node.name].hasOwnProperty(prop)) {
 					node[prop] = styles[node.taxonomy][node.name][prop];
 				}
-			}
+			});
 		} 
 
 		if (!node.color) {
@@ -171,7 +169,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 			else node.color = '#999999';
 		}
 		// lighten up the color if there are no children
-		if (node.children.length < 2) {
+		if (node.children.length < 2 && node.color) {
 			node.color = vis4color.fromHex(node.color).saturation('*.86').x;
 		}
 		
@@ -203,20 +201,18 @@ var BubbleTree = function(config, onHover, onUnHover) {
 		// sort children
 		node.children = me.sortChildren(node.children, true, me.config.sortBy);
 		
-		for (c in node.children) {
-			child = node.children[c];
+		$.each(node.children, function(c, child) {
 			child.parent = node;
 			node.maxChildAmount = Math.max(node.maxChildAmount, child.amount);
 			me.traverse(child, c);
-		}
+		});
 		
 		if (node.breakdowns !== null) {
 			node.breakdownsByName = {};
-			for (c in node.breakdowns) {
-				var bd = node.breakdowns[c];
+			$.each(node.breakdowns, function (c,bd) {
 				bd.famount = me.ns.Utils.formatNumber(bd.amount);
 				if (bd.name) node.breakdownsByName[bd.name] = bd;
-			}
+			});
 		}
 	};
 	
@@ -225,7 +221,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 		if (sortBy == 'label') {
 			sortBy = me.compareLabels;
 			alternate = false;
-		} else sortBy = me.compateAmounts;
+		} else sortBy = me.compareAmounts;
 		
 		children.sort(sortBy);
 		if (alternate) {
@@ -290,12 +286,11 @@ var BubbleTree = function(config, onHover, onUnHover) {
 		base = Math.pow((Math.pow(rt.amount, 0.6) + Math.pow(rt.maxChildAmount, 0.6)*2) / maxRad, 1.6666666667);
 		me.a2radBase = me.ns.a2radBase = base;
 		
-		for (b in me.displayObjects) {
-			obj = me.displayObjects[b];
+		$.each(me.displayObjects, function(b, obj) {
 			if (obj.className == "bubble") {
 				obj.bubbleRad = me.ns.Utils.amount2rad(obj.node.amount);
 			}
-		}
+		});
 		// vis4.log(me);
 		if (me.currentCenter) {
 			me.changeView(me.currentCenter.urlToken);
@@ -325,10 +320,10 @@ var BubbleTree = function(config, onHover, onUnHover) {
 		if (!$.isArray(me.config.bubbleType)) me.config.bubbleType = [me.config.bubbleType];
 		
 		if ($.isArray(me.config.bubbleType)) {
-			for (i in me.config.bubbleType) {
+			$.each(me.config.bubbleType, function(i) { 
 				if (me.config.bubbleType[i] == 'icon') icons = true;
 				me.bubbleClasses.push(me.getBubbleType(me.config.bubbleType[i]));
-			}
+			});
 		}
 		
 		var rootBubble = me.createBubble(rt, me.origin, 0, 0, rt.color);
@@ -362,18 +357,16 @@ var BubbleTree = function(config, onHover, onUnHover) {
 		children = parentBubble.node.children;
 		
 		// sum radii of all children
-		for (i in children) {
-			c = children[i];
+		$.each(children, function(i,c) {
 			childRadSum += a2rad(c.amount);
-		}
+		});
 		
 		if (children.length > 0) {
 			// create ring
 			ring = me.createRing(parentBubble.node, parentBubble.pos, 0, { stroke: '#888', 'stroke-dasharray': "-" });
 		}
 		
-		for (i in children) {
-			c = children[i];
+		$.each(children, function(i,c) {
 		
 			da = a2rad(c.amount) / childRadSum * twopi;
 			ca = oa + da*0.5;
@@ -387,7 +380,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 			oa += da;
 			
 			me.traverseBubbles(childBubble);
-		}
+		});
 
 	};
 	
@@ -398,6 +391,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 	 */
 	me.createBubble = function(node, origin, rad, angle, color) {
 		var me = this, ns = me.ns, i, b, bubble, classIndex = node.level;
+		if (isNaN(classIndex)) classIndex = 0;
 		classIndex = Math.min(classIndex, me.bubbleClasses.length-1);
 		
 		bubble = new me.bubbleClasses[classIndex](node, me, origin, rad, angle, color);
