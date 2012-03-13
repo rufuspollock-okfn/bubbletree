@@ -3,7 +3,7 @@ Radial Bubble Tree
 
 ![bubble tree screenshot](http://driven-by-data.net/wp/wp-content/uploads/2011/06/Bildschirmfoto-2011-07-02-um-23.02.50.png bubbletree screenshot right)
 
-The BubbleTree can be used to display hierarchical (spending) data in an interactive visualization. The setup is easy and independent from the OpenSpending platform. However, there is an optional integration module to connect with data from the OpenSpending API.
+**BubbleTree** is a library for interactive visualization of hierarchical data. Originally developed mainly for [spending data](http://openspending.org), the library is now completely independent from the OpenSpending platform. BubbleTree is built on top of [jQuery](http://jquery.com) and [RaphaelJS](http://raphaeljs.com/).
 
 ## Documentation
 
