@@ -207,7 +207,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 			me.traverse(child, c);
 		});
 		
-		if (node.breakdowns !== null) {
+		if (node.breakdowns) {
 			node.breakdownsByName = {};
 			$.each(node.breakdowns, function (c,bd) {
 				bd.famount = me.ns.Utils.formatNumber(bd.amount);
