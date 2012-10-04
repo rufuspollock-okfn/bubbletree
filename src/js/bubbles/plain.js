@@ -49,7 +49,7 @@ BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radius, angle, co
 		
 		var showIcon = false; //this.bubbleRad * this.bc.bubbleScale > 30;
 		
-		if (!me.node.shortLabel) me.node.shortLabel = me.node.label.length > 50 ? me.node.label.substr(0, 30)+'...' : me.node.label;
+		if (!me.node.shortLabel) me.node.shortLabel = me.node.label.length > me.bc.config.cutLabelsAt+3 ? me.node.label.substr(0, me.bc.config.cutLabelsAt)+'...' : me.node.label;
 		
 		me.initialized = true;
 		
@@ -89,7 +89,11 @@ BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radius, angle, co
 	};
 	
 	me.draw = function() {
-		var me = this, r = Math.max(5, me.bubbleRad * me.bc.bubbleScale), ox = me.pos.x, oy = me.pos.y, devnull = me.getXY(), showLabel = r > 20,
+		var me = this,
+			r = Math.max(5, me.bubbleRad * me.bc.bubbleScale),
+			ox = me.pos.x,
+			oy = me.pos.y,
+			devnull = me.getXY(),
 		x = me.pos.x, y = me.pos.y;
 		if (!me.visible) return;
 		
@@ -99,25 +103,27 @@ BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radius, angle, co
 		
 
 		//me.label.attr({ x: me.pos.x, y: me.pos.y, 'font-size': Math.max(4, me.bubbleRad * me.bc.bubbleScale * 0.25) });
-		if (!showLabel) {
-			me.label.hide();
-			me.label2.show();
-		} else {
-			me.label.show();
-			if (r < 40) {
-				me.label.find('.desc').hide();
-				me.label2.show();
-			} else {
-				// full label
-				me.label.find('.desc').show();
-				me.label2.hide();
-			}
-		}
 		
+		me.label.show();
+		me.label.find('*').show();
+		me.label2.show();
+		if (r >= me.bc.config.minRadiusLabels) {
+			// full label
+			me.label2.hide();
+		} else if (r >= me.bc.config.minRadiusAmounts) {
+			// full label
+			me.label.find('.desc').hide();
+		} else if (r >= me.bc.config.minRadiusHideLabels) {
+			me.label.hide();
+		} else {
+			me.label.hide();
+			me.label2.hide();
+		}
+
 		me.label.css({ width: 2*r+'px', opacity: me.alpha });
 		me.label.css({ left: (me.pos.x-r)+'px', top: (me.pos.y-me.label.height()*0.5)+'px' });
 	
-		var w = Math.max(80, 3*r);
+		var w = Math.max(70, 3*r);
 		me.label2.css({ width: w+'px', opacity: me.alpha });
 		me.label2.css({ left: (x - w*0.5)+'px', top: (y + r)+'px' });
 

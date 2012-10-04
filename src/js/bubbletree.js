@@ -16,9 +16,18 @@ var BubbleTree = function(config, onHover, onUnHover) {
 
 	me.$container = $(config.container);
 
-	me.config = config;
-
-	if (!me.config.hasOwnProperty('rootPath')) me.config.rootPath = '';
+	me.config = $.extend({
+		// this is where we look for the icons
+		rootPath: '',
+		// show full labels inside bubbles with min radius of 40px
+		minRadiusLabels: 40,
+		// just show the amounts inside bubbles with min radius of 20px
+		minRadiusAmounts: 20,
+		// hide labels at all for bubbles with min radius of 0 (deactivated by def)
+		minRadiusHideLabels: 0,
+		// trim labels after 50 characters
+		cutLabelsAt: 50
+	}, config);
 
 	/*
 	 * this function is called when the user hovers a bubble
