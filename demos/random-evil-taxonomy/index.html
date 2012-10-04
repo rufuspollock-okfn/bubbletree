@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="UTF-8"/>
+	<title>Minimal BubbleTree Demo</title>
+	<script type="text/javascript" src="../../lib/jquery-1.5.2.min.js"></script>
+	<script type="text/javascript" src="../../lib/jquery.history.js"></script>
+	<script type="text/javascript" src="../../lib/raphael.js"></script>
+	<script type="text/javascript" src="../../lib/vis4.js"></script>
+	<script type="text/javascript" src="../../lib/Tween.js"></script>
+	<script type="text/javascript" src="../../build/bubbletree.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../build/bubbletree.css" />
+	<script type="text/javascript" src="../../styles/cofog.js"></script>
+	
+	
+	<script type="text/javascript">
+       
+		$(function() {
+		
+			var randomNames = ['Burgis', 'Pascal', 'Lysann', 'Theo', 'Julia', 'Barnabas', 'Immanuel', 'Marisa', 'Folker', 'Hadumod', 'Friedegunde', 'Marco', 'Otto', 'Sonnhardt', 'Arntraud', 'Andree', 'Wiltrudis', 'Astrid', 'Kathrein', 'Raoul', 'Vivien', 'Ole', 'Leo', 'Dankward', 'David', 'Ferfried', 'Sonngard', 'Fabio', 'Hansjakob', 'Huberta', 'Doro', 'Gordian', 'Sturmius', 'Sturmhard', 'Reintraud', 'Sabine', 'Georg', 'Sylvia', 'Ann', 'Editha', 'Gunhard', 'Etienne', 'Hildtraud', 'Noah', 'Margarete', 'Stilla', 'Brian', 'Pauline', 'Edgar', 'Kathrin'];
+			var nodeCount = 1;
+			function generateRandomData(node, level) {
+				if (!level) level = 1;
+				var numChildren = 20; //3+Math.round(Math.random()*6);
+				node.children = [];
+				var amount = node.amount;
+				for (var i=0; i<numChildren; i++) {
+					nodeCount ++;
+					var child = { 
+						label: 'Random spending of '+randomNames[Number(String(level-1)+String(i)) % randomNames.length] + ' and ' + randomNames[Math.floor(Math.random() * randomNames.length)], 
+						amount: i+1 < numChildren ? amount*Math.random()*.3 : amount
+					};
+					if (level == 1) child.color = vis4color.fromHSL(i/numChildren*360, .7, .5).x;
+					if (level == 2) child.color = vis4color.fromHex(node.color).lightness('*'+(.5+Math.random()*.5)).x;
+					amount -= child.amount;
+					node.children.push(child);
+					if (level < 3) generateRandomData(child, level+1);
+				}
+				return node;
+			}
+			
+			var data = generateRandomData({
+				label: 'Random Names, Random Amounts',
+				amount: 100000000
+			});
+			
+			new BubbleTree({
+				data: data,
+				container: '.bubbletree'
+			});
+		
+			
+		});
+                                        
+	</script>
+</head>
+<body>
+	<div class="bubbletree-wrapper">
+		<div class="bubbletree"></div>
+	</div>
+</body>
+</html>
