@@ -529,7 +529,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 
 				rad2 = 0 - Math.max(
 					//hw *0.8 - tgtScale * (a2rad(node.parent.amount)+a2rad(node.amount)), // maximum visible part
-					hw * 0.8 - tgtScale * (a2rad(node.parent.amount) + a2rad(Math.max(node.amount*1.15 + node.maxChildAmount*1.15, node.left.amount * 0.85, node.right.amount * 0.85))),
+					hw * 0.8 - tgtScale * (a2rad(node.parent.amount) + a2rad(Math.max(node.amount*1.15 + node.maxChildAmount*1.15, (node.left ? node.left.amount : 0) * 0.85, (node.right ? node.right.amount : 0)  * 0.85))),
 					tgtScale*a2rad(node.parent.amount)*-1 + hw*0.15 // minimum visible part
 				) + hw;
 
