@@ -1,5 +1,5 @@
 /*!
- * BubbleTree 2.0.1
+ * BubbleTree 2.0.2
  *
  * Copyright (c) 2011 Gregor Aisch (http://driven-by-data.net)
  * Licensed under the MIT license
@@ -816,6 +816,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 };
 
 BubbleTree.Styles = {};
+
 /*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
 /*global Raphael, TWEEN, BubbleTree */
 
@@ -871,7 +872,8 @@ BubbleTree.Layout = function() {
 		me.toHide.push(obj);
 	};
 	
-};/*jshint undef: true, browser:true, jquery: true, devel: true */
+};
+/*jshint undef: true, browser:true, jquery: true, devel: true */
 /*global Raphael, TWEEN, BubbleTree */
 /*
  * represents a radial line
@@ -910,7 +912,8 @@ BubbleTree.Line = function(bc, attr, origin, angle, fromRad, toRad) {
 	
 	this.init();
 	
-};/*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
+};
+/*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
 /*global vis4, BubbleTree */
 
 /*
@@ -965,6 +968,7 @@ BubbleTree.Loader = function(config) {
 		me.run(me.config.data);
 	}
 };
+
 
 /*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
 /*global vis4, BubbleTree */
@@ -1101,6 +1105,7 @@ BubbleTree.MouseEventGroup = function(target, members) {
 		
 	};
 };
+
 /*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
 /*global Raphael, TWEEN, BubbleTree */
 
@@ -1147,7 +1152,8 @@ BubbleTree.Ring = function(node, bc, o, rad, attr) {
 	
 	
 	me.init();
-};/*jshint undef: true, browser:true, jquery: true, devel: true */
+};
+/*jshint undef: true, browser:true, jquery: true, devel: true */
 /*global Raphael, TWEEN, vis4, BubbleTree */
 
 /*
@@ -1239,7 +1245,8 @@ BubbleTree.Transitioner = function(duration) {
 		}
 	};
 	
-};/*jshint undef: true, browser:true, jquery: true, devel: true */
+};
+/*jshint undef: true, browser:true, jquery: true, devel: true */
 /*global Raphael, TWEEN, BubbleTree */
 
 BubbleTree.Utils = {};
@@ -1267,6 +1274,7 @@ BubbleTree.Utils.formatNumber = function(n) {
 	else return prefix+n;
 	
 };
+
 /*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
 /*global BubbleTree */
 
@@ -1301,7 +1309,8 @@ BubbleTree.Vector = function(x,y) {
 		var me = this;
 		return new BubbleTree.Vector(me.x, me.y);
 	};
-};/*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
+};
+/*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
 /*global Raphael, TWEEN, BubbleTree, vis4 */
 
 BubbleTree.Bubbles = BubbleTree.Bubbles || {};
@@ -1509,6 +1518,7 @@ BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radius, angle, co
 	
 	me.init();
 };
+
 /*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
 /*global Raphael, TWEEN, BubbleTree, vis4 */
 
@@ -1796,7 +1806,8 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 	};
 	
 	me.init();
-};/*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
+};
+/*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
 /*global Raphael, TWEEN, BubbleTree, vis4, vis4loader */
 
 BubbleTree.Bubbles = BubbleTree.Bubbles || {};
