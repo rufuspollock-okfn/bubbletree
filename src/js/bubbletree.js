@@ -775,9 +775,9 @@ var BubbleTree = function(config, onHover, onUnHover) {
 		if (fromUrlChange) me.changeView(node.urlToken);
 		else history.load(me.getUrlForNode(node));
 		//
-		$('.label, .label2', me.$container).removeClass('current');
-		$('.label2.'+node.id, me.$container).addClass('current');
-		$('.label.'+node.id, me.$container).addClass('current');
+		$('.bubbletree-label, .bubbletree-label2', me.$container).removeClass('current');
+		$('.bubbletree-label2.'+node.id, me.$container).addClass('current');
+		$('.bubbletree-label.'+node.id, me.$container).addClass('current');
 	};
 
 	/*
@@ -803,7 +803,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 	// removes all nodes
 	me.clean = function() {
 		var me = this, i;
-		$('.label').remove();
+		$('.bubbletree-label').remove();
 		/*for (i in me.displayObjects) {
 			try {
 				if ($.isFunction(me.displayObjects[i].hide)) me.displayObjects[i].hide();

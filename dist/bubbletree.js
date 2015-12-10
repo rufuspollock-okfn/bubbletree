@@ -1373,9 +1373,9 @@ var BubbleTree = function(config, onHover, onUnHover) {
 		if (fromUrlChange) me.changeView(node.urlToken);
 		else history.load(me.getUrlForNode(node));
 		//
-		$('.label, .label2', me.$container).removeClass('current');
-		$('.label2.'+node.id, me.$container).addClass('current');
-		$('.label.'+node.id, me.$container).addClass('current');
+		$('.bubbletree-label, .bubbletree-label2', me.$container).removeClass('current');
+		$('.bubbletree-label2.'+node.id, me.$container).addClass('current');
+		$('.bubbletree-label.'+node.id, me.$container).addClass('current');
 	};
 
 	/*
@@ -1401,7 +1401,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 	// removes all nodes
 	me.clean = function() {
 		var me = this, i;
-		$('.label').remove();
+		$('.bubbletree-label').remove();
 		/*for (i in me.displayObjects) {
 			try {
 				if ($.isFunction(me.displayObjects[i].hide)) me.displayObjects[i].hide();
@@ -1948,13 +1948,13 @@ BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radius, angle, co
 	me.pos = ns.Vector(0,0);
 	me.bubbleRad = utils.amount2rad(this.node.amount);
 	me.container = me.bc.$container;
-	
+
 	/*
 	 * child rotation is just used from outside to layout possible child bubbles
 	 */
 	me.childRotation = 0;
-	
-	
+
+
 	/*
 	 * convertes polar coordinates to x,y
 	 */
@@ -1964,35 +1964,35 @@ BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radius, angle, co
 		me.pos.x = o.x + Math.cos(a) * r;
 		me.pos.y = o.y - Math.sin(a) * r;
 	};
-	
+
 	/*
 	 * inistalizes the bubble
 	 */
 	me.init = function() {
 		var me = this;
 		me.getXY();
-		
+
 		var showIcon = false; //this.bubbleRad * this.bc.bubbleScale > 30;
-		
+
 		if (!me.node.shortLabel) me.node.shortLabel = me.node.label.length > me.bc.config.cutLabelsAt+3 ? me.node.label.substr(0, me.bc.config.cutLabelsAt)+'...' : me.node.label;
-		
+
 		me.initialized = true;
-		
+
 		//me.show();
 	};
-	
+
 	/*
 	 *
 	 */
 	me.onclick = function(e) {
 		var me = this;
 		me.bc.onNodeClick(me.node);
-		
+
 		//if (me.node.children.length > 1) {
 			me.bc.navigateTo(me.node);
 		//}
 	};
-	
+
 	me.onhover = function(e) {
 		var me = this, c = me.bc.$container[0];
 		e.node = me.node;
@@ -2002,7 +2002,7 @@ BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radius, angle, co
 		e.type = 'SHOW';
 		me.bc.tooltip(e);
 	};
-	
+
 	me.onunhover = function(e) {
 		var me = this, c = me.bc.$container[0];
 		e.node = me.node;
@@ -2012,7 +2012,7 @@ BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radius, angle, co
 		e.mousePos = { x:e.origEvent.pageX - c.offsetLeft, y: e.origEvent.pageY - c.offsetTop };
 		me.bc.tooltip(e);
 	};
-	
+
 	me.draw = function() {
 		var me = this,
 			r = Math.max(5, me.bubbleRad * me.bc.bubbleScale),
@@ -2021,14 +2021,14 @@ BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radius, angle, co
 			devnull = me.getXY(),
 		x = me.pos.x, y = me.pos.y;
 		if (!me.visible) return;
-		
+
 		me.circle.attr({ cx: me.pos.x, cy: me.pos.y, r: r, 'fill-opacity': me.alpha });
 		if (me.node.children.length > 1) me.dashedBorder.attr({ cx: me.pos.x, cy: me.pos.y, r: r-4, 'stroke-opacity': me.alpha * 0.9 });
 		else me.dashedBorder.attr({ 'stroke-opacity': 0 });
-		
+
 
 		//me.label.attr({ x: me.pos.x, y: me.pos.y, 'font-size': Math.max(4, me.bubbleRad * me.bc.bubbleScale * 0.25) });
-		
+
 		me.label.show();
 		me.label.find('*').show();
 		me.label2.show();
@@ -2037,7 +2037,7 @@ BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radius, angle, co
 			me.label2.hide();
 		} else if (r >= me.bc.config.minRadiusAmounts) {
 			// full label
-			me.label.find('.desc').hide();
+			me.label.find('.bubbletree-desc').hide();
 		} else if (r >= me.bc.config.minRadiusHideLabels) {
 			me.label.hide();
 		} else {
@@ -2047,15 +2047,15 @@ BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radius, angle, co
 
 		me.label.css({ width: 2*r+'px', opacity: me.alpha });
 		me.label.css({ left: (me.pos.x-r)+'px', top: (me.pos.y-me.label.height()*0.5)+'px' });
-	
+
 		var w = Math.max(70, 3*r);
 		me.label2.css({ width: w+'px', opacity: me.alpha });
 		me.label2.css({ left: (x - w*0.5)+'px', top: (y + r)+'px' });
 
 		//if (me.icon) me.icon.translate(me.pos.x - ox, me.pos.y - oy);
-	
+
 	};
-	
+
 	/*
 	 * removes all visible elements from the page
 	 */
@@ -2065,70 +2065,70 @@ BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radius, angle, co
 		me.dashedBorder.remove();
 		me.label.remove();
 		me.label2.remove();
-		
+
 		//$('#bubble-chart')
 		me.visible = false;
 
-		
+
 		//if (me.icon) me.icon.remove();
 	};
-	
+
 	/*
 	 * adds all visible elements to the page
 	 */
 	me.show = function() {
 		var me = this, i, cx = me.pos.x, cy = me.pos.y, r = Math.max(5, me.bubbleRad * me.bc.bubbleScale);
-		
+
 		me.circle = me.paper.circle(cx, cy, r)
 			.attr({ stroke: false, fill: me.color });
 
 		me.dashedBorder = me.paper.circle(cx, cy, r-3)
 			.attr({ stroke: '#ffffff', 'stroke-dasharray': "- " });
-	
-	
-		me.label = $('<div class="label '+me.node.id+'"><div class="amount">'+utils.formatNumber(me.node.amount)+'</div><div class="desc">'+me.node.shortLabel+'</div></div>');
+
+
+		me.label = $('<div class="bubbletree-label '+me.node.id+'"><div class="bubbletree-amount">'+utils.formatNumber(me.node.amount)+'</div><div class="bubbletree-desc">'+me.node.shortLabel+'</div></div>');
 		me.container.append(me.label);
-		
+
 		if (me.node.children.length > 0) {
 			$(me.circle.node).css({ cursor: 'pointer'});
 			$(me.label).css({ cursor: 'pointer'});
-		}	
-		
+		}
+
 		// additional label
-		me.label2 = $('<div class="label2 '+me.node.id+'"><span>'+me.node.shortLabel+'</span></div>');
+		me.label2 = $('<div class="bubbletree-label2 '+me.node.id+'"><span>'+me.node.shortLabel+'</span></div>');
 		me.container.append(me.label2);
-		
+
 		var list = [me.circle.node, me.label, me.dashedBorder.node];
 
 		var mgroup = new me.ns.MouseEventGroup(me, list);
 		mgroup.click(me.onclick.bind(me));
 		mgroup.hover(me.onhover.bind(me));
 		mgroup.unhover(me.onunhover.bind(me));
-		
+
 		me.visible = true;
-		
+
 	};
-	
+
 	/*
-	 * adds an invisible bubble on top for seamless 
+	 * adds an invisible bubble on top for seamless
 	 * event handling
 	 */
 	me.addOverlay = function() {
 		// add invisible overlay circle
 		var me = this;
-		
+
 		me.overlay = me.paper.circle(me.circle.attrs.cx, me.circle.attrs.cy, me.circle.attrs.r)
 			.attr({ stroke: false, fill: '#fff', 'opacity': 0});
-		
+
 		if (Raphael.svg) {
 			me.overlay.node.setAttribute('class', me.node.id);
 		}
 		$(me.overlay.node).css({ cursor: 'pointer'});
 		$(me.overlay.node).click(me.onclick.bind(me));
-		
+
 		$(me.label).click(me.onclick.bind(me));
 	};
-	
+
 	me.init();
 };
 
@@ -2154,13 +2154,13 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 	me.visible = false;
 	me.ns = ns;
 	me.bubbleRad = utils.amount2rad(this.node.amount);
-	
+
 	/*
 	 * child rotation is just used from outside to layout possible child bubbles
 	 */
 	me.childRotation = 0;
-	
-	
+
+
 	/*
 	 * convertes polar coordinates to x,y
 	 */
@@ -2169,7 +2169,7 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 		me.pos.x = o.x + Math.cos(a) * r;
 		me.pos.y = o.y - Math.sin(a) * r;
 	};
-	
+
 	/*
 	 * inistalizes the bubble
 	 */
@@ -2177,25 +2177,25 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 		var me = this;
 		me.pos = new me.ns.Vector(0,0);
 		me.getXY();
-		
+
 		var breakdown = [], b, i, val, bd = [], styles = me.bc.config.bubbleStyles;
-		
+
 		if (!me.node.shortLabel) me.node.shortLabel = me.node.label.length > 50 ? me.node.label.substr(0, 30)+'...' : me.node.label;
-		
+
 		me.breakdownOpacities = [0.2, 0.7, 0.45, 0.6, 0.35];
 		me.breakdownColors = [false, false, false, false, false, false, false, false, false, false];
-		
+
 		for (i in me.node.breakdowns) {
 			b = me.node.breakdowns[i];
 			b.famount = utils.formatNumber(b.amount);
 			val = b.amount / me.node.amount;
 			breakdown.push(val);
 			bd.push(b);
-			
+
 			if (styles && styles.hasOwnProperty('name') && styles.name.hasOwnProperty(b.name) && styles.name[b.name].hasOwnProperty('opacity')) {
 				me.breakdownOpacities[bd.length-1] = styles.name[b.name].opacity;
 			}
-			
+
 			if (styles && styles.hasOwnProperty('name') && styles.name.hasOwnProperty(b.name) && styles.name[b.name].hasOwnProperty('color')) {
 				me.breakdownColors[bd.length-1] = styles.name[b.name].color;
 				me.breakdownOpacities[bd.length-1] = 1;
@@ -2203,15 +2203,15 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 		}
 		me.node.breakdowns = bd;
 		me.breakdown = breakdown;
-		
+
 		var showIcon = false; //this.bubbleRad * this.bc.bubbleScale > 30;
 		// create label
 
 		me.initialized = true;
-		
+
 		//me.show();
 	};
-	
+
 	/*
 	 *
 	 */
@@ -2219,9 +2219,9 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 		var me = this;
 
 		me.bc.navigateTo(me.node);
-		
+
 	};
-		
+
 	me.onhover = function(e) {
 		var me = this, c = me.bc.$container[0];
 		e.node = me.node;
@@ -2231,7 +2231,7 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 		e.type = 'SHOW';
 		me.bc.tooltip(e);
 	};
-	
+
 	me.onunhover = function(e) {
 		var me = this, c = me.bc.$container[0];
 		e.node = me.node;
@@ -2241,11 +2241,11 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 		e.mousePos = { x:e.origEvent.pageX - c.offsetLeft, y: e.origEvent.pageY - c.offsetTop };
 		me.bc.tooltip(e);
 	};
-	
+
 	this.draw = function() {
 		var me = this, r = Math.max(5, me.bubbleRad * me.bc.bubbleScale), ox = me.pos.x, oy = me.pos.y, devnull = me.getXY(), showLabel = r > 20, x = me.pos.x, y = me.pos.y;
 		if (!me.visible) return;
-		
+
 		me.circle.attr({ cx: x, cy: y, r: r, 'fill-opacity': me.alpha });
 		if (me.node.children.length > 1) me.dashedBorder.attr({ cx: x, cy: y, r: r*0.85, 'stroke-opacity': me.alpha * 0.8 });
 		else me.dashedBorder.attr({ 'stroke-opacity': 0 });
@@ -2255,7 +2255,7 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 			var i,x0,x1,x2,x3,y0,y1,y2,y3,ir = r*0.85, oa = -Math.PI * 0.5, da;
 			for (i in me.breakdown) {
 				da = me.breakdown[i] * Math.PI * 2;
-				x0 = x+Math.cos((oa))*ir; 
+				x0 = x+Math.cos((oa))*ir;
 				y0 = y+Math.sin((oa))*ir;
 				x1 = x+Math.cos((oa+da))*ir;
 				y1 = y+Math.sin((oa+da))*ir;
@@ -2264,9 +2264,9 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 				x3 = x+Math.cos((oa))*r;
 				y3 = y+Math.sin((oa))*r;
 				oa += da;
-				
+
 				var path = "M"+x0+" "+y0+" A"+ir+","+ir+" 0 "+(da > Math.PI ? "1,1" : "0,1")+" "+x1+","+y1+" L"+x2+" "+y2+" A"+r+","+r+" 0 "+(da > Math.PI ? "1,0" : "0,0")+" "+x3+" "+y3+" Z";
-				
+
 				me.breakdownArcs[i].attr({ path: path, 'stroke-opacity': me.alpha*0.2, 'fill-opacity': me.breakdownOpacities[i]*me.alpha });
 			}
 		}
@@ -2278,24 +2278,24 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 		} else {
 			me.label.show();
 			if (r < 40) {
-				me.label.find('.desc').hide();
+				me.label.find('.bubbletree-desc').hide();
 				me.label2.show();
 			} else {
 				// full label
-				me.label.find('.desc').show();
+				me.label.find('.bubbletree-desc').show();
 				me.label2.hide();
 			}
 		}
-		
+
 		me.label.css({ width: 2*r*0.9+'px', opacity: me.alpha });
 		me.label.css({ left: (me.pos.x-r*0.9)+'px', top: (me.pos.y-me.label.height()*0.53)+'px' });
-	
+
 		var w = Math.max(80, 3*r);
 		me.label2.css({ width: w+'px', opacity: me.alpha });
 		me.label2.css({ left: (x - w*0.5)+'px', top: (y + r)+'px' });
-	
+
 	};
-	
+
 	/*
 	 * removes all visible elements from the page
 	 */
@@ -2305,22 +2305,22 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 		me.dashedBorder.remove();
 		me.label.remove();
 		me.label2.remove();
-		
+
 		//me.bc.$container
 		me.visible = false;
 		for (i in me.breakdownArcs) {
 			me.breakdownArcs[i].remove();
 		}
-		
+
 		//if (me.icon) me.icon.remove();
 	};
-	
+
 	/*
 	 * adds all visible elements to the page
 	 */
 	me.show = function() {
 		var me = this, i, r = Math.max(5, me.bubbleRad * me.bc.bubbleScale);
-		
+
 		me.circle = me.paper.circle(me.pos.x, me.pos.y, r)
 			.attr({ stroke: false, fill: me.color });
 
@@ -2330,36 +2330,36 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 
 		me.dashedBorder = me.paper.circle(me.pos.x, me.pos.y,  r*0.85)
 			.attr({ stroke: '#fff', 'stroke-opacity': me.alpha * 0.4,  'stroke-dasharray': ". ", fill: false });
-		
-		me.label = $('<div class="label '+me.node.id+'"><div class="amount">'+utils.formatNumber(me.node.amount)+'</div><div class="desc">'+me.node.shortLabel+'</div></div>');
+
+		me.label = $('<div class="bubbletree-label '+me.node.id+'"><div class="bubbletree-amount">'+utils.formatNumber(me.node.amount)+'</div><div class="bubbletree-desc">'+me.node.shortLabel+'</div></div>');
 		me.bc.$container.append(me.label);
-		
+
 		if (me.node.children.length > 1) {
 			$(me.circle.node).css({ cursor: 'pointer'});
 			$(me.label).css({ cursor: 'pointer'});
 		}
-		
+
 		// additional label
-		me.label2 = $('<div class="label2 '+me.node.id+'"><span>'+me.node.shortLabel+'</span></div>');
+		me.label2 = $('<div class="bubbletree-label2 '+me.node.id+'"><span>'+me.node.shortLabel+'</span></div>');
 		me.bc.$container.append(me.label2);
-		
+
 		var list = [me.circle.node, me.label];
-		
+
 		if (me.breakdown.length > 1) {
 			me.breakdownArcs = {};
-			
+
 			for (i in me.breakdown) {
-				var col = me.breakdownColors[i] ? me.breakdownColors[i] : '#fff', 
+				var col = me.breakdownColors[i] ? me.breakdownColors[i] : '#fff',
 					arc = me.paper.path("M 0 0 L 2 2")
 					.attr({ fill: col, 'fill-opacity': Math.random()*0.4 + 0.3, stroke: '#fff'});
 				me.breakdownArcs[i] = arc;
 				// $(arc.node).hover(me.arcHover.bind(me), me.arcUnhover.bind(me));
-				
+
 				if ($.isFunction(me.bc.config.initTooltip)) {
 					me.bc.config.initTooltip(me.node.breakdowns[i], arc.node);
 				}
 			}
-			
+
 			for (i in me.breakdownArcs) {
 				// we dont add the breakdown arcs to the list 'cause
 				// we want them to fire different mouse over events
@@ -2367,22 +2367,22 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 				$(me.breakdownArcs[i].node).click(me.onclick.bind(me));
 			}
 		}
-		
+
 		var mgroup = new me.ns.MouseEventGroup(me, list);
 		mgroup.click(me.onclick.bind(me));
 		mgroup.hover(me.onhover.bind(me));
 		mgroup.unhover(me.onunhover.bind(me));
-		
+
 		me.visible = true;
-		
+
 	};
-	
-	
+
+
 	me.arcHover = function(e) {
-		var me = this, c = me.bc.$container[0], i, 
-			arcs = me.breakdownArcs, node, 
+		var me = this, c = me.bc.$container[0], i,
+			arcs = me.breakdownArcs, node,
 			bd = me.node.breakdowns;
-			
+
 		for (i in arcs) {
 			if (arcs[i].node == e.target) {
 				e.node = bd[i];
@@ -2394,15 +2394,15 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 				return;
 			}
 		}
-		
+
 		vis4.log('cant find the breakdown node');
 	};
-	
+
 	me.arcUnhover = function(e) {
-		var me = this, c = me.bc.$container[0], i, 
-			arcs = me.breakdownArcs, node, 
+		var me = this, c = me.bc.$container[0], i,
+			arcs = me.breakdownArcs, node,
 			bd = me.node.breakdowns;
-			
+
 		for (i in arcs) {
 			if (arcs[i].node == e.target) {
 				e.node = bd[i];
@@ -2414,10 +2414,10 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 				return;
 			}
 		}
-		
+
 		vis4.log('cant find the breakdown node');
 	};
-	
+
 	me.init();
 };
 /*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
@@ -2444,15 +2444,15 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 	me.ns = ns;
 	me.pos = ns.Vector(0,0);
 	me.bubbleRad = utils.amount2rad(this.node.amount);
-	
+
 	me.iconLoaded = false;
-	
+
 	/*
 	 * child rotation is just used from outside to layout possible child bubbles
 	 */
 	me.childRotation = 0;
-	
-	
+
+
 	/*
 	 * convertes polar coordinates to x,y
 	 */
@@ -2462,63 +2462,63 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 		me.pos.x = o.x + Math.cos(a) * r;
 		me.pos.y = o.y - Math.sin(a) * r;
 	};
-	
+
 	/*
 	 * inistalizes the bubble
 	 */
 	me.init = function() {
 		var me = this;
 		me.getXY();
-		
+
 		me.hasIcon = me.node.hasOwnProperty('icon');
-		
+
 		if (!me.node.shortLabel) me.node.shortLabel = me.node.label.length > 50 ? me.node.label.substr(0, 30)+'...' : me.node.label;
-		
+
 		/*if (showIcon) {
 			me.icon = me.paper.path("M17.081,4.065V3.137c0,0,0.104-0.872-0.881-0.872c-0.928,0-0.891,0.9-0.891,0.9v0.9C4.572,3.925,2.672,15.783,2.672,15.783c1.237-2.98,4.462-2.755,4.462-2.755c4.05,0,4.481,2.681,4.481,2.681c0.984-2.953,4.547-2.662,4.547-2.662c3.769,0,4.509,2.719,4.509,2.719s0.787-2.812,4.557-2.756c3.262,0,4.443,2.7,4.443,2.7v-0.058C29.672,4.348,17.081,4.065,17.081,4.065zM15.328,24.793c0,1.744-1.8,1.801-1.8,1.801c-1.885,0-1.8-1.801-1.8-1.801s0.028-0.928-0.872-0.928c-0.9,0-0.957,0.9-0.957,0.9c0,3.628,3.6,3.572,3.6,3.572c3.6,0,3.572-3.545,3.572-3.545V13.966h-1.744V24.793z")
 				.translate(me.pos.x, me.pos.y).attr({fill: "#fff", stroke: "none"});
 		}*/
-		
-		
+
+
 		me.initialized = true;
-		
+
 		//me.show();
 	};
-	
-	
+
+
 	/*
 	 * adds all visible elements to the page
 	 */
 	me.show = function() {
 		var me = this, i, cx = me.pos.x, icon, cy = me.pos.y, r = Math.max(5, me.bubbleRad * me.bc.bubbleScale);
-				
+
 		me.circle = me.paper.circle(cx, cy, r)
 			.attr({ stroke: false, fill: me.color });
 
 		me.dashedBorder = me.paper.circle(cx, cy, Math.min(r-3, r*0.95))
 			.attr({ stroke: '#ffffff', 'stroke-dasharray': "- " });
-		
+
 		if ($.isFunction(me.bc.config.initTooltip)) {
 			me.bc.config.initTooltip(me.node, me.circle.node);
 		}
-	
-		me.label = $('<div class="label '+me.node.id+'"><div class="amount">'+utils.formatNumber(me.node.amount)+'</div><div class="desc">'+me.node.shortLabel+'</div></div>');
+
+		me.label = $('<div class="bubbletree-label '+me.node.id+'"><div class="bubbletree-amount">'+utils.formatNumber(me.node.amount)+'</div><div class="bubbletree-desc">'+me.node.shortLabel+'</div></div>');
 		me.bc.$container.append(me.label);
-		
+
 		if ($.isFunction(me.bc.config.initTooltip)) {
 			me.bc.config.initTooltip(me.node, me.label[0]);
 		}
-		
+
 		// additional label
-		me.label2 = $('<div class="label2 '+me.node.id+'"><span>'+me.node.shortLabel+'</span></div>');
+		me.label2 = $('<div class="bubbletree-label2 '+me.node.id+'"><span>'+me.node.shortLabel+'</span></div>');
 		me.bc.$container.append(me.label2);
-		
+
 		if (me.node.children.length > 0) {
 			$(me.circle.node).css({ cursor: 'pointer'});
 			$(me.label).css({ cursor: 'pointer'});
-		}	
-		
-		/*var 
+		}
+
+		/*var
 		list=[me.circle.node, me.label, me.dashedBorder.node],
 		mgroup = new me.ns.MouseEventGroup(me, list);
 		mgroup.click(me.onclick.bind(me));
@@ -2526,17 +2526,17 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 		mgroup.unhover(me.onunhover.bind(me));
 		me.mgroup = mgroup;
 		*/
-		
+
 		me.visible = true;
-		
+
 		if (me.hasIcon) {
 			if (!me.iconLoaded) me.loadIcon();
 			else me.displayIcon();
 		} else {
 			me.addOverlay();
 		}
-	};	
-	
+	};
+
 	/*
 	 * will load the icon as soon as needed
 	 */
@@ -2545,7 +2545,7 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 		ldr.add(me.bc.config.rootPath + me.node.icon);
 		ldr.load(me.iconLoadComplete.bind(me));
 	};
-	
+
 	/*
 	 * on complete handler for icon loading process
 	 */
@@ -2564,53 +2564,53 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 		me.iconLoaded = true;
 		me.displayIcon();
 	};
-	
+
 	/*
 	 * will display the icon, create the svg path element, etc
 	 */
 	me.displayIcon = function() {
 		var me = this, i, path;
 		me.iconPaths = [];
-		
+
 		path = me.paper.path(me.iconPathData);
 		path.attr({fill: "#fff", stroke: "none"}).translate(-50, -50);
 		me.iconPaths.push(path);
 		//me.mgroup.addMember(path.node);
-		
+
 		me.addOverlay();
 	};
-	
+
 	/*
-	 * adds an invisible bubble on top for seamless 
+	 * adds an invisible bubble on top for seamless
 	 * event handling
 	 */
 	me.addOverlay = function() {
 		// add invisible overlay circle
 		var me = this;
-		
+
 		me.overlay = me.paper.circle(me.circle.attrs.cx, me.circle.attrs.cy, me.circle.attrs.r)
 			.attr({ stroke: false, fill: '#fff', 'fill-opacity': 0});
-		
+
 		if (Raphael.svg) {
 			me.overlay.node.setAttribute('class', me.node.id);
 		}
 		$(me.overlay.node).css({ cursor: 'pointer'});
-		
+
 		$(me.overlay.node).click(me.onclick.bind(me));
 		$(me.label).click(me.onclick.bind(me));
 		$(me.label2).click(me.onclick.bind(me));
-		
+
 		if ($.isPlainObject(me.bc.tooltip)) {
 			// use q-tip tooltips
 			var tt = me.bc.tooltip.content(me.node);
 			$(me.overlay.node).qtip({
-				position: { 
-					target: 'mouse', 
-					viewport: $(window), 
+				position: {
+					target: 'mouse',
+					viewport: $(window),
 					adjust: { x:7, y:7 }
 				},
-				show: { 
-					delay: me.bc.tooltip.delay || 100 
+				show: {
+					delay: me.bc.tooltip.delay || 100
 				},
 				content: {
 					title: tt[0],
@@ -2619,7 +2619,7 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 			});
 		}
 	};
-	
+
 	/*
 	 * will remove the icon from stage
 	 */
@@ -2630,28 +2630,28 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 		}
 		me.iconPaths = [];
 	};
-	
-	
+
+
 	me.draw = function() {
-		var me = this, 
-			r = Math.max(5, me.bubbleRad * me.bc.bubbleScale), 
-			ox = me.pos.x, 
-			oy = me.pos.y, 
-			devnull = me.getXY(), 
-			x = me.pos.x, y = me.pos.y, 
+		var me = this,
+			r = Math.max(5, me.bubbleRad * me.bc.bubbleScale),
+			ox = me.pos.x,
+			oy = me.pos.y,
+			devnull = me.getXY(),
+			x = me.pos.x, y = me.pos.y,
 			showIcon = me.hasIcon && r > 15,
 			showLabel = me.hasIcon ? r > 40 : r > 20,
 			i, path, scale, transform, ly;
-		
+
 		if (!me.visible) return;
-		
+
 		me.circle.attr({ cx: x, cy: y, r: r, 'fill-opacity': me.alpha });
 		if(me.overlay)
 			me.overlay.attr({ cx: x, cy: y, r: Math.max(10,r)});
-			
+
 		if (me.node.children.length > 1) me.dashedBorder.attr({ cx: me.pos.x, cy: me.pos.y, r: Math.min(r-3, r-4), 'stroke-opacity': me.alpha * 0.9 });
 		else me.dashedBorder.attr({ 'stroke-opacity': 0 });
-		
+
 
 		//me.label.attr({ x: me.pos.x, y: me.pos.y, 'font-size': Math.max(4, me.bubbleRad * me.bc.bubbleScale * 0.25) });
 		if (!showLabel) {
@@ -2660,24 +2660,24 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 		} else {
 			me.label.show();
 			if ((showIcon && r < 70) || (!showIcon && r < 40)) {
-				me.label.find('.desc').hide();
+				me.label.find('.bubbletree-desc').hide();
 				me.label2.show();
 			} else {
 				// full label
-				me.label.find('.desc').show();
+				me.label.find('.bubbletree-desc').show();
 				me.label2.hide();
 			}
 		}
-		
-		ly = showIcon ? y+r*0.77-me.label.height() : y-me.label.height()*0.5; 
+
+		ly = showIcon ? y+r*0.77-me.label.height() : y-me.label.height()*0.5;
 		me.label.css({ width: (showIcon ? r*1.2 : 2*r)+'px', opacity: me.alpha });
 		me.label.css({ left: (showIcon ? x - r*0.6 : x-r)+'px', top: ly+'px' });
-		
+
 		var w = Math.max(80, 3*r);
 		me.label2.css({ width: w+'px', opacity: me.alpha });
 		me.label2.css({ left: (x - w*0.5)+'px', top: (y + r)+'px' });
-		
-		
+
+
 		//if (me.icon) me.icon.translate(me.pos.x - ox, me.pos.y - oy);
 		if (me.hasIcon) {
 			if (showIcon) {
@@ -2687,15 +2687,15 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 					//path.translate(me.pos.x - ox, me.pos.y - oy);
 					if (Raphael.version[0] == "1") {
 						transform = "scale("+scale+") translate("+(x/scale)+", "+((y+(showLabel ? me.label.height()*-0.5 : 0))/scale)+")";
-						
+
 					} else {
 						// version > 1
 						transform = "scale("+scale+") translate("+(x/scale-50)+", "+((y+(showLabel ? me.label.height()*-0.5 : 0))/scale-50)+")";
-						
+
 					}
 					path.node.setAttribute("transform", transform);
 					path.attr({ 'fill-opacity': me.alpha });
-					
+
 				}
 			} else {
 				for (i in me.iconPaths) {
@@ -2703,9 +2703,9 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 					path.attr({ 'fill-opacity': 0 });
 				}
 			}
-		} 
+		}
 	};
-	
+
 	/*
 	 * removes all visible elements from the page
 	 */
@@ -2715,7 +2715,7 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 		me.dashedBorder.remove();
 		me.label.remove();
 		me.label2.remove();
-		
+
 		//me.bc.$container
 		me.visible = false;
 		if (me.hasIcon) me.removeIcon();
@@ -2732,7 +2732,7 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 			me.bc.navigateTo(me.node);
 		//}
 	};
-	
+
 	me.onhover = function(e) {
 		var me = this, c = me.bc.$container[0];
 		e.node = me.node;
@@ -2742,7 +2742,7 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 		e.target = me;
 		me.bc.tooltip(e);
 	};
-	
+
 	me.onunhover = function(e) {
 		var me = this, c = me.bc.$container[0];
 		e.node = me.node;
@@ -2752,8 +2752,8 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 		e.mousePos = { x:e.origEvent.pageX - c.offsetLeft, y: e.origEvent.pageY - c.offsetTop };
 		me.bc.tooltip(e);
 	};
-	
-	
+
+
 	me.init();
 };
 
