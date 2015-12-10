@@ -29,3 +29,7 @@ If you use Bubbletree to make a visualization we'd love it (but it's not require
 
 [Gregor Aisch](http://vis4.net/blog/) with a very small amount of input from [Rufus Pollock](http://rufuspollock.org/) as part of work on the [OpenSpending](http://openspending.org/) project and with financial support from [Publish What You Fund](http://www.publishwhatyoufund.org/) and the [Shuttleworth Foundation](http://www.shuttleworthfoundation.org/).
 
+## Useful commands
+
+* `npm run build` to rebuild library and demos
+* `npm run review` to check code style 
