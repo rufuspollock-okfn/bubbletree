@@ -3,26 +3,22 @@
 <head>
 	<meta charset="UTF-8"/>
 	<title>UK Country & Regional Analysis</title>
-	<script type="text/javascript" src="../../lib/jquery-1.5.2.min.js"></script>
-	<script type="text/javascript" src="../../lib/jquery.history.js"></script>
-	<script type="text/javascript" src="../../lib/jquery.tooltip.min.js"></script>
-	<script type="text/javascript" src="../../lib/raphael.js"></script>
-	<script type="text/javascript" src="../../lib/vis4.js"></script>
-	<script type="text/javascript" src="../../lib/Tween.js"></script>
-	<script type="text/javascript" src="../../build/bubbletree.js"></script>
-	<script type="text/javascript" src="http://assets.openspending.org/openspendingjs/master/lib/aggregator.js"></script>	
-	<link rel="stylesheet" type="text/css" href="../../build/bubbletree.css" />
-	<script type="text/javascript" src="../../styles/cofog.js"></script>	
-	
+
+	<script type="text/javascript" src="../../public/lib/jquery.min.js"></script>
+	<script type="text/javascript" src="../../public/lib/jquery-migrate.min.js"></script>
+	<script type="text/javascript" src="../../public/lib/jquery.history.js"></script>
+	<script type="text/javascript" src="../../public/lib/jquery.tooltip.min.js"></script>
+	<script type="text/javascript" src="../../public/lib/raphael-min.js"></script>
+	<script type="text/javascript" src="../../public/lib/Tween.js"></script>
+	<script type="text/javascript" src="../../dist/bubbletree.js"></script>
+	<script type="text/javascript" src="http://assets.openspending.org/openspendingjs/master/lib/aggregator.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../dist/bubbletree.css" />
+	<script type="text/javascript" src="../../public/styles/cofog.js"></script>
+
 	<script type="text/javascript" src="svgmap.js"></script>
-	
-	
-	<script type="text/javascript" src="../../styles/cofog.js"></script>
-	
+
 	<script type="text/javascript">
-       
 		$(function() {
-			
 			var $tooltip = $('<div class="tooltip">Tooltip</div>');
 			$tooltip.hide();
 			$('.bubbletree').append($tooltip);
@@ -88,13 +84,7 @@
 					
 				}
 			});
-
-			
-			
 		});
-
-       
-                                        
 	</script>
 	<style type="text/css">
 		.bubbletree-wrapper {

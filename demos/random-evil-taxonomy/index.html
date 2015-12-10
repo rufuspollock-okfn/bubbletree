@@ -3,19 +3,19 @@
 <head>
 	<meta charset="UTF-8"/>
 	<title>Minimal BubbleTree Demo</title>
-	<script type="text/javascript" src="../../lib/jquery-1.5.2.min.js"></script>
-	<script type="text/javascript" src="../../lib/jquery.history.js"></script>
-	<script type="text/javascript" src="../../lib/raphael.js"></script>
-	<script type="text/javascript" src="../../lib/vis4.js"></script>
-	<script type="text/javascript" src="../../lib/Tween.js"></script>
-	<script type="text/javascript" src="../../build/bubbletree.js"></script>
-	<link rel="stylesheet" type="text/css" href="../../build/bubbletree.css" />
-	<script type="text/javascript" src="../../styles/cofog.js"></script>
 
-	<script type="text/javascript">
+  <script type="text/javascript" src="../../public/lib/jquery.min.js"></script>
+  <script type="text/javascript" src="../../public/lib/jquery-migrate.min.js"></script>
+  <script type="text/javascript" src="../../public/lib/jquery.history.js"></script>
+  <script type="text/javascript" src="../../public/lib/jquery.tooltip.min.js"></script>
+  <script type="text/javascript" src="../../public/lib/raphael-min.js"></script>
+  <script type="text/javascript" src="../../public/lib/Tween.js"></script>
+  <script type="text/javascript" src="../../dist/bubbletree.js"></script>
+  <link rel="stylesheet" type="text/css" href="../../dist/bubbletree.css" />
+  <script type="text/javascript" src="../../public/styles/cofog.js"></script>
 
+  <script type="text/javascript">
 		$(function() {
-
 			var randomNames = ['Burgis', 'Pascal', 'Lysann', 'Theo', 'Julia', 'Barnabas', 'Immanuel', 'Marisa', 'Folker', 'Hadumod', 'Friedegunde', 'Marco', 'Otto', 'Sonnhardt', 'Arntraud', 'Andree', 'Wiltrudis', 'Astrid', 'Kathrein', 'Raoul', 'Vivien', 'Ole', 'Leo', 'Dankward', 'David', 'Ferfried', 'Sonngard', 'Fabio', 'Hansjakob', 'Huberta', 'Doro', 'Gordian', 'Sturmius', 'Sturmhard', 'Reintraud', 'Sabine', 'Georg', 'Sylvia', 'Ann', 'Editha', 'Gunhard', 'Etienne', 'Hildtraud', 'Noah', 'Margarete', 'Stilla', 'Brian', 'Pauline', 'Edgar', 'Kathrin'];
 			var nodeCount = 1;
 			function generateRandomData(node, level) {
@@ -50,10 +50,7 @@
 				minRadiusHideLabels: 20,
 				cutLabelsAt: 30
 			});
-
-
 		});
-
 	</script>
 </head>
 <body>

@@ -3,20 +3,23 @@
 <head>
 	<meta charset="UTF-8"/>
 	<title>UK Department for International Development</title>
-	<script type="text/javascript" src="../../../../lib/vendor/jquery-1.5.2.min.js"></script>
-	<script type="text/javascript" src="../../../../lib/vendor/jquery.history.js"></script>
-	<script type="text/javascript" src="../../../../lib/vendor/raphael.js"></script>
-	<script type="text/javascript" src="../../../../lib/vendor/vis4.js"></script>
-	<script type="text/javascript" src="../../../../lib/vendor/Tween.js"></script>
-	<script type="text/javascript" src="../../bubbletree.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="../../css/style.page.css" />
-	<link rel="stylesheet" type="text/css" href="../../css/style.bubbletree.css" />
-	<link rel="stylesheet" type="text/css" href="../../css/style.tooltips.css" />
+
+  <script type="text/javascript" src="../../public/lib/jquery.min.js"></script>
+  <script type="text/javascript" src="../../public/lib/jquery-migrate.min.js"></script>
+  <script type="text/javascript" src="../../public/lib/jquery.history.js"></script>
+  <script type="text/javascript" src="../../public/lib/jquery.tooltip.min.js"></script>
+  <script type="text/javascript" src="../../public/lib/raphael-min.js"></script>
+  <script type="text/javascript" src="../../public/lib/Tween.js"></script>
+  <script type="text/javascript" src="../../dist/bubbletree.js"></script>
+  <script type="text/javascript" src="http://assets.openspending.org/openspendingjs/master/lib/aggregator.js"></script>
+  <link rel="stylesheet" type="text/css" href="../../dist/bubbletree.css" />
+  <script type="text/javascript" src="../../public/styles/cofog.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="../../public/styles/page.css" />
+	<link rel="stylesheet" type="text/css" href="../../public/styles/tooltip.css" />
 	
 	<script type="text/javascript">
-       
 		$(function() {
-			
 			var $tooltip = $('<div class="tooltip">Tooltip</div>');
 			$('#bubble-chart').append($tooltip);
 			
@@ -121,12 +124,8 @@
 			};
 			config.tooltipCallback = tooltip;
 					
-			new OpenSpending.BubbleTree.Loader(config);
-			
+			new OpenSpending.Aggregator(config);
 		});
-
-       
-                                        
 	</script>
 </head>
 <body>
