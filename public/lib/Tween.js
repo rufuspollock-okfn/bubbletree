@@ -378,6 +378,7 @@ TWEEN.Tween = function (object) {
 
 };
 
+
 TWEEN.Easing = {
 
 	Linear: {

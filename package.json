@@ -29,7 +29,7 @@
   "homepage": "http://okfnlabs.org/bubbletree",
   "dependencies": {
     "jquery": "^1.11.3",
-    "webpack-raphael": "git+https://github.com/bisone/raphael.git",
+    "webpack-raphael": "^2.1.4",
     "tween.js": "^16.3.1"
   },
   "devDependencies": {
