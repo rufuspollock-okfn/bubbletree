@@ -73,11 +73,11 @@ vis4.map = function(arr, idCol) {
 };
 
 vis4.DelayedTask = function(/* delay, scope, func, args */) {
-	
+
 	var me = this;
-	
+
 	me.init = function(args) {
-		var me = this, taskArgs = [];	
+		var me = this, taskArgs = [];
 		for (var i in args) {
 			if (i > 2) taskArgs.push(args[i]);
 		}
@@ -87,25 +87,25 @@ vis4.DelayedTask = function(/* delay, scope, func, args */) {
 		me.running = true;
 		me.timer = window.setTimeout(this.run.bind(me), args[0]);
 	};
-	
+
 	me.run = function() {
 		var me = this;
 		me.func.apply(me.scope, me.args);
 		me.running = false;
 	};
-	
+
 	me.cancel = function() {
 		vis4.log('canceling timer', this);
 		window.clearTimeout(this.timer);
 		this.running = false;
 	};
-	
+
 	me.init(arguments);
 };
 
-var vis4loadingItem = function(url, id, type, ldr) { 
+var vis4loadingItem = function(url, id, type, ldr) {
 	this.url = url; this.id = id; this.type = type; this.loader = ldr;
-	
+
 	this.load = function() {
 		$.get(this.url, this.processContent.bind(this));
 	};
@@ -116,7 +116,7 @@ var vis4loadingItem = function(url, id, type, ldr) {
 		else this.data = content;
 		this.loader.itemLoaded();
 	};
-	
+
 };
 
 /*
@@ -126,12 +126,12 @@ var vis4loadingItem = function(url, id, type, ldr) {
  * ldr.add('data.txt', 'id1');
  * ldr.add('data/employes.tsv', 'employes', 'tsv');
  * ldr.add('data/list.json', 'list', 'json');
- * ldr.load(function(ldr) 
+ * ldr.load(function(ldr)
  *
  */
-var vis4loader = function() { 
-	this.items = []; this.byID = {}; 
-	
+var vis4loader = function() {
+	this.items = []; this.byID = {};
+
 	this.add = function(url, id, type) {
 		if (type === null) type = 'text';
 		var item = new vis4loadingItem(url, id, type, this);
@@ -157,14 +157,6 @@ var vis4loader = function() {
 	};
 };
 
-Function.prototype.bind = function(scope) {
-  var _function = this;
-  return function() {
-    return _function.apply(scope, arguments);
-  };
-};
-
-
 /*
  * vis4color.fromHex("#FF0000").saturation("*.5").lightness(.8).hue("+10").hex;
  *
@@ -172,15 +164,15 @@ Function.prototype.bind = function(scope) {
  */
 
 var vis4color = function(mode) {
-	
-	this.h = 0; this.s = 0.5; this.l = 0.8; this.v = 1; this.i = 1; this.r = 255; this.g = 0; this.b = 0; 
+
+	this.h = 0; this.s = 0.5; this.l = 0.8; this.v = 1; this.i = 1; this.r = 255; this.g = 0; this.b = 0;
 	this.x = "#FF0000"; this.u = 0; this.br = 1; this.K = 1/180*Math.PI;
 	if (mode == 'hsi' || mode == 'hsl' || mode == 'hsb' || mode == 'hsv') this.mode = mode;
 
 	this.log = function(s) {
 		if (window.console !== null) console.log(s);
 	};
-	
+
 	this.cos = function(d) {
 		return Math.cos(d*this.K);
 	};
@@ -195,7 +187,7 @@ var vis4color = function(mode) {
 		}
 		this.mode = mode;
 		// recalc hsx-color
-		this.rgb2hsx();	
+		this.rgb2hsx();
 	};
 
 	this.setHexColor = function(hex) {
@@ -259,7 +251,7 @@ var vis4color = function(mode) {
 	this.int2rgb = function() {
 		this.r = this.u >> 16;
 		this.g = this.u >> 8 & 0xFF;
-		this.b = this.u & 0xFF;	
+		this.b = this.u & 0xFF;
 	};
 
 	this.hex2int = function() {
@@ -276,7 +268,7 @@ var vis4color = function(mode) {
 	this.int2rgb = function() {
 		this.r = this.u >> 16;
 		this.g = this.u >> 8 & 0xFF;
-		this.b = this.u & 0xFF;	
+		this.b = this.u & 0xFF;
 	};
 
 	this.hsx2rgb = function() {
@@ -306,7 +298,7 @@ var vis4color = function(mode) {
 	};
 
 	this.saturation = function(s) {
-		this._evaluate(s, "s"); 
+		this._evaluate(s, "s");
 		this.hsx2rgb();
 		this.rgb2int();
 		this.int2hex();
@@ -315,7 +307,7 @@ var vis4color = function(mode) {
 
 	this.lightness = function(l) {
 		if (this.mode != "hsl") { this.log("WARNING: lightness property not available in "+this.mode+" mode"); return; }
-		this._evaluate(l, "l"); 
+		this._evaluate(l, "l");
 		this.hsx2rgb();
 		this.rgb2int();
 		this.int2hex();
@@ -342,7 +334,7 @@ var vis4color = function(mode) {
 
 	this.intensity = function(i) {
 		if (this.mode != "hsi") { this.log("WARNING: intensity property not available in "+this.mode+" mode"); return; }
-		this._evaluate(i, "i"); 
+		this._evaluate(i, "i");
 		this.hsx2rgb();
 		this.rgb2int();
 		this.int2hex();
@@ -359,7 +351,7 @@ var vis4color = function(mode) {
 				this[propName] = this[propName] * Number(val.substr(1));
 			} else if (val.charAt(0) == "/" && !isNaN(val.substr(1))) {
 				this[propName] = this[propName] / Number(val.substr(1));
-			} 
+			}
 		} else if (!isNaN(val)) {
 			this[propName] = Number(val);
 		}
@@ -374,7 +366,7 @@ var vis4color = function(mode) {
 		var min = Math.min(Math.min(this.r, this.g), this.b),
 			max = Math.max(Math.max(this.r, this.g), this.b),
 			delta = max - min;
-		
+
 		this.v = max/255;
 		this.s = delta / max;
 		if (this.s === 0) {
@@ -390,7 +382,7 @@ var vis4color = function(mode) {
 
 	this.hsv2rgb = function() {
 		var h = this.h, s = this.s, _rgb = this._rgb, v = this.v*255, i, f, p, q, t;
-		
+
 		if (this.s === 0 && isNaN(h)) {
 			this.r = this.g = this.b = v;
 		} else {
@@ -401,16 +393,16 @@ var vis4color = function(mode) {
 			p = v * (1 - s);
 			q = v * (1 - s * f);
 			t = v * (1 - s * (1 - f));
-			
+
 			switch (i) {
 				case 0: _rgb(v, t, p); break;
 				case 1: _rgb(q, v, p); break;
 				case 2: _rgb(p, v, t); break;
 				case 3: _rgb(p, q, v); break;
 				case 4: _rgb(t, p, v); break;
-				case 5: _rgb(v, p, q); 
+				case 5: _rgb(v, p, q);
 			}
-		}			
+		}
 	};
 
 	this._rgb = function(r,g,b) {
@@ -419,12 +411,12 @@ var vis4color = function(mode) {
 	// hsl magic
 
 	this.rgb2hsl = function() {
-		var r = this.r / 255, 
-			g = this.g / 255, 
+		var r = this.r / 255,
+			g = this.g / 255,
 			b = this.b / 255,
 			min = Math.min(Math.min(r, g), b),
 			max = Math.max(Math.max(r, g), b);
-		
+
 		this.l = (max + min) / 2;
 		if (max == min) {
 			this.s = 0;
@@ -439,7 +431,7 @@ var vis4color = function(mode) {
 		if (r == max) this.h = (g - b) / (max - min);
 		else if (g == max) this.h = 2 + (b - r) / (max - min);
 		else if (b == max) this.h = 4 + (r - g) / (max - min);
-		
+
 		this.h *= 60;
 		if (this.h < 0) this.h += 360;
 	};
@@ -462,7 +454,7 @@ var vis4color = function(mode) {
 			for (var i = 0; i < 3; i++) {
 				if (t3[i] < 0) t3[i] += 1;
 				if (t3[i] > 1) t3[i] -= 1;
-				
+
 				if (6 * t3[i] < 1) c[i] = t1 + (t2 - t1) * 6 * t3[i];
 				else if (2 * t3[i] < 1) c[i] = t2;
 				else if (3 * t3[i] < 2) c[i] = t1 + (t2 - t1) * ((2 / 3) - t3[i]) * 6;
@@ -482,25 +474,25 @@ var vis4color = function(mode) {
 	};
 
 	this._rgbLuminance = function() {
-		return (0.2126 * this.r + 0.7152 * this.g + 0.0722 * this.b) / 255; 
+		return (0.2126 * this.r + 0.7152 * this.g + 0.0722 * this.b) / 255;
 	};
 
 	this.hsb2rgb = function() {
 		var treshold = 0.001;
 		var l_min = 0, l_max = 1, l_est = 0.5;
 		var current_brightness;
-		
+
 		// first try
 		this.l = l_est;
 		this.hsl2rgb();
 		current_brightness = this._rgbLuminance();
 		var trys = 0;
-		
+
 		while (Math.abs(current_brightness - this.br) > treshold && trys < 100) {
-			
+
 			if (current_brightness > this.br) {
 				// too bright, next try darker
-				l_max = l_est;					
+				l_max = l_est;
 			} else {
 				// too dark, next try brighter
 				l_min = l_est;
@@ -521,24 +513,24 @@ var vis4color = function(mode) {
 			max = Math.max(Math.max(r, g), b),
 			sum = r + g + b,
 			delta = max - min;
-		
+
 		r = r / sum;
 		g = g / sum;
 		b = b / sum;
-		
+
 		min = Math.min(Math.min(r, g), b);
 		//trace('rgb = ',r,g,b,' min = ' + min);
-		
-		this.i = (r + g + b) / 765;			
-		this.h = this.acos((r - 0.5*g - 0.5*b) / Math.sqrt( (r - g) * (r - g) + (r - b) * (g - b)) );			
+
+		this.i = (r + g + b) / 765;
+		this.h = this.acos((r - 0.5*g - 0.5*b) / Math.sqrt( (r - g) * (r - g) + (r - b) * (g - b)) );
 		this.s = 1 - 3 * min;
-		
+
 		if (b > g) this.h = 360 - this.h;
-	};	
-		
+	};
+
 	this.hsi2rgb = function() { // http://fourier.eng.hmc.edu/e161/lectures/colorprocessing/node4.html
 		var h = this.h,i=this.i,s=this.s, r, b, g, cos = this.cos;
-		
+
 		if (h <= 120) {
 			b = (1 - s) / 3;
 			r = (1 + (s * cos(h)) / cos(60 - h)) / 3;
@@ -556,12 +548,12 @@ var vis4color = function(mode) {
 		}
 		r = Math.min(255, r*i*3*255);
 		g = Math.min(255, g*i*3*255);
-		b = Math.min(255, b*i*3*255);			
+		b = Math.min(255, b*i*3*255);
 	};
 };
 
 // static constructors
-			
+
 vis4color.fromHex = function(color, mode) {
 	if (mode == null) mode = 'hsl';
 	var c = new vis4color(mode);
@@ -615,6 +607,21 @@ vis4color.fromHSI = function(h,s,i, mode) {
 /*global Raphael, TWEEN, vis4, vis4color, vis4loader */
 
 var BubbleTree = function(config, onHover, onUnHover) {
+
+	var history = $.history || {
+    callback: null,
+    options: null,
+    init: function(callback, options) {
+      this.callback = callback;
+      this.options = options;
+      this.load('/');
+    },
+    load: function(url) {
+      if (typeof this.callback == 'function') {
+        this.callback(url);
+      }
+    }
+  };
 
 	var me = this;
 
@@ -1310,7 +1317,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 	*/
 
 	me.initHistory = function() {
-		$.history.init(me.urlChanged.bind(me), { unescape: ",/" });
+		history.init(me.urlChanged.bind(me), { unescape: ",/" });
 	};
 
 	me.freshUrl = '';
@@ -1351,7 +1358,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 			url = me.getUrlForNode(me.nodesByUrlToken[token]);
 			if (me.freshUrl != url) {
 				// node found but url not perfect
-				$.history.load(url);
+				history.load(url);
 			} else {
 				me.navigateTo(me.nodesByUrlToken[token], true);
 			}
@@ -1364,7 +1371,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 		// vis4.log('bc.navigateTo(',node,',',fromUrlChange,')');
 		var me = this;
 		if (fromUrlChange) me.changeView(node.urlToken);
-		else $.history.load(me.getUrlForNode(node));
+		else history.load(me.getUrlForNode(node));
 		//
 		$('.label, .label2', me.$container).removeClass('current');
 		$('.label2.'+node.id, me.$container).addClass('current');

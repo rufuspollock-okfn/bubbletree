@@ -10,6 +10,21 @@
 
 var BubbleTree = function(config, onHover, onUnHover) {
 
+	var history = $.history || {
+    callback: null,
+    options: null,
+    init: function(callback, options) {
+      this.callback = callback;
+      this.options = options;
+      this.load('/');
+    },
+    load: function(url) {
+      if (typeof this.callback == 'function') {
+        this.callback(url);
+      }
+    }
+  };
+
 	var me = this;
 
 	me.version = "2.0.2";
@@ -704,7 +719,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 	*/
 
 	me.initHistory = function() {
-		$.history.init(me.urlChanged.bind(me), { unescape: ",/" });
+		history.init(me.urlChanged.bind(me), { unescape: ",/" });
 	};
 
 	me.freshUrl = '';
@@ -745,7 +760,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 			url = me.getUrlForNode(me.nodesByUrlToken[token]);
 			if (me.freshUrl != url) {
 				// node found but url not perfect
-				$.history.load(url);
+				history.load(url);
 			} else {
 				me.navigateTo(me.nodesByUrlToken[token], true);
 			}
@@ -758,7 +773,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 		// vis4.log('bc.navigateTo(',node,',',fromUrlChange,')');
 		var me = this;
 		if (fromUrlChange) me.changeView(node.urlToken);
-		else $.history.load(me.getUrlForNode(node));
+		else history.load(me.getUrlForNode(node));
 		//
 		$('.label, .label2', me.$container).removeClass('current');
 		$('.label2.'+node.id, me.$container).addClass('current');
