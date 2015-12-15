@@ -4,56 +4,56 @@
 	<meta charset="UTF-8"/>
 	<title>Italian Regional Accounts</title>
 
-  <script type="text/javascript" src="../../public/lib/jquery.min.js"></script>
-  <script type="text/javascript" src="../../public/lib/jquery-migrate.min.js"></script>
-  <script type="text/javascript" src="../../public/lib/jquery.history.js"></script>
-  <script type="text/javascript" src="../../public/lib/jquery.tooltip.min.js"></script>
-  <script type="text/javascript" src="../../public/lib/raphael-min.js"></script>
-  <script type="text/javascript" src="../../public/lib/Tween.js"></script>
-  <script type="text/javascript" src="../../dist/bubbletree.js"></script>
+  <script type="text/javascript" src="../assets/scripts/jquery.min.js"></script>
+  <script type="text/javascript" src="../assets/scripts/jquery-migrate.min.js"></script>
+  <script type="text/javascript" src="../assets/scripts/jquery.history.js"></script>
+  <script type="text/javascript" src="../assets/scripts/jquery.tooltip.min.js"></script>
+  <script type="text/javascript" src="../assets/scripts/raphael-min.js"></script>
+  <script type="text/javascript" src="../assets/scripts/Tween.js"></script>
+  <script type="text/javascript" src="../assets/scripts/bubbletree.js"></script>
   <script type="text/javascript" src="http://assets.openspending.org/openspendingjs/master/lib/aggregator.js"></script>
-  <link rel="stylesheet" type="text/css" href="../../dist/bubbletree.css" />
-  <script type="text/javascript" src="../../public/styles/cofog.js"></script>
+  <link rel="stylesheet" type="text/css" href="../assets/styles/bubbletree.css" />
+  <script type="text/javascript" src="../assets/styles/cofog.js"></script>
 
-  <link rel="stylesheet" type="text/css" href="../../public/styles/page.css" />
-  <link rel="stylesheet" type="text/css" href="../../public/styles/tooltip.css" />
+  <link rel="stylesheet" type="text/css" href="../assets/styles/page.css" />
+  <link rel="stylesheet" type="text/css" href="../assets/styles/tooltip.css" />
 
   <script type="text/javascript" src="config.js"></script>
 
-	<script type="text/javascript" src="../../public/styles/itb-functions.js"></script>
-	
+	<script type="text/javascript" src="../assets/styles/itb-functions.js"></script>
+
 	<script type="text/javascript">
-       
+
 		$(function() {
-			
+
 			var $tooltip = $('<div class="tooltip">Tooltip</div>');
 			$('#bubble-chart').append($tooltip);
-			
+
 			var tooltip = function(event) {
 				if (event.type == 'SHOW') {
 					// show tooltip
 					vis4.log(event);
-					$tooltip.css({ 
-						left: event.mousePos.x + 4, 
-						top: event.mousePos.y + 4 
+					$tooltip.css({
+						left: event.mousePos.x + 4,
+						top: event.mousePos.y + 4
 					});
 					$tooltip.html(event.node.label+' <b>'+event.node.famount+'</b>');
 					var bubble = event.target;
-					
+
 					$tooltip.show();
 				} else {
 					// hide tooltip
 					$tooltip.hide();
 				}
 			};
-						
+
 			config.tooltipCallback = tooltip;
 
 			config.drilldowns = ['to', 'function'];
 			config.bubbleType = ['donut', 'donut', 'icon'];
 			config.bubbleStyles['itb-function'] = BubbleTree.Styles.ITBFunction;
-			config.rootPath = '../../';	
-		
+			config.rootPath = '../../';
+
 			new OpenSpending.Aggregator(config);
 		});
 	</script>

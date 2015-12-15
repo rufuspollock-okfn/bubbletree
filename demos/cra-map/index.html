@@ -4,16 +4,16 @@
 	<meta charset="UTF-8"/>
 	<title>UK Country & Regional Analysis</title>
 
-	<script type="text/javascript" src="../../public/lib/jquery.min.js"></script>
-	<script type="text/javascript" src="../../public/lib/jquery-migrate.min.js"></script>
-	<script type="text/javascript" src="../../public/lib/jquery.history.js"></script>
-	<script type="text/javascript" src="../../public/lib/jquery.tooltip.min.js"></script>
-	<script type="text/javascript" src="../../public/lib/raphael-min.js"></script>
-	<script type="text/javascript" src="../../public/lib/Tween.js"></script>
-	<script type="text/javascript" src="../../dist/bubbletree.js"></script>
+	<script type="text/javascript" src="../assets/scripts/jquery.min.js"></script>
+	<script type="text/javascript" src="../assets/scripts/jquery-migrate.min.js"></script>
+	<script type="text/javascript" src="../assets/scripts/jquery.history.js"></script>
+	<script type="text/javascript" src="../assets/scripts/jquery.tooltip.min.js"></script>
+	<script type="text/javascript" src="../assets/scripts/raphael-min.js"></script>
+	<script type="text/javascript" src="../assets/scripts/Tween.js"></script>
+	<script type="text/javascript" src="../assets/scripts/bubbletree.js"></script>
 	<script type="text/javascript" src="http://assets.openspending.org/openspendingjs/master/lib/aggregator.js"></script>
-	<link rel="stylesheet" type="text/css" href="../../dist/bubbletree.css" />
-	<script type="text/javascript" src="../../public/styles/cofog.js"></script>
+	<link rel="stylesheet" type="text/css" href="../assets/styles/bubbletree.css" />
+	<script type="text/javascript" src="../assets/styles/cofog.js"></script>
 
 	<script type="text/javascript" src="svgmap.js"></script>
 
@@ -22,29 +22,29 @@
 			var $tooltip = $('<div class="tooltip">Tooltip</div>');
 			$tooltip.hide();
 			$('.bubbletree').append($tooltip);
-			
+
 			var tooltip = function(event) {
 				if (event.type == 'SHOW') {
 					// show tooltip
-					$tooltip.css({ 
-						left: event.mousePos.x + 4, 
-						top: event.mousePos.y + 4 
+					$tooltip.css({
+						left: event.mousePos.x + 4,
+						top: event.mousePos.y + 4
 					});
 					$tooltip.html(event.node.label+' <b>'+event.node.famount+'</b>');
 					var bubble = event.target;
-					
+
 					$tooltip.show();
 				} else {
 					// hide tooltip
 					$tooltip.hide();
 				}
 			};
-			
+
 			var map = new SVGMap({
-				svg: 'uk.svg', 
+				svg: 'uk.svg',
 				container: $('#map')
 			});
-			
+
 			$('#maptypeswitch').click(function(e) {
 				if (!$(e.target).hasClass('active')) {
 					$('#maptypeswitch a').removeClass('active');
@@ -53,22 +53,22 @@
 					map.updateValues(map.currentNode);
 				}
 			});
-			
+
 			var onNodeClick = function(node) {
 				map.updateValues(node);
 				$('#mapdesc').html('Map of Regional Spending on <div style="font-size:130%">'+node.label+'</div>');
 			};
-			
+
 			new OpenSpending.Aggregator({
 				apiUrl: 'http://openspending.org/api',
 				localApiCache: 'aggregate.json',
 				dataset: 'cra',
 				drilldowns: ['cofog1', 'cofog2', 'cofog3'],
 				cuts: ['year:2008'],
-				rootNodeLabel: 'Grant total', 
+				rootNodeLabel: 'Grant total',
 				breakdown: 'region',
 				callback: function(data) {
-					
+
 					new BubbleTree({
 						data: data,
 						container: '.bubbletree',
@@ -79,9 +79,9 @@
 						tooltipCallback: tooltip,
 						bubbleStyles: {
 							'cofog':  BubbleTree.Styles.Cofog
-						}	
+						}
 					})
-					
+
 				}
 			});
 		});
@@ -110,7 +110,7 @@
 			background: #861541; color: #fff; text-decoration: none;
 		}
 	</style>
-	
+
 </head>
 <body>
 	<div id="header"><a class="title">OpenSpending</a>
@@ -122,10 +122,10 @@
 		<div class="bubbletree"></div>
 	</div>
 	<div id="map">
-	
+
 	</div>
 	<div id="mapdesc">
-		
+
 	</div>
 	<div id="maptypeswitch"><a name="total">Total</a> &nbsp;<a name="percapita" class="active">By Population</a></div>
 </body>

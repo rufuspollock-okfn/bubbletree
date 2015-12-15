@@ -4,20 +4,20 @@
 	<meta charset="UTF-8"/>
 	<title>Minimal BubbleTree Demo</title>
 
-  <script type="text/javascript" src="../../public/lib/jquery.min.js"></script>
-  <script type="text/javascript" src="../../public/lib/jquery-migrate.min.js"></script>
-  <script type="text/javascript" src="../../public/lib/jquery.history.js"></script>
-  <script type="text/javascript" src="../../public/lib/jquery.tooltip.min.js"></script>
-  <script type="text/javascript" src="../../public/lib/raphael-min.js"></script>
-  <script type="text/javascript" src="../../public/lib/Tween.js"></script>
-  <script type="text/javascript" src="../../dist/bubbletree.js"></script>
-  <link rel="stylesheet" type="text/css" href="../../dist/bubbletree.css" />
-  <script type="text/javascript" src="../../public/styles/cofog.js"></script>
+  <script type="text/javascript" src="../assets/scripts/jquery.min.js"></script>
+  <script type="text/javascript" src="../assets/scripts/jquery-migrate.min.js"></script>
+  <script type="text/javascript" src="../assets/scripts/jquery.history.js"></script>
+  <script type="text/javascript" src="../assets/scripts/jquery.tooltip.min.js"></script>
+  <script type="text/javascript" src="../assets/scripts/raphael-min.js"></script>
+  <script type="text/javascript" src="../assets/scripts/Tween.js"></script>
+  <script type="text/javascript" src="../assets/scripts/bubbletree.js"></script>
+  <link rel="stylesheet" type="text/css" href="../assets/styles/bubbletree.css" />
+  <script type="text/javascript" src="../assets/styles/cofog.js"></script>
 
   <script type="text/javascript">
-       
+
 		$(function() {
-		
+
 			var randomNames = ['Burgis', 'Pascal', 'Lysann', 'Theo', 'Julia', 'Barnabas', 'Immanuel', 'Marisa', 'Folker', 'Hadumod', 'Friedegunde', 'Marco', 'Otto', 'Sonnhardt', 'Arntraud', 'Andree', 'Wiltrudis', 'Astrid', 'Kathrein', 'Raoul', 'Vivien', 'Ole', 'Leo', 'Dankward', 'David', 'Ferfried', 'Sonngard', 'Fabio', 'Hansjakob', 'Huberta', 'Doro', 'Gordian', 'Sturmius', 'Sturmhard', 'Reintraud', 'Sabine', 'Georg', 'Sylvia', 'Ann', 'Editha', 'Gunhard', 'Etienne', 'Hildtraud', 'Noah', 'Margarete', 'Stilla', 'Brian', 'Pauline', 'Edgar', 'Kathrin'];
 			var nodeCount = 1;
 			function generateRandomData(node, level) {
@@ -27,8 +27,8 @@
 				var amount = node.amount;
 				for (var i=0; i<numChildren; i++) {
 					nodeCount ++;
-					var child = { 
-						label: randomNames[Number(String(level-1)+String(i))], 
+					var child = {
+						label: randomNames[Number(String(level-1)+String(i))],
 						amount: i+1 < numChildren ? amount*Math.random()*.6 : amount
 					};
 					if (level == 1) child.color = vis4color.fromHSL(i/numChildren*360, .7, .5).x;
@@ -39,20 +39,20 @@
 				}
 				return node;
 			}
-			
+
 			var data = generateRandomData({
 				label: 'Random Names, Random Amounts',
 				amount: 100000000
 			});
-			
+
 			new BubbleTree({
 				data: data,
 				container: '.bubbletree'
 			});
-		
-			
+
+
 		});
-                                        
+
 	</script>
 </head>
 <body>

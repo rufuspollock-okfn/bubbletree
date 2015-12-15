@@ -43,10 +43,11 @@ var vendorScriptFiles = [
   path.join(nodeModulesDir, '/jquery/dist/jquery.min.js'),
   path.join(nodeModulesDir, '/jquery-migrate/dist/jquery-migrate.min.js'),
   path.join(nodeModulesDir, '/raphael/raphael-min.js'),
-  path.join(nodeModulesDir, '/tween.js/src/Tween.js')
+  path.join(nodeModulesDir, '/tween.js/src/Tween.js'),
+  path.join(srcDistDir, '/bubbletree.js')
 ];
 
-var templatesPath = path.join(__dirname, 'public/templates');
+var templatesPath = path.join(__dirname, 'demos/assets/templates');
 var templateRenderer = nunjucks.configure(templatesPath, {
   autoescape: false
 });
@@ -92,6 +93,9 @@ gulp.task('styles', function() {
 
 gulp.task('demos', function() {
   var demos = fs.readdirSync(demosPath).filter(function(file) {
+    if (file == 'assets') {
+      return false;
+    }
     return fs.statSync(path.join(demosPath, file)).isDirectory();
   }).map(function(item) {
     return '* [' + item + '](' + item + '/index.html)';
@@ -112,12 +116,12 @@ gulp.task('readme', function() {
     .pipe(gulp.dest(__dirname));
 });
 
-gulp.task('vendor-scripts', function() {
+gulp.task('vendor-scripts', ['sources', 'sources-minified'], function() {
   return gulp.src(vendorScriptFiles)
-    .pipe(gulp.dest(path.join(__dirname, '/public/lib')));
+    .pipe(gulp.dest(path.join(__dirname, '/demos/assets/scripts')));
 });
 
 gulp.task('custom-styles', function() {
   return gulp.src(path.join(__dirname, '/src/css') + '/*')
-    .pipe(gulp.dest(path.join(__dirname, '/public/styles')));
+    .pipe(gulp.dest(path.join(__dirname, '/demos/assets/styles')));
 });

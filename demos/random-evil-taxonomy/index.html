@@ -4,15 +4,15 @@
 	<meta charset="UTF-8"/>
 	<title>Minimal BubbleTree Demo</title>
 
-  <script type="text/javascript" src="../../public/lib/jquery.min.js"></script>
-  <script type="text/javascript" src="../../public/lib/jquery-migrate.min.js"></script>
-  <script type="text/javascript" src="../../public/lib/jquery.history.js"></script>
-  <script type="text/javascript" src="../../public/lib/jquery.tooltip.min.js"></script>
-  <script type="text/javascript" src="../../public/lib/raphael-min.js"></script>
-  <script type="text/javascript" src="../../public/lib/Tween.js"></script>
-  <script type="text/javascript" src="../../dist/bubbletree.js"></script>
-  <link rel="stylesheet" type="text/css" href="../../dist/bubbletree.css" />
-  <script type="text/javascript" src="../../public/styles/cofog.js"></script>
+  <script type="text/javascript" src="../assets/scripts/jquery.min.js"></script>
+  <script type="text/javascript" src="../assets/scripts/jquery-migrate.min.js"></script>
+  <script type="text/javascript" src="../assets/scripts/jquery.history.js"></script>
+  <script type="text/javascript" src="../assets/scripts/jquery.tooltip.min.js"></script>
+  <script type="text/javascript" src="../assets/scripts/raphael-min.js"></script>
+  <script type="text/javascript" src="../assets/scripts/Tween.js"></script>
+  <script type="text/javascript" src="../assets/scripts/bubbletree.js"></script>
+  <link rel="stylesheet" type="text/css" href="../assets/styles/bubbletree.css" />
+  <script type="text/javascript" src="../assets/styles/cofog.js"></script>
 
   <script type="text/javascript">
 		$(function() {
@@ -25,8 +25,8 @@
 				var amount = node.amount;
 				for (var i=0; i<numChildren; i++) {
 					nodeCount ++;
-					var child = { 
-						label: 'Random spending of '+randomNames[Number(String(level-1)+String(i)) % randomNames.length] + ' and ' + randomNames[Math.floor(Math.random() * randomNames.length)], 
+					var child = {
+						label: 'Random spending of '+randomNames[Number(String(level-1)+String(i)) % randomNames.length] + ' and ' + randomNames[Math.floor(Math.random() * randomNames.length)],
 						amount: i+1 < numChildren ? amount*Math.random()*.3 : amount,
 						shortLabel: ''
 					};

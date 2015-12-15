@@ -4,43 +4,43 @@
 	<meta charset="UTF-8"/>
 	<title>UK Country Regional Analysis</title>
 
-  <script type="text/javascript" src="../../public/lib/jquery.min.js"></script>
-  <script type="text/javascript" src="../../public/lib/jquery-migrate.min.js"></script>
-  <script type="text/javascript" src="../../public/lib/jquery.history.js"></script>
-  <script type="text/javascript" src="../../public/lib/jquery.tooltip.min.js"></script>
-  <script type="text/javascript" src="../../public/lib/raphael-min.js"></script>
-  <script type="text/javascript" src="../../public/lib/Tween.js"></script>
-  <script type="text/javascript" src="../../dist/bubbletree.js"></script>
+  <script type="text/javascript" src="../assets/scripts/jquery.min.js"></script>
+  <script type="text/javascript" src="../assets/scripts/jquery-migrate.min.js"></script>
+  <script type="text/javascript" src="../assets/scripts/jquery.history.js"></script>
+  <script type="text/javascript" src="../assets/scripts/jquery.tooltip.min.js"></script>
+  <script type="text/javascript" src="../assets/scripts/raphael-min.js"></script>
+  <script type="text/javascript" src="../assets/scripts/Tween.js"></script>
+  <script type="text/javascript" src="../assets/scripts/bubbletree.js"></script>
   <script type="text/javascript" src="http://assets.openspending.org/openspendingjs/master/lib/aggregator.js"></script>
-  <link rel="stylesheet" type="text/css" href="../../dist/bubbletree.css" />
-  <script type="text/javascript" src="../../public/styles/cofog.js"></script>
+  <link rel="stylesheet" type="text/css" href="../assets/styles/bubbletree.css" />
+  <script type="text/javascript" src="../assets/styles/cofog.js"></script>
 
   <script type="text/javascript">
-       
+
 		$(function() {
-			
+
 			var $tooltip = $('<div class="tooltip">Tooltip</div>');
 			$('.bubbletree').append($tooltip);
 			$tooltip.hide();
-			
+
 			var tooltip = function(event) {
 				if (event.type == 'SHOW') {
 					// show tooltip
 					vis4.log(event);
-					$tooltip.css({ 
-						left: event.mousePos.x + 4, 
-						top: event.mousePos.y + 4 
+					$tooltip.css({
+						left: event.mousePos.x + 4,
+						top: event.mousePos.y + 4
 					});
 					$tooltip.html(event.node.label+' <b>'+event.node.famount+'</b>');
 					var bubble = event.target;
-					
+
 					$tooltip.show();
 				} else {
 					// hide tooltip
 					$tooltip.hide();
 				}
 			};
-			
+
 			var dataLoaded = function(data) {
 				// console.log('dataLoaded', JSON.stringify(data));
 				window.bubbleTree = new BubbleTree({
@@ -57,7 +57,7 @@
 					tooltipCallback: tooltip
 				});
 			};
-			
+
 			// call openspending api for data
 			new OpenSpending.Aggregator({
 				apiUrl: 'http://openspending.org/api',
@@ -69,10 +69,10 @@
 				// localApiCache: 'aggregate.json',
 				callback: dataLoaded
 			});
-			
-			
+
+
 		});
-                                        
+
 	</script>
 </head>
 <body>

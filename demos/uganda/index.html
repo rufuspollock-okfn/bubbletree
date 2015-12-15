@@ -4,16 +4,16 @@
 	<meta charset="UTF-8"/>
 	<title>Uganda Budget</title>
 
-  <script type="text/javascript" src="../../public/lib/jquery.min.js"></script>
-  <script type="text/javascript" src="../../public/lib/jquery-migrate.min.js"></script>
-  <script type="text/javascript" src="../../public/lib/jquery.history.js"></script>
-  <script type="text/javascript" src="../../public/lib/jquery.tooltip.min.js"></script>
-  <script type="text/javascript" src="../../public/lib/raphael-min.js"></script>
-  <script type="text/javascript" src="../../public/lib/Tween.js"></script>
-  <script type="text/javascript" src="../../dist/bubbletree.js"></script>
+  <script type="text/javascript" src="../assets/scripts/jquery.min.js"></script>
+  <script type="text/javascript" src="../assets/scripts/jquery-migrate.min.js"></script>
+  <script type="text/javascript" src="../assets/scripts/jquery.history.js"></script>
+  <script type="text/javascript" src="../assets/scripts/jquery.tooltip.min.js"></script>
+  <script type="text/javascript" src="../assets/scripts/raphael-min.js"></script>
+  <script type="text/javascript" src="../assets/scripts/Tween.js"></script>
+  <script type="text/javascript" src="../assets/scripts/bubbletree.js"></script>
   <script type="text/javascript" src="http://assets.openspending.org/openspendingjs/master/lib/aggregator.js"></script>
-  <link rel="stylesheet" type="text/css" href="../../dist/bubbletree.css" />
-  <script type="text/javascript" src="../../public/styles/cofog.js"></script>
+  <link rel="stylesheet" type="text/css" href="../assets/styles/bubbletree.css" />
+  <script type="text/javascript" src="../assets/styles/cofog.js"></script>
 
   <style type="text/css">
     #header {
@@ -25,19 +25,19 @@
 			var $tooltip = $('<div class="tooltip">Tooltip</div>');
 			$('.bubble-chart').append($tooltip);
 			$tooltip.hide();
-			
+
 			var getTooltip = function() {
 				return this.getAttribute('tooltip');
 			};
-			
+
 			var initTooltip = function(node, domnode) {
 				domnode.setAttribute('tooltip', node.label+' &nbsp;<br /><big><b>'+node.famount+'</b></big>');
-				
+
 				vis4.log(domnode.getAttribute('tooltip'));
-				
+
 				$(domnode).tooltip({ delay: 200, bodyHandler: getTooltip });
 			};
-			
+
 			new OpenSpending.Aggregator({
 				apiUrl: 'http://openspending.org/api',
 				dataset: 'ugandabudget',
@@ -47,8 +47,9 @@
 				rootNodeLabel: 'Uganda Budget',
 				//breakdown: 'spending_source_type',
 				callback: function(data) {
-					
+
 					new BubbleTree({
+            autoColors: true,
 						data: data,
 						container: '.bubbletree',
 						//tooltipCallback: tooltip,
@@ -64,7 +65,7 @@
 								'government-of-uganda': { color: '#A1218D' },
 								'budget-support': { color: '#1A439A' }
 							}
-							
+
 						}
 					});
 				}
