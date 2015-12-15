@@ -1,5 +1,5 @@
 /*!
- * BubbleTree 2.0.1
+ * BubbleTree 2.0.2
  *
  * Copyright (c) 2011 Gregor Aisch (http://driven-by-data.net)
  * Licensed under the MIT license
@@ -10,13 +10,32 @@
 
 var BubbleTree = function(config, onHover, onUnHover) {
 
+	var history = $.history || {
+    callback: null,
+    options: null,
+    init: function(callback, options) {
+      this.callback = callback;
+      this.options = options;
+      this.load('/');
+    },
+    load: function(url) {
+      if (typeof this.callback == 'function') {
+        this.callback(url);
+      }
+    }
+  };
+
 	var me = this;
 
 	me.version = "2.0.2";
 
-	me.$container = $(config.container);
+	me.$container = $(config.container).empty();
 
 	me.config = $.extend({
+    // Clear colors for all nodes (is doing before autoColors!)
+    clearColors: false,
+    // If node has no color - automatically assign it
+    autoColors: false,
 		// this is where we look for the icons
 		rootPath: '',
 		// show full labels inside bubbles with min radius of 40px
@@ -173,9 +192,21 @@ var BubbleTree = function(config, onHover, onUnHover) {
 		}
 
 		if (!node.color) {
-			// use color from parent node if no other match available
-			if (node.level > 0) node.color = node.parent.color;
-			else node.color = '#999999';
+      if (me.config.autoColors) {
+        if (node.level == 0) {
+          node.color = vis4color.fromHSL(45, 0.9, 0.5).x;
+        } else
+        if (node.level == 1) {
+          var count = node.parent.children.length;
+          node.color = vis4color.fromHSL(index / count * 360, 0.7, 0.5).x;
+        } else {
+          node.color = vis4color.fromHex(node.parent.color).lightness('*' + (0.5+Math.random() * 0.5)).x;
+        }
+      } else {
+        // use color from parent node if no other match available
+        if (node.level > 0) node.color = node.parent.color;
+        else node.color = '#999999';
+      }
 		}
 		// lighten up the color if there are no children
 		if (node.children.length < 2 && node.color) {
@@ -612,7 +643,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 				}
 			}
 
-			tr = new ns.Transitioner($.browser.msie || me.currentCenter == node ? 0 : 1000);
+			tr = new ns.Transitioner(me.currentCenter == node ? 0 : 1000);
 			tr.changeLayout(t);
 			me.currentTransition = tr;
 			if (!me.currentCenter && $.isFunction(me.config.firstNodeCallback)) {
@@ -704,7 +735,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 	*/
 
 	me.initHistory = function() {
-		$.history.init(me.urlChanged.bind(me), { unescape: ",/" });
+		history.init(me.urlChanged.bind(me), { unescape: ",/" });
 	};
 
 	me.freshUrl = '';
@@ -745,7 +776,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 			url = me.getUrlForNode(me.nodesByUrlToken[token]);
 			if (me.freshUrl != url) {
 				// node found but url not perfect
-				$.history.load(url);
+				history.load(url);
 			} else {
 				me.navigateTo(me.nodesByUrlToken[token], true);
 			}
@@ -758,11 +789,11 @@ var BubbleTree = function(config, onHover, onUnHover) {
 		// vis4.log('bc.navigateTo(',node,',',fromUrlChange,')');
 		var me = this;
 		if (fromUrlChange) me.changeView(node.urlToken);
-		else $.history.load(me.getUrlForNode(node));
+		else history.load(me.getUrlForNode(node));
 		//
-		$('.label, .label2', me.$container).removeClass('current');
-		$('.label2.'+node.id, me.$container).addClass('current');
-		$('.label.'+node.id, me.$container).addClass('current');
+		$('.bubbletree-label, .bubbletree-label2', me.$container).removeClass('current');
+		$('.bubbletree-label2.'+node.id, me.$container).addClass('current');
+		$('.bubbletree-label.'+node.id, me.$container).addClass('current');
 	};
 
 	/*
@@ -788,7 +819,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 	// removes all nodes
 	me.clean = function() {
 		var me = this, i;
-		$('.label').remove();
+		$('.bubbletree-label').remove();
 		/*for (i in me.displayObjects) {
 			try {
 				if ($.isFunction(me.displayObjects[i].hide)) me.displayObjects[i].hide();

@@ -41,7 +41,7 @@ BubbleTree.Transitioner = function(duration) {
 					toProps[p] = props[p];
 				}
 				tween.to(toProps, me.duration);
-				tween.easing(TWEEN.Easing.Exponential.EaseOut);
+				tween.easing(TWEEN.Easing.Exponential.Out);
 				if ($.isFunction(o.draw)) tween.onUpdate(o.draw.bind(o));
 				if (i == layout.objects.length-1) tween.onComplete(me._completed.bind(me));
 				tween.start();

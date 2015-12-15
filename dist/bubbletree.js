@@ -1,5 +1,603 @@
+if ((typeof module == 'object') && (typeof module.exports == 'object')) {
+  var $ = require('jquery');
+  var Raphael = require('webpack-raphael');
+  var TWEEN = require('tween.js');
+}
+
+var vis4 = function() {};
+
+vis4.log = function() {
+	try {
+		if (window.console !== null) console.log.apply(this, arguments);
+	} catch (e) {};
+};
+
+vis4.str2time = function(s) {
+	var p = s.split(".");
+	return Math.round(Date.UTC(2000+p[0], p[1]-1, p[2])*0.001);
+};
+
+vis4.round = function(val, prec) {
+	var d = Math.pow(10, prec);
+	return Math.round(val*d)/d;
+};
+vis4.formatNumber_ksep = '.';
+vis4.formatNumber_dsep = ',';
+vis4.formatNumber = function(nr, round) {
+	//if (nr > 999999 && round) return (''+vis4.round(nr/1000000,1)).replace(".",vis4.formatNumber_dsep)+"&nbsp;Mio";
+	nr = ''+nr;
+	var out = '', c=0;
+	for (var i=nr.length-1;i>=0;i--) {
+		if (c > 0 && c < nr.length && c%3==0) out = vis4.formatNumber_ksep + out;
+		out = nr[i] + out;
+		c++;
+	}
+	return out;
+};
+vis4.parseTSV = function(raw, asObject) {
+	var lines = raw.split("\n");
+	var data = [];
+	var props;
+	var l;
+	for (l=0; l<lines.length; l++) {
+		var line = lines[l];
+		if (line !== '') {
+			//if (line != lines[lines.length-1]) line = StringUtil.trim(line);
+			if (asObject) {
+				if (l === 0) props = line.split("\t");
+				else {
+					var obj = { };
+					var values = line.split("\t");
+					if (values.length != props.length) {
+						return "wrong tsv format";
+					}
+					for (var p = 0; p < props.length; p++) {
+						obj[$.trim(props[p])] = $.trim(values[p]);
+					}
+					data.push(obj);
+				}
+			} else {
+				data.push(line.split("\t"));
+			}
+		}
+	}
+	return data;
+};
+
+vis4.map = function(arr, idCol) {
+	var map = {};
+	for (var i=0; i<arr.length; i++) {
+		map[arr[i][idCol]] = arr[i];
+	}
+	return map;
+};
+
+vis4.DelayedTask = function(/* delay, scope, func, args */) {
+
+	var me = this;
+
+	me.init = function(args) {
+		var me = this, taskArgs = [];
+		for (var i in args) {
+			if (i > 2) taskArgs.push(args[i]);
+		}
+		me.func = args[2];
+		me.scope = args[1];
+		me.args = taskArgs;
+		me.running = true;
+		me.timer = window.setTimeout(this.run.bind(me), args[0]);
+	};
+
+	me.run = function() {
+		var me = this;
+		me.func.apply(me.scope, me.args);
+		me.running = false;
+	};
+
+	me.cancel = function() {
+		vis4.log('canceling timer', this);
+		window.clearTimeout(this.timer);
+		this.running = false;
+	};
+
+	me.init(arguments);
+};
+
+var vis4loadingItem = function(url, id, type, ldr) {
+	this.url = url; this.id = id; this.type = type; this.loader = ldr;
+
+	this.load = function() {
+		$.get(this.url, this.processContent.bind(this));
+	};
+
+	this.processContent = function(content) {
+		if (this.type == 'tsv') this.data = vis4.parseTSV(content, true);
+		else if (this.type == 'json') this.data = (typeof(content) == "string") ? $.parseJSON(content) : content;
+		else this.data = content;
+		this.loader.itemLoaded();
+	};
+
+};
+
+/*
+ * usage:
+ *
+ * var ldr = new vis4loader();
+ * ldr.add('data.txt', 'id1');
+ * ldr.add('data/employes.tsv', 'employes', 'tsv');
+ * ldr.add('data/list.json', 'list', 'json');
+ * ldr.load(function(ldr)
+ *
+ */
+var vis4loader = function() {
+	this.items = []; this.byID = {};
+
+	this.add = function(url, id, type) {
+		if (type === null) type = 'text';
+		var item = new vis4loadingItem(url, id, type, this);
+		this.items.push(item);
+		this.byID[id] = item;
+	};
+
+	this.load = function(callback) {
+		this.callback = callback;
+		this.loaded = 0;
+		for (var i=0;i<this.items.length;i++) {
+			this.items[i].load();
+		}
+	};
+
+	this.itemLoaded = function() {
+		this.loaded++;
+		if (this.loaded == this.items.length) this.callback(this);
+	};
+
+	this.get = function(id) {
+		return this.byID[id].data;
+	};
+};
+
+/*
+ * vis4color.fromHex("#FF0000").saturation("*.5").lightness(.8).hue("+10").hex;
+ *
+ *
+ */
+
+var vis4color = function(mode) {
+
+	this.h = 0; this.s = 0.5; this.l = 0.8; this.v = 1; this.i = 1; this.r = 255; this.g = 0; this.b = 0;
+	this.x = "#FF0000"; this.u = 0; this.br = 1; this.K = 1/180*Math.PI;
+	if (mode == 'hsi' || mode == 'hsl' || mode == 'hsb' || mode == 'hsv') this.mode = mode;
+
+	this.log = function(s) {
+		if (window.console !== null) console.log(s);
+	};
+
+	this.cos = function(d) {
+		return Math.cos(d*this.K);
+	};
+
+	this.trim = function(value) {
+		return Math.max(0, Math.min(1, value));
+	};
+
+	this.setMode = function(mode) {
+		if (mode != 'hsv' && mode != 'hsi' && mode != 'hsl' && mode != 'hsb') {
+			this.log("unknown color mode "+mode);
+		}
+		this.mode = mode;
+		// recalc hsx-color
+		this.rgb2hsx();
+	};
+
+	this.setHexColor = function(hex) {
+		if (hex.charAt(0) != "#") hex = "#"+hex;
+		if (hex.length == 4) hex = "#"+hex.charAt(1)+hex.charAt(1)+hex.charAt(2)+hex.charAt(2)+hex.charAt(3)+hex.charAt(3);
+		if (hex.length != 7) this.log("invalid hex color");
+		this.x = hex;
+		this.hex2int();
+		this.int2rgb();
+		this.rgb2hsx();
+	};
+
+	this.setRGBColor = function(r,g,b) {
+		this.r = r; this.b = b; this.g = g;
+		this.rgb2int();
+		this.int2hex();
+		this.rgb2hsx();
+	};
+
+	this.setHSVColor = function(h,s,v) {
+		if (this.mode != 'hsv') this.mode = 'hsv';
+		this.h = h; this.s = this.trim(s); this.v = this.trim(v);
+		this.hsv2rgb();
+		this.rgb2int();
+		this.int2hex();
+	};
+
+	this.setHSLColor = function(h,s,l) {
+		if (this.mode != 'hsl') this.mode = 'hsl';
+		this.h = h; this.s = this.trim(s); this.l = this.trim(l);
+		this.hsl2rgb();
+		this.rgb2int();
+		this.int2hex();
+	};
+
+	this.setHSBColor = function(h,s,b) {
+		if (this.mode != 'hsb') this.mode = 'hsb';
+		this.h = h; this.s = this.trim(s); this.b = this.trim(b);
+		this.hsb2rgb();
+		this.rgb2int();
+		this.int2hex();
+	};
+
+	this.setHSIColor = function(h,s,i) {
+		if (this.mode != 'hsi') this.mode = 'hsi';
+		this.h = h; this.s = this.trim(s); this.i = this.trim(i);
+		this.hsi2rgb();
+		this.rgb2int();
+		this.int2hex();
+	};
+
+	// private methods
+
+	this.onChange = function() { };
+
+	this.rgb2int = function() {
+		this.u = this.r << 16 | this.g << 8 | this.b;
+		this.onChange();
+	};
+
+	this.int2rgb = function() {
+		this.r = this.u >> 16;
+		this.g = this.u >> 8 & 0xFF;
+		this.b = this.u & 0xFF;
+	};
+
+	this.hex2int = function() {
+		this.u = parseInt(this.x.substr(1), 16);
+		this.onChange();
+	};
+
+	this.int2hex = function() {
+		var str = "000000" + this.u.toString(16).toUpperCase();
+		this.x = "#" + str.substr(str.length - 6);
+		this.onChange();
+	};
+
+	this.int2rgb = function() {
+		this.r = this.u >> 16;
+		this.g = this.u >> 8 & 0xFF;
+		this.b = this.u & 0xFF;
+	};
+
+	this.hsx2rgb = function() {
+		switch (this.mode) {
+			case 'hsv': this.hsv2rgb(); break;
+			case 'hsi': this.hsi2rgb(); break;
+			case 'hsl': this.hsl2rgb(); break;
+			case 'hsb': this.hsb2rgb(); break;
+		}
+	};
+
+	this.rgb2hsx = function() {
+		switch (this.mode) {
+			case 'hsv': this.rgb2hsv(); break;
+			case 'hsi': this.rgb2hsi(); break;
+			case 'hsl': this.rgb2hsl(); break;
+			case 'hsb': this.rgb2hsb(); break;
+		}
+	};
+
+	this.hue = function(h) {
+		this._evaluate(h, "h");
+		this.hsx2rgb();
+		this.rgb2int();
+		this.int2hex();
+		return this;
+	};
+
+	this.saturation = function(s) {
+		this._evaluate(s, "s");
+		this.hsx2rgb();
+		this.rgb2int();
+		this.int2hex();
+		return this;
+	};
+
+	this.lightness = function(l) {
+		if (this.mode != "hsl") { this.log("WARNING: lightness property not available in "+this.mode+" mode"); return; }
+		this._evaluate(l, "l");
+		this.hsx2rgb();
+		this.rgb2int();
+		this.int2hex();
+		return this;
+	};
+
+	this.brightness = function(br) {
+		if (this.mode != "hsb") { this.log("WARNING: brightness property not available in "+this.mode+" mode"); return; }
+		this._evaluate(br, "br");
+		this.hsx2rgb();
+		this.rgb2int();
+		this.int2hex();
+		return this;
+	};
+
+	this.value = function(v) {
+		if (this.mode != "hsv") { this.log("WARNING: value property not available in "+this.mode+" mode"); return; }
+		this._evaluate(v, "v");
+		this.hsx2rgb();
+		this.rgb2int();
+		this.int2hex();
+		return this;
+	};
+
+	this.intensity = function(i) {
+		if (this.mode != "hsi") { this.log("WARNING: intensity property not available in "+this.mode+" mode"); return; }
+		this._evaluate(i, "i");
+		this.hsx2rgb();
+		this.rgb2int();
+		this.int2hex();
+		return this;
+	};
+
+	this._evaluate = function(val, propName) {
+		if (typeof(val) == "string") {
+			if (val.charAt(0) == "+" && !isNaN(val.substr(1))) {
+				this[propName] = Number(this[propName]) + Number(val.substr(1));
+			} else if (val.charAt(0) == "-" && !isNaN(val.substr(1))) {
+				this[propName] = this[propName] - Number(val.substr(1));
+			} if (val.charAt(0) == "*" && !isNaN(val.substr(1))) {
+				this[propName] = this[propName] * Number(val.substr(1));
+			} else if (val.charAt(0) == "/" && !isNaN(val.substr(1))) {
+				this[propName] = this[propName] / Number(val.substr(1));
+			}
+		} else if (!isNaN(val)) {
+			this[propName] = Number(val);
+		}
+	};
+
+	this.rgb = function() { return [this.r,this.g,this.b]; };
+	this.hsl = function() { return [this.h,this.s,this.l]; };
+
+	// hsv magic
+
+	this.rgb2hsv = function() {
+		var min = Math.min(Math.min(this.r, this.g), this.b),
+			max = Math.max(Math.max(this.r, this.g), this.b),
+			delta = max - min;
+
+		this.v = max/255;
+		this.s = delta / max;
+		if (this.s === 0) {
+			this.h = undefined;
+		} else {
+			if (this.r == max) this.h = (this.g - this.b) / delta;
+			if (this.g == max) this.h = 2+(this.b - this.r) / delta;
+			if (this.b == max) this.h = 4+(this.r - this.g) / delta;
+			this.h *= 60;
+			if (this.h < 0) this.h += 360;
+		}
+	};
+
+	this.hsv2rgb = function() {
+		var h = this.h, s = this.s, _rgb = this._rgb, v = this.v*255, i, f, p, q, t;
+
+		if (this.s === 0 && isNaN(h)) {
+			this.r = this.g = this.b = v;
+		} else {
+			if (h == 360) h = 0;
+			h /= 60;
+			i = Math.floor(h);
+			f = h - i;
+			p = v * (1 - s);
+			q = v * (1 - s * f);
+			t = v * (1 - s * (1 - f));
+
+			switch (i) {
+				case 0: _rgb(v, t, p); break;
+				case 1: _rgb(q, v, p); break;
+				case 2: _rgb(p, v, t); break;
+				case 3: _rgb(p, q, v); break;
+				case 4: _rgb(t, p, v); break;
+				case 5: _rgb(v, p, q);
+			}
+		}
+	};
+
+	this._rgb = function(r,g,b) {
+		this.r = r; this.g = g; this.b = b;
+	};
+	// hsl magic
+
+	this.rgb2hsl = function() {
+		var r = this.r / 255,
+			g = this.g / 255,
+			b = this.b / 255,
+			min = Math.min(Math.min(r, g), b),
+			max = Math.max(Math.max(r, g), b);
+
+		this.l = (max + min) / 2;
+		if (max == min) {
+			this.s = 0;
+			this.h = undefined;
+		} else {
+			if (this.l < 0.5) {
+				this.s = (max - min) / (max + min);
+			} else {
+				this.s = (max - min) / (2 - max - min);
+			}
+		}
+		if (r == max) this.h = (g - b) / (max - min);
+		else if (g == max) this.h = 2 + (b - r) / (max - min);
+		else if (b == max) this.h = 4 + (r - g) / (max - min);
+
+		this.h *= 60;
+		if (this.h < 0) this.h += 360;
+	};
+
+	this.hsl2rgb = function() {
+		if (this.s === 0) {
+			this.r = this.g = this.b = this.l*255;
+		} else {
+			var t1, t2, t3 = [0,0,0], c = [0,0,0];
+			if (this.l < 0.5) {
+				t2 = this.l * (1 + this.s);
+			} else {
+				t2 = this.l + this.s - this.l * this.s;
+			}
+			t1 = 2 * this.l - t2;
+			var h = this.h / 360;
+			t3[0] = h + 1 / 3;
+			t3[1] = h;
+			t3[2] = h - 1 / 3;
+			for (var i = 0; i < 3; i++) {
+				if (t3[i] < 0) t3[i] += 1;
+				if (t3[i] > 1) t3[i] -= 1;
+
+				if (6 * t3[i] < 1) c[i] = t1 + (t2 - t1) * 6 * t3[i];
+				else if (2 * t3[i] < 1) c[i] = t2;
+				else if (3 * t3[i] < 2) c[i] = t1 + (t2 - t1) * ((2 / 3) - t3[i]) * 6;
+				else c[i] = t1;
+			}
+			this.r = c[0] * 255;
+			this.g = c[1] * 255;
+			this.b = c[2] * 255;
+		}
+	};
+
+	// hsb magic
+
+	this.rgb2hsb = function() {
+		this.rgb2hsl();
+		this.br = this._rgbLuminance();
+	};
+
+	this._rgbLuminance = function() {
+		return (0.2126 * this.r + 0.7152 * this.g + 0.0722 * this.b) / 255;
+	};
+
+	this.hsb2rgb = function() {
+		var treshold = 0.001;
+		var l_min = 0, l_max = 1, l_est = 0.5;
+		var current_brightness;
+
+		// first try
+		this.l = l_est;
+		this.hsl2rgb();
+		current_brightness = this._rgbLuminance();
+		var trys = 0;
+
+		while (Math.abs(current_brightness - this.br) > treshold && trys < 100) {
+
+			if (current_brightness > this.br) {
+				// too bright, next try darker
+				l_max = l_est;
+			} else {
+				// too dark, next try brighter
+				l_min = l_est;
+			}
+			l_est = (l_min + l_max) / 2;
+			this.l = l_est;
+			this.hsl2rgb();
+			current_brightness = this._rgbLuminance();
+			trys++;
+		}
+		this.br = current_brightness;
+	};
+
+	// hsi magic
+
+	this.rgb2hsi = function() { // http://fourier.eng.hmc.edu/e161/lectures/colorprocessing/node3.html
+		var min, r = this.r, g = this.g, b = this.b,
+			max = Math.max(Math.max(r, g), b),
+			sum = r + g + b,
+			delta = max - min;
+
+		r = r / sum;
+		g = g / sum;
+		b = b / sum;
+
+		min = Math.min(Math.min(r, g), b);
+		//trace('rgb = ',r,g,b,' min = ' + min);
+
+		this.i = (r + g + b) / 765;
+		this.h = this.acos((r - 0.5*g - 0.5*b) / Math.sqrt( (r - g) * (r - g) + (r - b) * (g - b)) );
+		this.s = 1 - 3 * min;
+
+		if (b > g) this.h = 360 - this.h;
+	};
+
+	this.hsi2rgb = function() { // http://fourier.eng.hmc.edu/e161/lectures/colorprocessing/node4.html
+		var h = this.h,i=this.i,s=this.s, r, b, g, cos = this.cos;
+
+		if (h <= 120) {
+			b = (1 - s) / 3;
+			r = (1 + (s * cos(h)) / cos(60 - h)) / 3;
+			g = 1 - (b + r);
+		} else if (h <= 240) {
+			h -= 120;
+			r = (1 - s) / 3;
+			g = (1 + (s * cos(h)) / cos(60 - h)) / 3;
+			b = 1 - (r + g);
+		} else {
+			h -= 240;
+			g = (1 - s) / 3;
+			b = (1 + (s * cos(h)) / cos(60 - h)) / 3;
+			r = 1 - (g + b);
+		}
+		r = Math.min(255, r*i*3*255);
+		g = Math.min(255, g*i*3*255);
+		b = Math.min(255, b*i*3*255);
+	};
+};
+
+// static constructors
+
+vis4color.fromHex = function(color, mode) {
+	if (mode == null) mode = 'hsl';
+	var c = new vis4color(mode);
+	c.setHexColor(color);
+	return c;
+};
+
+vis4color.fromRGB = function(r, g, b, mode) {
+	if (mode === null) mode = 'hsl';
+	var c = new vis4color(mode);
+	c.setRGBolor(r,g,b);
+	return c;
+};
+
+vis4color.fromHSV = function(h,s,v, mode) {
+	if (mode === null) mode = 'hsl';
+	var c = new vis4color(mode);
+	c.setHSVColor(h,s,v);
+	return c;
+};
+
+vis4color.fromHSL = function(h,s,l, mode) {
+	if (mode === null) mode = 'hsl';
+	var c = new vis4color(mode);
+	c.setHSLColor(h,s,l);
+	return c;
+};
+
+vis4color.fromHSB = function(h,s,b, mode) {
+	if (mode === null) mode = 'hsl';
+	var c = new vis4color(mode);
+	c.setHSBColor(h,s,b);
+	return c;
+};
+
+vis4color.fromHSI = function(h,s,i, mode) {
+	if (mode === null) mode = 'hsl';
+	var c = new vis4color(mode);
+	c.setHSIColor(h,s,i);
+	return c;
+};
+
 /*!
- * BubbleTree 2.0.1
+ * BubbleTree 2.0.2
  *
  * Copyright (c) 2011 Gregor Aisch (http://driven-by-data.net)
  * Licensed under the MIT license
@@ -10,13 +608,32 @@
 
 var BubbleTree = function(config, onHover, onUnHover) {
 
+	var history = $.history || {
+    callback: null,
+    options: null,
+    init: function(callback, options) {
+      this.callback = callback;
+      this.options = options;
+      this.load('/');
+    },
+    load: function(url) {
+      if (typeof this.callback == 'function') {
+        this.callback(url);
+      }
+    }
+  };
+
 	var me = this;
 
 	me.version = "2.0.2";
 
-	me.$container = $(config.container);
+	me.$container = $(config.container).empty();
 
 	me.config = $.extend({
+    // Clear colors for all nodes (is doing before autoColors!)
+    clearColors: false,
+    // If node has no color - automatically assign it
+    autoColors: false,
 		// this is where we look for the icons
 		rootPath: '',
 		// show full labels inside bubbles with min radius of 40px
@@ -173,9 +790,21 @@ var BubbleTree = function(config, onHover, onUnHover) {
 		}
 
 		if (!node.color) {
-			// use color from parent node if no other match available
-			if (node.level > 0) node.color = node.parent.color;
-			else node.color = '#999999';
+      if (me.config.autoColors) {
+        if (node.level == 0) {
+          node.color = vis4color.fromHSL(45, 0.9, 0.5).x;
+        } else
+        if (node.level == 1) {
+          var count = node.parent.children.length;
+          node.color = vis4color.fromHSL(index / count * 360, 0.7, 0.5).x;
+        } else {
+          node.color = vis4color.fromHex(node.parent.color).lightness('*' + (0.5+Math.random() * 0.5)).x;
+        }
+      } else {
+        // use color from parent node if no other match available
+        if (node.level > 0) node.color = node.parent.color;
+        else node.color = '#999999';
+      }
 		}
 		// lighten up the color if there are no children
 		if (node.children.length < 2 && node.color) {
@@ -612,7 +1241,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 				}
 			}
 
-			tr = new ns.Transitioner($.browser.msie || me.currentCenter == node ? 0 : 1000);
+			tr = new ns.Transitioner(me.currentCenter == node ? 0 : 1000);
 			tr.changeLayout(t);
 			me.currentTransition = tr;
 			if (!me.currentCenter && $.isFunction(me.config.firstNodeCallback)) {
@@ -704,7 +1333,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 	*/
 
 	me.initHistory = function() {
-		$.history.init(me.urlChanged.bind(me), { unescape: ",/" });
+		history.init(me.urlChanged.bind(me), { unescape: ",/" });
 	};
 
 	me.freshUrl = '';
@@ -745,7 +1374,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 			url = me.getUrlForNode(me.nodesByUrlToken[token]);
 			if (me.freshUrl != url) {
 				// node found but url not perfect
-				$.history.load(url);
+				history.load(url);
 			} else {
 				me.navigateTo(me.nodesByUrlToken[token], true);
 			}
@@ -758,11 +1387,11 @@ var BubbleTree = function(config, onHover, onUnHover) {
 		// vis4.log('bc.navigateTo(',node,',',fromUrlChange,')');
 		var me = this;
 		if (fromUrlChange) me.changeView(node.urlToken);
-		else $.history.load(me.getUrlForNode(node));
+		else history.load(me.getUrlForNode(node));
 		//
-		$('.label, .label2', me.$container).removeClass('current');
-		$('.label2.'+node.id, me.$container).addClass('current');
-		$('.label.'+node.id, me.$container).addClass('current');
+		$('.bubbletree-label, .bubbletree-label2', me.$container).removeClass('current');
+		$('.bubbletree-label2.'+node.id, me.$container).addClass('current');
+		$('.bubbletree-label.'+node.id, me.$container).addClass('current');
 	};
 
 	/*
@@ -788,7 +1417,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 	// removes all nodes
 	me.clean = function() {
 		var me = this, i;
-		$('.label').remove();
+		$('.bubbletree-label').remove();
 		/*for (i in me.displayObjects) {
 			try {
 				if ($.isFunction(me.displayObjects[i].hide)) me.displayObjects[i].hide();
@@ -816,6 +1445,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 };
 
 BubbleTree.Styles = {};
+
 /*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
 /*global Raphael, TWEEN, BubbleTree */
 
@@ -871,7 +1501,8 @@ BubbleTree.Layout = function() {
 		me.toHide.push(obj);
 	};
 	
-};/*jshint undef: true, browser:true, jquery: true, devel: true */
+};
+/*jshint undef: true, browser:true, jquery: true, devel: true */
 /*global Raphael, TWEEN, BubbleTree */
 /*
  * represents a radial line
@@ -910,7 +1541,8 @@ BubbleTree.Line = function(bc, attr, origin, angle, fromRad, toRad) {
 	
 	this.init();
 	
-};/*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
+};
+/*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
 /*global vis4, BubbleTree */
 
 /*
@@ -965,6 +1597,7 @@ BubbleTree.Loader = function(config) {
 		me.run(me.config.data);
 	}
 };
+
 
 /*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
 /*global vis4, BubbleTree */
@@ -1101,6 +1734,7 @@ BubbleTree.MouseEventGroup = function(target, members) {
 		
 	};
 };
+
 /*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
 /*global Raphael, TWEEN, BubbleTree */
 
@@ -1147,7 +1781,8 @@ BubbleTree.Ring = function(node, bc, o, rad, attr) {
 	
 	
 	me.init();
-};/*jshint undef: true, browser:true, jquery: true, devel: true */
+};
+/*jshint undef: true, browser:true, jquery: true, devel: true */
 /*global Raphael, TWEEN, vis4, BubbleTree */
 
 /*
@@ -1190,7 +1825,7 @@ BubbleTree.Transitioner = function(duration) {
 					toProps[p] = props[p];
 				}
 				tween.to(toProps, me.duration);
-				tween.easing(TWEEN.Easing.Exponential.EaseOut);
+				tween.easing(TWEEN.Easing.Exponential.Out);
 				if ($.isFunction(o.draw)) tween.onUpdate(o.draw.bind(o));
 				if (i == layout.objects.length-1) tween.onComplete(me._completed.bind(me));
 				tween.start();
@@ -1239,7 +1874,8 @@ BubbleTree.Transitioner = function(duration) {
 		}
 	};
 	
-};/*jshint undef: true, browser:true, jquery: true, devel: true */
+};
+/*jshint undef: true, browser:true, jquery: true, devel: true */
 /*global Raphael, TWEEN, BubbleTree */
 
 BubbleTree.Utils = {};
@@ -1267,6 +1903,7 @@ BubbleTree.Utils.formatNumber = function(n) {
 	else return prefix+n;
 	
 };
+
 /*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
 /*global BubbleTree */
 
@@ -1301,7 +1938,8 @@ BubbleTree.Vector = function(x,y) {
 		var me = this;
 		return new BubbleTree.Vector(me.x, me.y);
 	};
-};/*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
+};
+/*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
 /*global Raphael, TWEEN, BubbleTree, vis4 */
 
 BubbleTree.Bubbles = BubbleTree.Bubbles || {};
@@ -1326,13 +1964,13 @@ BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radius, angle, co
 	me.pos = ns.Vector(0,0);
 	me.bubbleRad = utils.amount2rad(this.node.amount);
 	me.container = me.bc.$container;
-	
+
 	/*
 	 * child rotation is just used from outside to layout possible child bubbles
 	 */
 	me.childRotation = 0;
-	
-	
+
+
 	/*
 	 * convertes polar coordinates to x,y
 	 */
@@ -1342,35 +1980,35 @@ BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radius, angle, co
 		me.pos.x = o.x + Math.cos(a) * r;
 		me.pos.y = o.y - Math.sin(a) * r;
 	};
-	
+
 	/*
 	 * inistalizes the bubble
 	 */
 	me.init = function() {
 		var me = this;
 		me.getXY();
-		
+
 		var showIcon = false; //this.bubbleRad * this.bc.bubbleScale > 30;
-		
+
 		if (!me.node.shortLabel) me.node.shortLabel = me.node.label.length > me.bc.config.cutLabelsAt+3 ? me.node.label.substr(0, me.bc.config.cutLabelsAt)+'...' : me.node.label;
-		
+
 		me.initialized = true;
-		
+
 		//me.show();
 	};
-	
+
 	/*
 	 *
 	 */
 	me.onclick = function(e) {
 		var me = this;
 		me.bc.onNodeClick(me.node);
-		
+
 		//if (me.node.children.length > 1) {
 			me.bc.navigateTo(me.node);
 		//}
 	};
-	
+
 	me.onhover = function(e) {
 		var me = this, c = me.bc.$container[0];
 		e.node = me.node;
@@ -1380,7 +2018,7 @@ BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radius, angle, co
 		e.type = 'SHOW';
 		me.bc.tooltip(e);
 	};
-	
+
 	me.onunhover = function(e) {
 		var me = this, c = me.bc.$container[0];
 		e.node = me.node;
@@ -1390,7 +2028,7 @@ BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radius, angle, co
 		e.mousePos = { x:e.origEvent.pageX - c.offsetLeft, y: e.origEvent.pageY - c.offsetTop };
 		me.bc.tooltip(e);
 	};
-	
+
 	me.draw = function() {
 		var me = this,
 			r = Math.max(5, me.bubbleRad * me.bc.bubbleScale),
@@ -1399,14 +2037,14 @@ BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radius, angle, co
 			devnull = me.getXY(),
 		x = me.pos.x, y = me.pos.y;
 		if (!me.visible) return;
-		
+
 		me.circle.attr({ cx: me.pos.x, cy: me.pos.y, r: r, 'fill-opacity': me.alpha });
 		if (me.node.children.length > 1) me.dashedBorder.attr({ cx: me.pos.x, cy: me.pos.y, r: r-4, 'stroke-opacity': me.alpha * 0.9 });
 		else me.dashedBorder.attr({ 'stroke-opacity': 0 });
-		
+
 
 		//me.label.attr({ x: me.pos.x, y: me.pos.y, 'font-size': Math.max(4, me.bubbleRad * me.bc.bubbleScale * 0.25) });
-		
+
 		me.label.show();
 		me.label.find('*').show();
 		me.label2.show();
@@ -1415,7 +2053,7 @@ BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radius, angle, co
 			me.label2.hide();
 		} else if (r >= me.bc.config.minRadiusAmounts) {
 			// full label
-			me.label.find('.desc').hide();
+			me.label.find('.bubbletree-desc').hide();
 		} else if (r >= me.bc.config.minRadiusHideLabels) {
 			me.label.hide();
 		} else {
@@ -1425,15 +2063,15 @@ BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radius, angle, co
 
 		me.label.css({ width: 2*r+'px', opacity: me.alpha });
 		me.label.css({ left: (me.pos.x-r)+'px', top: (me.pos.y-me.label.height()*0.5)+'px' });
-	
+
 		var w = Math.max(70, 3*r);
 		me.label2.css({ width: w+'px', opacity: me.alpha });
 		me.label2.css({ left: (x - w*0.5)+'px', top: (y + r)+'px' });
 
 		//if (me.icon) me.icon.translate(me.pos.x - ox, me.pos.y - oy);
-	
+
 	};
-	
+
 	/*
 	 * removes all visible elements from the page
 	 */
@@ -1443,72 +2081,73 @@ BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radius, angle, co
 		me.dashedBorder.remove();
 		me.label.remove();
 		me.label2.remove();
-		
+
 		//$('#bubble-chart')
 		me.visible = false;
 
-		
+
 		//if (me.icon) me.icon.remove();
 	};
-	
+
 	/*
 	 * adds all visible elements to the page
 	 */
 	me.show = function() {
 		var me = this, i, cx = me.pos.x, cy = me.pos.y, r = Math.max(5, me.bubbleRad * me.bc.bubbleScale);
-		
+
 		me.circle = me.paper.circle(cx, cy, r)
 			.attr({ stroke: false, fill: me.color });
 
 		me.dashedBorder = me.paper.circle(cx, cy, r-3)
 			.attr({ stroke: '#ffffff', 'stroke-dasharray': "- " });
-	
-	
-		me.label = $('<div class="label '+me.node.id+'"><div class="amount">'+utils.formatNumber(me.node.amount)+'</div><div class="desc">'+me.node.shortLabel+'</div></div>');
+
+
+		me.label = $('<div class="bubbletree-label '+me.node.id+'"><div class="bubbletree-amount">'+utils.formatNumber(me.node.amount)+'</div><div class="bubbletree-desc">'+me.node.shortLabel+'</div></div>');
 		me.container.append(me.label);
-		
+
 		if (me.node.children.length > 0) {
 			$(me.circle.node).css({ cursor: 'pointer'});
 			$(me.label).css({ cursor: 'pointer'});
-		}	
-		
+		}
+
 		// additional label
-		me.label2 = $('<div class="label2 '+me.node.id+'"><span>'+me.node.shortLabel+'</span></div>');
+		me.label2 = $('<div class="bubbletree-label2 '+me.node.id+'"><span>'+me.node.shortLabel+'</span></div>');
 		me.container.append(me.label2);
-		
+
 		var list = [me.circle.node, me.label, me.dashedBorder.node];
 
 		var mgroup = new me.ns.MouseEventGroup(me, list);
 		mgroup.click(me.onclick.bind(me));
 		mgroup.hover(me.onhover.bind(me));
 		mgroup.unhover(me.onunhover.bind(me));
-		
+
 		me.visible = true;
-		
+
 	};
-	
+
 	/*
-	 * adds an invisible bubble on top for seamless 
+	 * adds an invisible bubble on top for seamless
 	 * event handling
 	 */
 	me.addOverlay = function() {
 		// add invisible overlay circle
 		var me = this;
-		
+
 		me.overlay = me.paper.circle(me.circle.attrs.cx, me.circle.attrs.cy, me.circle.attrs.r)
 			.attr({ stroke: false, fill: '#fff', 'opacity': 0});
-		
+
 		if (Raphael.svg) {
 			me.overlay.node.setAttribute('class', me.node.id);
 		}
 		$(me.overlay.node).css({ cursor: 'pointer'});
 		$(me.overlay.node).click(me.onclick.bind(me));
-		
+
 		$(me.label).click(me.onclick.bind(me));
 	};
-	
+
 	me.init();
 };
+
 /*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
 /*global Raphael, TWEEN, BubbleTree, vis4 */
 
@@ -1531,13 +2170,13 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 	me.visible = false;
 	me.ns = ns;
 	me.bubbleRad = utils.amount2rad(this.node.amount);
-	
+
 	/*
 	 * child rotation is just used from outside to layout possible child bubbles
 	 */
 	me.childRotation = 0;
-	
-	
+
+
 	/*
 	 * convertes polar coordinates to x,y
 	 */
@@ -1546,7 +2185,7 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 		me.pos.x = o.x + Math.cos(a) * r;
 		me.pos.y = o.y - Math.sin(a) * r;
 	};
-	
+
 	/*
 	 * inistalizes the bubble
 	 */
@@ -1554,25 +2193,25 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 		var me = this;
 		me.pos = new me.ns.Vector(0,0);
 		me.getXY();
-		
+
 		var breakdown = [], b, i, val, bd = [], styles = me.bc.config.bubbleStyles;
-		
+
 		if (!me.node.shortLabel) me.node.shortLabel = me.node.label.length > 50 ? me.node.label.substr(0, 30)+'...' : me.node.label;
-		
+
 		me.breakdownOpacities = [0.2, 0.7, 0.45, 0.6, 0.35];
 		me.breakdownColors = [false, false, false, false, false, false, false, false, false, false];
-		
+
 		for (i in me.node.breakdowns) {
 			b = me.node.breakdowns[i];
 			b.famount = utils.formatNumber(b.amount);
 			val = b.amount / me.node.amount;
 			breakdown.push(val);
 			bd.push(b);
-			
+
 			if (styles && styles.hasOwnProperty('name') && styles.name.hasOwnProperty(b.name) && styles.name[b.name].hasOwnProperty('opacity')) {
 				me.breakdownOpacities[bd.length-1] = styles.name[b.name].opacity;
 			}
-			
+
 			if (styles && styles.hasOwnProperty('name') && styles.name.hasOwnProperty(b.name) && styles.name[b.name].hasOwnProperty('color')) {
 				me.breakdownColors[bd.length-1] = styles.name[b.name].color;
 				me.breakdownOpacities[bd.length-1] = 1;
@@ -1580,15 +2219,15 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 		}
 		me.node.breakdowns = bd;
 		me.breakdown = breakdown;
-		
+
 		var showIcon = false; //this.bubbleRad * this.bc.bubbleScale > 30;
 		// create label
 
 		me.initialized = true;
-		
+
 		//me.show();
 	};
-	
+
 	/*
 	 *
 	 */
@@ -1596,9 +2235,9 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 		var me = this;
 
 		me.bc.navigateTo(me.node);
-		
+
 	};
-		
+
 	me.onhover = function(e) {
 		var me = this, c = me.bc.$container[0];
 		e.node = me.node;
@@ -1608,7 +2247,7 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 		e.type = 'SHOW';
 		me.bc.tooltip(e);
 	};
-	
+
 	me.onunhover = function(e) {
 		var me = this, c = me.bc.$container[0];
 		e.node = me.node;
@@ -1618,11 +2257,11 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 		e.mousePos = { x:e.origEvent.pageX - c.offsetLeft, y: e.origEvent.pageY - c.offsetTop };
 		me.bc.tooltip(e);
 	};
-	
+
 	this.draw = function() {
 		var me = this, r = Math.max(5, me.bubbleRad * me.bc.bubbleScale), ox = me.pos.x, oy = me.pos.y, devnull = me.getXY(), showLabel = r > 20, x = me.pos.x, y = me.pos.y;
 		if (!me.visible) return;
-		
+
 		me.circle.attr({ cx: x, cy: y, r: r, 'fill-opacity': me.alpha });
 		if (me.node.children.length > 1) me.dashedBorder.attr({ cx: x, cy: y, r: r*0.85, 'stroke-opacity': me.alpha * 0.8 });
 		else me.dashedBorder.attr({ 'stroke-opacity': 0 });
@@ -1632,7 +2271,7 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 			var i,x0,x1,x2,x3,y0,y1,y2,y3,ir = r*0.85, oa = -Math.PI * 0.5, da;
 			for (i in me.breakdown) {
 				da = me.breakdown[i] * Math.PI * 2;
-				x0 = x+Math.cos((oa))*ir; 
+				x0 = x+Math.cos((oa))*ir;
 				y0 = y+Math.sin((oa))*ir;
 				x1 = x+Math.cos((oa+da))*ir;
 				y1 = y+Math.sin((oa+da))*ir;
@@ -1641,9 +2280,9 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 				x3 = x+Math.cos((oa))*r;
 				y3 = y+Math.sin((oa))*r;
 				oa += da;
-				
+
 				var path = "M"+x0+" "+y0+" A"+ir+","+ir+" 0 "+(da > Math.PI ? "1,1" : "0,1")+" "+x1+","+y1+" L"+x2+" "+y2+" A"+r+","+r+" 0 "+(da > Math.PI ? "1,0" : "0,0")+" "+x3+" "+y3+" Z";
-				
+
 				me.breakdownArcs[i].attr({ path: path, 'stroke-opacity': me.alpha*0.2, 'fill-opacity': me.breakdownOpacities[i]*me.alpha });
 			}
 		}
@@ -1655,24 +2294,24 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 		} else {
 			me.label.show();
 			if (r < 40) {
-				me.label.find('.desc').hide();
+				me.label.find('.bubbletree-desc').hide();
 				me.label2.show();
 			} else {
 				// full label
-				me.label.find('.desc').show();
+				me.label.find('.bubbletree-desc').show();
 				me.label2.hide();
 			}
 		}
-		
+
 		me.label.css({ width: 2*r*0.9+'px', opacity: me.alpha });
 		me.label.css({ left: (me.pos.x-r*0.9)+'px', top: (me.pos.y-me.label.height()*0.53)+'px' });
-	
+
 		var w = Math.max(80, 3*r);
 		me.label2.css({ width: w+'px', opacity: me.alpha });
 		me.label2.css({ left: (x - w*0.5)+'px', top: (y + r)+'px' });
-	
+
 	};
-	
+
 	/*
 	 * removes all visible elements from the page
 	 */
@@ -1682,22 +2321,22 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 		me.dashedBorder.remove();
 		me.label.remove();
 		me.label2.remove();
-		
+
 		//me.bc.$container
 		me.visible = false;
 		for (i in me.breakdownArcs) {
 			me.breakdownArcs[i].remove();
 		}
-		
+
 		//if (me.icon) me.icon.remove();
 	};
-	
+
 	/*
 	 * adds all visible elements to the page
 	 */
 	me.show = function() {
 		var me = this, i, r = Math.max(5, me.bubbleRad * me.bc.bubbleScale);
-		
+
 		me.circle = me.paper.circle(me.pos.x, me.pos.y, r)
 			.attr({ stroke: false, fill: me.color });
 
@@ -1707,36 +2346,36 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 
 		me.dashedBorder = me.paper.circle(me.pos.x, me.pos.y,  r*0.85)
 			.attr({ stroke: '#fff', 'stroke-opacity': me.alpha * 0.4,  'stroke-dasharray': ". ", fill: false });
-		
-		me.label = $('<div class="label '+me.node.id+'"><div class="amount">'+utils.formatNumber(me.node.amount)+'</div><div class="desc">'+me.node.shortLabel+'</div></div>');
+
+		me.label = $('<div class="bubbletree-label '+me.node.id+'"><div class="bubbletree-amount">'+utils.formatNumber(me.node.amount)+'</div><div class="bubbletree-desc">'+me.node.shortLabel+'</div></div>');
 		me.bc.$container.append(me.label);
-		
+
 		if (me.node.children.length > 1) {
 			$(me.circle.node).css({ cursor: 'pointer'});
 			$(me.label).css({ cursor: 'pointer'});
 		}
-		
+
 		// additional label
-		me.label2 = $('<div class="label2 '+me.node.id+'"><span>'+me.node.shortLabel+'</span></div>');
+		me.label2 = $('<div class="bubbletree-label2 '+me.node.id+'"><span>'+me.node.shortLabel+'</span></div>');
 		me.bc.$container.append(me.label2);
-		
+
 		var list = [me.circle.node, me.label];
-		
+
 		if (me.breakdown.length > 1) {
 			me.breakdownArcs = {};
-			
+
 			for (i in me.breakdown) {
-				var col = me.breakdownColors[i] ? me.breakdownColors[i] : '#fff', 
+				var col = me.breakdownColors[i] ? me.breakdownColors[i] : '#fff',
 					arc = me.paper.path("M 0 0 L 2 2")
 					.attr({ fill: col, 'fill-opacity': Math.random()*0.4 + 0.3, stroke: '#fff'});
 				me.breakdownArcs[i] = arc;
 				// $(arc.node).hover(me.arcHover.bind(me), me.arcUnhover.bind(me));
-				
+
 				if ($.isFunction(me.bc.config.initTooltip)) {
 					me.bc.config.initTooltip(me.node.breakdowns[i], arc.node);
 				}
 			}
-			
+
 			for (i in me.breakdownArcs) {
 				// we dont add the breakdown arcs to the list 'cause
 				// we want them to fire different mouse over events
@@ -1744,22 +2383,22 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 				$(me.breakdownArcs[i].node).click(me.onclick.bind(me));
 			}
 		}
-		
+
 		var mgroup = new me.ns.MouseEventGroup(me, list);
 		mgroup.click(me.onclick.bind(me));
 		mgroup.hover(me.onhover.bind(me));
 		mgroup.unhover(me.onunhover.bind(me));
-		
+
 		me.visible = true;
-		
+
 	};
-	
-	
+
+
 	me.arcHover = function(e) {
-		var me = this, c = me.bc.$container[0], i, 
-			arcs = me.breakdownArcs, node, 
+		var me = this, c = me.bc.$container[0], i,
+			arcs = me.breakdownArcs, node,
 			bd = me.node.breakdowns;
-			
+
 		for (i in arcs) {
 			if (arcs[i].node == e.target) {
 				e.node = bd[i];
@@ -1771,15 +2410,15 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 				return;
 			}
 		}
-		
+
 		vis4.log('cant find the breakdown node');
 	};
-	
+
 	me.arcUnhover = function(e) {
-		var me = this, c = me.bc.$container[0], i, 
-			arcs = me.breakdownArcs, node, 
+		var me = this, c = me.bc.$container[0], i,
+			arcs = me.breakdownArcs, node,
 			bd = me.node.breakdowns;
-			
+
 		for (i in arcs) {
 			if (arcs[i].node == e.target) {
 				e.node = bd[i];
@@ -1791,12 +2430,13 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 				return;
 			}
 		}
-		
+
 		vis4.log('cant find the breakdown node');
 	};
-	
+
 	me.init();
-};/*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
+};
+/*jshint undef: true, browser:true, jquery: true, devel: true, smarttabs: true */
 /*global Raphael, TWEEN, BubbleTree, vis4, vis4loader */
 
 BubbleTree.Bubbles = BubbleTree.Bubbles || {};
@@ -1820,15 +2460,15 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 	me.ns = ns;
 	me.pos = ns.Vector(0,0);
 	me.bubbleRad = utils.amount2rad(this.node.amount);
-	
+
 	me.iconLoaded = false;
-	
+
 	/*
 	 * child rotation is just used from outside to layout possible child bubbles
 	 */
 	me.childRotation = 0;
-	
-	
+
+
 	/*
 	 * convertes polar coordinates to x,y
 	 */
@@ -1838,63 +2478,63 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 		me.pos.x = o.x + Math.cos(a) * r;
 		me.pos.y = o.y - Math.sin(a) * r;
 	};
-	
+
 	/*
 	 * inistalizes the bubble
 	 */
 	me.init = function() {
 		var me = this;
 		me.getXY();
-		
+
 		me.hasIcon = me.node.hasOwnProperty('icon');
-		
+
 		if (!me.node.shortLabel) me.node.shortLabel = me.node.label.length > 50 ? me.node.label.substr(0, 30)+'...' : me.node.label;
-		
+
 		/*if (showIcon) {
 			me.icon = me.paper.path("M17.081,4.065V3.137c0,0,0.104-0.872-0.881-0.872c-0.928,0-0.891,0.9-0.891,0.9v0.9C4.572,3.925,2.672,15.783,2.672,15.783c1.237-2.98,4.462-2.755,4.462-2.755c4.05,0,4.481,2.681,4.481,2.681c0.984-2.953,4.547-2.662,4.547-2.662c3.769,0,4.509,2.719,4.509,2.719s0.787-2.812,4.557-2.756c3.262,0,4.443,2.7,4.443,2.7v-0.058C29.672,4.348,17.081,4.065,17.081,4.065zM15.328,24.793c0,1.744-1.8,1.801-1.8,1.801c-1.885,0-1.8-1.801-1.8-1.801s0.028-0.928-0.872-0.928c-0.9,0-0.957,0.9-0.957,0.9c0,3.628,3.6,3.572,3.6,3.572c3.6,0,3.572-3.545,3.572-3.545V13.966h-1.744V24.793z")
 				.translate(me.pos.x, me.pos.y).attr({fill: "#fff", stroke: "none"});
 		}*/
-		
-		
+
+
 		me.initialized = true;
-		
+
 		//me.show();
 	};
-	
-	
+
+
 	/*
 	 * adds all visible elements to the page
 	 */
 	me.show = function() {
 		var me = this, i, cx = me.pos.x, icon, cy = me.pos.y, r = Math.max(5, me.bubbleRad * me.bc.bubbleScale);
-				
+
 		me.circle = me.paper.circle(cx, cy, r)
 			.attr({ stroke: false, fill: me.color });
 
 		me.dashedBorder = me.paper.circle(cx, cy, Math.min(r-3, r*0.95))
 			.attr({ stroke: '#ffffff', 'stroke-dasharray': "- " });
-		
+
 		if ($.isFunction(me.bc.config.initTooltip)) {
 			me.bc.config.initTooltip(me.node, me.circle.node);
 		}
-	
-		me.label = $('<div class="label '+me.node.id+'"><div class="amount">'+utils.formatNumber(me.node.amount)+'</div><div class="desc">'+me.node.shortLabel+'</div></div>');
+
+		me.label = $('<div class="bubbletree-label '+me.node.id+'"><div class="bubbletree-amount">'+utils.formatNumber(me.node.amount)+'</div><div class="bubbletree-desc">'+me.node.shortLabel+'</div></div>');
 		me.bc.$container.append(me.label);
-		
+
 		if ($.isFunction(me.bc.config.initTooltip)) {
 			me.bc.config.initTooltip(me.node, me.label[0]);
 		}
-		
+
 		// additional label
-		me.label2 = $('<div class="label2 '+me.node.id+'"><span>'+me.node.shortLabel+'</span></div>');
+		me.label2 = $('<div class="bubbletree-label2 '+me.node.id+'"><span>'+me.node.shortLabel+'</span></div>');
 		me.bc.$container.append(me.label2);
-		
+
 		if (me.node.children.length > 0) {
 			$(me.circle.node).css({ cursor: 'pointer'});
 			$(me.label).css({ cursor: 'pointer'});
-		}	
-		
-		/*var 
+		}
+
+		/*var
 		list=[me.circle.node, me.label, me.dashedBorder.node],
 		mgroup = new me.ns.MouseEventGroup(me, list);
 		mgroup.click(me.onclick.bind(me));
@@ -1902,17 +2542,17 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 		mgroup.unhover(me.onunhover.bind(me));
 		me.mgroup = mgroup;
 		*/
-		
+
 		me.visible = true;
-		
+
 		if (me.hasIcon) {
 			if (!me.iconLoaded) me.loadIcon();
 			else me.displayIcon();
 		} else {
 			me.addOverlay();
 		}
-	};	
-	
+	};
+
 	/*
 	 * will load the icon as soon as needed
 	 */
@@ -1921,7 +2561,7 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 		ldr.add(me.bc.config.rootPath + me.node.icon);
 		ldr.load(me.iconLoadComplete.bind(me));
 	};
-	
+
 	/*
 	 * on complete handler for icon loading process
 	 */
@@ -1940,53 +2580,53 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 		me.iconLoaded = true;
 		me.displayIcon();
 	};
-	
+
 	/*
 	 * will display the icon, create the svg path element, etc
 	 */
 	me.displayIcon = function() {
 		var me = this, i, path;
 		me.iconPaths = [];
-		
+
 		path = me.paper.path(me.iconPathData);
 		path.attr({fill: "#fff", stroke: "none"}).translate(-50, -50);
 		me.iconPaths.push(path);
 		//me.mgroup.addMember(path.node);
-		
+
 		me.addOverlay();
 	};
-	
+
 	/*
-	 * adds an invisible bubble on top for seamless 
+	 * adds an invisible bubble on top for seamless
 	 * event handling
 	 */
 	me.addOverlay = function() {
 		// add invisible overlay circle
 		var me = this;
-		
+
 		me.overlay = me.paper.circle(me.circle.attrs.cx, me.circle.attrs.cy, me.circle.attrs.r)
 			.attr({ stroke: false, fill: '#fff', 'fill-opacity': 0});
-		
+
 		if (Raphael.svg) {
 			me.overlay.node.setAttribute('class', me.node.id);
 		}
 		$(me.overlay.node).css({ cursor: 'pointer'});
-		
+
 		$(me.overlay.node).click(me.onclick.bind(me));
 		$(me.label).click(me.onclick.bind(me));
 		$(me.label2).click(me.onclick.bind(me));
-		
+
 		if ($.isPlainObject(me.bc.tooltip)) {
 			// use q-tip tooltips
 			var tt = me.bc.tooltip.content(me.node);
 			$(me.overlay.node).qtip({
-				position: { 
-					target: 'mouse', 
-					viewport: $(window), 
+				position: {
+					target: 'mouse',
+					viewport: $(window),
 					adjust: { x:7, y:7 }
 				},
-				show: { 
-					delay: me.bc.tooltip.delay || 100 
+				show: {
+					delay: me.bc.tooltip.delay || 100
 				},
 				content: {
 					title: tt[0],
@@ -1995,7 +2635,7 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 			});
 		}
 	};
-	
+
 	/*
 	 * will remove the icon from stage
 	 */
@@ -2006,28 +2646,28 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 		}
 		me.iconPaths = [];
 	};
-	
-	
+
+
 	me.draw = function() {
-		var me = this, 
-			r = Math.max(5, me.bubbleRad * me.bc.bubbleScale), 
-			ox = me.pos.x, 
-			oy = me.pos.y, 
-			devnull = me.getXY(), 
-			x = me.pos.x, y = me.pos.y, 
+		var me = this,
+			r = Math.max(5, me.bubbleRad * me.bc.bubbleScale),
+			ox = me.pos.x,
+			oy = me.pos.y,
+			devnull = me.getXY(),
+			x = me.pos.x, y = me.pos.y,
 			showIcon = me.hasIcon && r > 15,
 			showLabel = me.hasIcon ? r > 40 : r > 20,
 			i, path, scale, transform, ly;
-		
+
 		if (!me.visible) return;
-		
+
 		me.circle.attr({ cx: x, cy: y, r: r, 'fill-opacity': me.alpha });
 		if(me.overlay)
 			me.overlay.attr({ cx: x, cy: y, r: Math.max(10,r)});
-			
+
 		if (me.node.children.length > 1) me.dashedBorder.attr({ cx: me.pos.x, cy: me.pos.y, r: Math.min(r-3, r-4), 'stroke-opacity': me.alpha * 0.9 });
 		else me.dashedBorder.attr({ 'stroke-opacity': 0 });
-		
+
 
 		//me.label.attr({ x: me.pos.x, y: me.pos.y, 'font-size': Math.max(4, me.bubbleRad * me.bc.bubbleScale * 0.25) });
 		if (!showLabel) {
@@ -2036,24 +2676,24 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 		} else {
 			me.label.show();
 			if ((showIcon && r < 70) || (!showIcon && r < 40)) {
-				me.label.find('.desc').hide();
+				me.label.find('.bubbletree-desc').hide();
 				me.label2.show();
 			} else {
 				// full label
-				me.label.find('.desc').show();
+				me.label.find('.bubbletree-desc').show();
 				me.label2.hide();
 			}
 		}
-		
-		ly = showIcon ? y+r*0.77-me.label.height() : y-me.label.height()*0.5; 
+
+		ly = showIcon ? y+r*0.77-me.label.height() : y-me.label.height()*0.5;
 		me.label.css({ width: (showIcon ? r*1.2 : 2*r)+'px', opacity: me.alpha });
 		me.label.css({ left: (showIcon ? x - r*0.6 : x-r)+'px', top: ly+'px' });
-		
+
 		var w = Math.max(80, 3*r);
 		me.label2.css({ width: w+'px', opacity: me.alpha });
 		me.label2.css({ left: (x - w*0.5)+'px', top: (y + r)+'px' });
-		
-		
+
+
 		//if (me.icon) me.icon.translate(me.pos.x - ox, me.pos.y - oy);
 		if (me.hasIcon) {
 			if (showIcon) {
@@ -2063,15 +2703,15 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 					//path.translate(me.pos.x - ox, me.pos.y - oy);
 					if (Raphael.version[0] == "1") {
 						transform = "scale("+scale+") translate("+(x/scale)+", "+((y+(showLabel ? me.label.height()*-0.5 : 0))/scale)+")";
-						
+
 					} else {
 						// version > 1
 						transform = "scale("+scale+") translate("+(x/scale-50)+", "+((y+(showLabel ? me.label.height()*-0.5 : 0))/scale-50)+")";
-						
+
 					}
 					path.node.setAttribute("transform", transform);
 					path.attr({ 'fill-opacity': me.alpha });
-					
+
 				}
 			} else {
 				for (i in me.iconPaths) {
@@ -2079,9 +2719,9 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 					path.attr({ 'fill-opacity': 0 });
 				}
 			}
-		} 
+		}
 	};
-	
+
 	/*
 	 * removes all visible elements from the page
 	 */
@@ -2091,7 +2731,7 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 		me.dashedBorder.remove();
 		me.label.remove();
 		me.label2.remove();
-		
+
 		//me.bc.$container
 		me.visible = false;
 		if (me.hasIcon) me.removeIcon();
@@ -2108,7 +2748,7 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 			me.bc.navigateTo(me.node);
 		//}
 	};
-	
+
 	me.onhover = function(e) {
 		var me = this, c = me.bc.$container[0];
 		e.node = me.node;
@@ -2118,7 +2758,7 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 		e.target = me;
 		me.bc.tooltip(e);
 	};
-	
+
 	me.onunhover = function(e) {
 		var me = this, c = me.bc.$container[0];
 		e.node = me.node;
@@ -2128,7 +2768,11 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 		e.mousePos = { x:e.origEvent.pageX - c.offsetLeft, y: e.origEvent.pageY - c.offsetTop };
 		me.bc.tooltip(e);
 	};
-	
-	
+
+
 	me.init();
 };
+
+if ((typeof module == 'object') && (typeof module.exports == 'object')) {
+  module.exports = BubbleTree;
+}

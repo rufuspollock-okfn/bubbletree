@@ -3,57 +3,60 @@
 <head>
 	<meta charset="UTF-8"/>
 	<title>UK Department for International Development</title>
-	<script type="text/javascript" src="../../../../lib/vendor/jquery-1.5.2.min.js"></script>
-	<script type="text/javascript" src="../../../../lib/vendor/jquery.history.js"></script>
-	<script type="text/javascript" src="../../../../lib/vendor/raphael.js"></script>
-	<script type="text/javascript" src="../../../../lib/vendor/vis4.js"></script>
-	<script type="text/javascript" src="../../../../lib/vendor/Tween.js"></script>
-	<script type="text/javascript" src="../../bubbletree.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="../../css/style.page.css" />
-	<link rel="stylesheet" type="text/css" href="../../css/style.bubbletree.css" />
-	<link rel="stylesheet" type="text/css" href="../../css/style.tooltips.css" />
-	
+
+  <script type="text/javascript" src="../assets/scripts/jquery.min.js"></script>
+  <script type="text/javascript" src="../assets/scripts/jquery-migrate.min.js"></script>
+  <script type="text/javascript" src="../assets/scripts/jquery.history.js"></script>
+  <script type="text/javascript" src="../assets/scripts/jquery.tooltip.min.js"></script>
+  <script type="text/javascript" src="../assets/scripts/raphael-min.js"></script>
+  <script type="text/javascript" src="../assets/scripts/Tween.js"></script>
+  <script type="text/javascript" src="../assets/scripts/bubbletree.js"></script>
+  <script type="text/javascript" src="http://assets.openspending.org/openspendingjs/master/lib/aggregator.js"></script>
+  <link rel="stylesheet" type="text/css" href="../assets/styles/bubbletree.css" />
+  <script type="text/javascript" src="../assets/styles/cofog.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="../assets/styles/page.css" />
+	<link rel="stylesheet" type="text/css" href="../assets/styles/tooltip.css" />
+
 	<script type="text/javascript">
-       
 		$(function() {
-			
 			var $tooltip = $('<div class="tooltip">Tooltip</div>');
 			$('#bubble-chart').append($tooltip);
-			
+
 			var tooltip = function(event) {
 				if (event.type == 'SHOW') {
 					// show tooltip
 					vis4.log(event);
-					$tooltip.css({ 
-						left: event.mousePos.x + 4, 
-						top: event.mousePos.y + 4 
+					$tooltip.css({
+						left: event.mousePos.x + 4,
+						top: event.mousePos.y + 4
 					});
 					$tooltip.html(event.node.label+' <b>'+event.node.famount+'</b>');
 					var bubble = event.target;
-					
+
 					$tooltip.show();
 				} else {
 					// hide tooltip
 					$tooltip.hide();
 				}
 			};
-			
+
 			var config = {
 				// todo: we should really document all the settings
 				apiUrl: 'http://openspending.org/api',
 				// todo: ...
 				localApiCache: 'aggregate.json',
-				// todo: we should really document all the settings		
+				// todo: we should really document all the settings
 				dataset: 'dfid',
 				// todo: we should really document all the settings
 				drilldowns: ['sector', 'agency', 'subagency', 'subsubagency'],
 				// todo: we should really document all the settings
 				//cuts: ['year:2009'],
 				// todo: we should really document all the settings
-				rootNodeLabel: 'Total Development Spending', 
-				// jquery selector code to identify the container div 
+				rootNodeLabel: 'Total Development Spending',
+				// jquery selector code to identify the container div
 				container: '#bubble-chart',
-				// 
+				//
 				initYear: 2009,
 				// breakdown
 				breakdown: 'sector',
@@ -61,72 +64,68 @@
 				// defines what class is used to render the bubbles
 				// possible values are pie,donut,plain,multi,icon
 				bubbleType: ['icon'],
-				
+
 				bubbleStyles: {
 					'dfid': {
-						'education': { 
-							color: '#3333cc', 
+						'education': {
+							color: '#3333cc',
 							icon: 'styles/icons/education.svg'
 						},
-						'health': { 
-							color: '#cc0066', 
-							icon: 'styles/icons/health.svg' 
+						'health': {
+							color: '#cc0066',
+							icon: 'styles/icons/health.svg'
 						},
-						'social-services': { 
-							color: '#f4714c', 
-							icon: 'styles/icons/helping-others.svg' 
+						'social-services': {
+							color: '#f4714c',
+							icon: 'styles/icons/helping-others.svg'
 						},
-						'water-supply-sanitation': { 
-							color: '#cc6666', 
-							icon: 'styles/icons/water.svg' 
+						'water-supply-sanitation': {
+							color: '#cc6666',
+							icon: 'styles/icons/water.svg'
 						},
-						'government-civil-society': { 
-							color: '#9900cc', 
-							icon: 'styles/icons/legislative.svg' 
+						'government-civil-society': {
+							color: '#9900cc',
+							icon: 'styles/icons/legislative.svg'
 						},
-						'humanitarian-assistance': { 
-							color: '#0099cc', 
-							icon: 'styles/icons/aid-developing-countries.svg' 
+						'humanitarian-assistance': {
+							color: '#0099cc',
+							icon: 'styles/icons/aid-developing-countries.svg'
 						},
-						'environment-protection': { 
-							color: '#006633', 
-							icon: 'styles/icons/environment.svg' 
+						'environment-protection': {
+							color: '#006633',
+							icon: 'styles/icons/environment.svg'
 						},
-						'economic': { 
-							color: '#33cc33', 
-							icon: 'styles/icons/economic-aid.svg' 
+						'economic': {
+							color: '#33cc33',
+							icon: 'styles/icons/economic-aid.svg'
 						},
-						'research': { 
-							color: '#3333cc', 
-							icon: 'styles/icons/research.svg' 
+						'research': {
+							color: '#3333cc',
+							icon: 'styles/icons/research.svg'
 						},
-						'africa': { 
-							icon: 'styles/icons/africa.svg' 
+						'africa': {
+							icon: 'styles/icons/africa.svg'
 						},
-						'asia': { 
-							icon: 'styles/icons/asia.svg' 
+						'asia': {
+							icon: 'styles/icons/asia.svg'
 						},
-						'undefined-sector': { 
-							color: '#a6a6a6' 
+						'undefined-sector': {
+							color: '#a6a6a6'
 						},
-						'european-commission': { 
-							color: '#003399', 
-							icon: 'styles/icons/EC.svg' 
-						} 
+						'european-commission': {
+							color: '#003399',
+							icon: 'styles/icons/EC.svg'
+						}
 					}
 				},
 				rootPath: '../../'
-				
-				
+
+
 			};
 			config.tooltipCallback = tooltip;
-					
-			new OpenSpending.BubbleTree.Loader(config);
-			
-		});
 
-       
-                                        
+			new OpenSpending.Aggregator(config);
+		});
 	</script>
 </head>
 <body>

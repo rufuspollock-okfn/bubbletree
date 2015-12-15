@@ -1,5 +1,5 @@
 .watchr
-
+.idea
 *.sublime-project
-
 *.sublime-workspace
+node_modules

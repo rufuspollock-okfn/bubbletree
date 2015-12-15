@@ -3,9 +3,11 @@
  *
  */
  
-if (!OpenSpending || !OpenSpending.BubbleTree) window.alert('You must include the BubbleTree before including the styles');
+if (!BubbleTree) {
+	window.alert('You must include the BubbleTree before including the styles');
+}
 
-OpenSpending.BubbleTree.Styles.ITBFunction = {
+BubbleTree.Styles.ITBFunction = {
 	'5': { icon: 'styles/icons/education.svg' },
 	'9': { icon: 'styles/icons/housing.svg' },
 	

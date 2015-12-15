@@ -3,44 +3,42 @@
 <head>
 	<meta charset="UTF-8"/>
 	<title>Berliner Senatshaushalt</title>
-	<script type="text/javascript" src="../../lib/jquery-1.5.2.min.js"></script>
-	<script type="text/javascript" src="../../lib/jquery.history.js"></script>
-	<script type="text/javascript" src="../../lib/jquery.tooltip.min.js"></script>
-	<script type="text/javascript" src="../../lib/raphael.js"></script>
-	<script type="text/javascript" src="../../lib/vis4.js"></script>
-	<script type="text/javascript" src="../../lib/Tween.js"></script>
-	<script type="text/javascript" src="../../build/bubbletree.js"></script>
-	<script type="text/javascript" src="http://assets.openspending.org/openspendingjs/master/lib/aggregator.js"></script>	
-	<link rel="stylesheet" type="text/css" href="../../build/bubbletree.css" />
-	<script type="text/javascript" src="../../styles/cofog.js"></script>
-	
-	
+
+	<script type="text/javascript" src="../assets/scripts/jquery.min.js"></script>
+	<script type="text/javascript" src="../assets/scripts/jquery-migrate.min.js"></script>
+	<script type="text/javascript" src="../assets/scripts/jquery.history.js"></script>
+	<script type="text/javascript" src="../assets/scripts/jquery.tooltip.min.js"></script>
+	<script type="text/javascript" src="../assets/scripts/raphael-min.js"></script>
+	<script type="text/javascript" src="../assets/scripts/Tween.js"></script>
+	<script type="text/javascript" src="../assets/scripts/bubbletree.js"></script>
+	<script type="text/javascript" src="http://assets.openspending.org/openspendingjs/master/lib/aggregator.js"></script>
+	<link rel="stylesheet" type="text/css" href="../assets/styles/bubbletree.css" />
+	<script type="text/javascript" src="../assets/styles/cofog.js"></script>
+
 	<script type="text/javascript" src="svgmap.js"></script>
-	
-	
+
 	<script type="text/javascript">
-       
 		$(function() {
-			
+
 			var $tooltip = $('<div class="tooltip">Tooltip</div>');
 			$tooltip.hide();
 			$('.bubbletree').append($tooltip);
-			
+
 			var getTooltip = function() {
 				return this.getAttribute('tooltip');
 			};
-			
+
 			var initTooltip = function(node, domnode) {
 				vis4.log($(domnode).tooltip);
 				vis4.log(node.label + ' - '+node.famount);
 				//domnode.setAttribute('title', node.label + ' <b>'+node.famount);
 				domnode.setAttribute('tooltip', node.label+' &nbsp;<b>'+node.famount+'</b><br /><small>'+node.name+'</small>');
-				
+
 				vis4.log(domnode.getAttribute('tooltip'));
-				
+
 				$(domnode).tooltip({ delay: 100, bodyHandler: getTooltip });
 			};
-			
+
 			var mapTooltip = function(map, node, subnode, population) {
 				var value, unit;
 				vis4.formatNumber_ksep = '.';
@@ -60,13 +58,13 @@
 				}
 				return subnode.label + '<br /><b>'+value+'</b> '+unit +'<br/><small>'+node.taxonomy+' = '+node.name+'<br />'+subnode.taxonomy+' = '+subnode.name+'</small>';
 			};
-			
+
 			var map = new SVGMap({
-				svg: 'berlin.svg', 
+				svg: 'berlin.svg',
 				container: $('#map'),
 				tooltip: mapTooltip
 			});
-			
+
 			$('#maptypeswitch').click(function(e) {
 				if (!$(e.target).hasClass('active')) {
 					$('#maptypeswitch a').removeClass('active');
@@ -75,12 +73,12 @@
 					map.updateValues(map.currentNode);
 				}
 			});
-			
+
 			var onNodeClick = function(node) {
 				map.updateValues(node);
 				$('#mapdesc').html('Ausgabenverteilung über Bezirke für<div style="font-size:130%">'+node.label+'</div>');
 			};
-			
+
 			new OpenSpending.Aggregator({
 				apiUrl: 'http://berlin.offenerhaushalt.de/api',
 				dataset: 'berlin',
@@ -89,9 +87,9 @@
 				breakdown: 'bereich',
 				localApiCache: 'aggregate-2011.json',
 				rootNodeLabel: 'Berliner Haushalt',
-				
+
 				callback: function(data) {
-					
+
 					new BubbleTree({
 						data: data,
 						container: '.bubbletree',
@@ -99,18 +97,18 @@
 						nodeClickCallback: onNodeClick,
 						firstNodeCallback: onNodeClick,
 						rootPath: '../../',
-						//randomColors: 
+						//randomColors:
 						bubbleStyles: {
 							'funktionenplan-berlin': {
 								'010': { icon: 'styles/icons/legislative.svg' },
 								'011': { icon: 'styles/icons/legislative.svg' },
 								'012': { icon: 'styles/icons/admin.svg' },
-								
+
 								'040': { icon: 'styles/icons/order-safety.svg' },
 								'042': { icon: 'styles/icons/police2.svg' },
 								'044': { icon: 'styles/icons/fire-brigade.svg' },
 								'050': { icon: 'styles/icons/courts.svg' },
-								
+
 								'052': { icon: 'styles/icons/courts.svg' },
 								'056': { icon: 'styles/icons/prisons.svg' },
 								'060': { icon: 'styles/icons/financial-admin.svg' },
@@ -119,20 +117,20 @@
 								'110': { icon: 'styles/icons/schools.svg', shortLabel: 'Schulen' },
 								'112': { icon: 'styles/icons/pre-school.svg' },
 								'113': { icon: 'styles/icons/secondary-lower.svg' },
-								'116': { icon: 'styles/icons/secondary-upper.svg' },								
+								'116': { icon: 'styles/icons/secondary-upper.svg' },
 								'117': { icon: 'styles/icons/post-secondary.svg' },
 								'119': { icon: 'styles/icons/schools.svg' },
 								'120': { shortLabel: 'Berufs- und Sonderschulen' },
 								'127': { shortLabel: 'Berufsschulen' },
-								
+
 								'130': { icon: 'styles/icons/education.svg' },
-								
+
 								'180': { icon: 'styles/icons/culture.svg', shortLabel: 'Kultur' },
 								'181': { icon: 'styles/icons/culture.svg' },
 								'186': { icon: 'styles/icons/books.svg', shortLabel: 'Bibliotheken' },
 								'188': { icon: 'styles/icons/admin-culture.svg', shortLabel: 'Verwaltung' },
-								
-								
+
+
 								'200': { icon: 'styles/icons/social-systems.svg' },
 								'230': { icon: 'styles/icons/family.svg' },
 								'234': { icon: 'styles/icons/unemployment.svg', shortLabel: 'Sozialhilfe, Asyl' },
@@ -141,23 +139,17 @@
 								'310': { icon: 'styles/icons/health.svg' },
 								'320': { icon: 'styles/icons/sports.svg' },
 								'330': { icon: 'styles/icons/environment.svg' },
-								
-								
+
+
 								'700': { shortLabel: 'Verkehr' }
 							}
 						},
-						initTooltip: initTooltip	
+						initTooltip: initTooltip
 					})
-					
+
 				}
 			});
-
-			
-			
 		});
-
-       
-                                        
 	</script>
 	<style type="text/css">
 		.bubbletree-wrapper {
@@ -172,7 +164,7 @@
 		}
 		#header { display:none; top: 3%; left:0; text-align:center; width: 100%; bottom:auto; }
 		#footer { top: 3%; right:2%; text-align:right; position: absolute; font-size:12px; font-family: Graublau; }
-		.bubbletree .label .desc { font-size: 11px; } 
+		.bubbletree .label .desc { font-size: 11px; }
 		#header .title { font-size:38px; }
 		#header .subtitle { font-size: 14px; }
 		#mapdesc { width: 50%; bottom: 10%; color: #333; left: 50%;
@@ -182,13 +174,13 @@
 			position: absolute; bottom: 4%; left: 50%; text-align:center; width:50%; font-family: Graublau; font-size:12px;
 		}
 		#maptypeswitch a {
-			cursor: pointer; color: #999; padding: 3px 0ex; margin: 0 1em; 
+			cursor: pointer; color: #999; padding: 3px 0ex; margin: 0 1em;
 		}
 		#maptypeswitch a.active {
 			color: #000; text-decoration: none;
 		}
 	</style>
-	
+
 </head>
 <body>
 	<div id="header"><a class="title">Berliner Senatshaushalt</a></div>
@@ -200,10 +192,10 @@
 		<div class="bubbletree"></div>
 	</div>
 	<div id="map">
-	
+
 	</div>
 	<div id="mapdesc">
-		
+
 	</div>
 	<div id="maptypeswitch"><a name="total">Gesamt</a><a name="percapita" class="active">Pro Einwohner</a></div>
 </body>

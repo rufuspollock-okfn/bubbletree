@@ -1,0 +1,47 @@
+{
+  "name": "bubbletree",
+  "version": "2.0.2",
+  "description": "BubbleTree is a library for interactive visualization of hierarchical data.",
+  "main": "dist/bubbletree.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "gulp",
+    "review": "jscs src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/okfn/bubbletree.git"
+  },
+  "author": {
+    "name": "Gregor Aisch",
+    "url": "http://vis4.net/blog/"
+  },
+  "contributors": [
+    {
+      "name": "Rufus Pollock",
+      "url": "http://rufuspollock.org/"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/okfn/bubbletree/issues"
+  },
+  "homepage": "http://okfnlabs.org/bubbletree",
+  "dependencies": {
+    "jquery": "^1.11.3",
+    "webpack-raphael": "^2.1.4",
+    "tween.js": "^16.3.1"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-file": "^0.2.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-uglify": "^1.5.1",
+    "jquery-migrate": "^1.2.1",
+    "jscs": "^2.7.0",
+    "marked": "^0.3.5",
+    "nunjucks": "^2.2.0"
+  }
+}
