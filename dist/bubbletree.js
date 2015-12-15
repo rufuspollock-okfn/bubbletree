@@ -627,9 +627,13 @@ var BubbleTree = function(config, onHover, onUnHover) {
 
 	me.version = "2.0.2";
 
-	me.$container = $(config.container);
+	me.$container = $(config.container).empty();
 
 	me.config = $.extend({
+    // Clear colors for all nodes (is doing before autoColors!)
+    clearColors: false,
+    // If node has no color - automatically assign it
+    autoColors: false,
 		// this is where we look for the icons
 		rootPath: '',
 		// show full labels inside bubbles with min radius of 40px
@@ -786,9 +790,21 @@ var BubbleTree = function(config, onHover, onUnHover) {
 		}
 
 		if (!node.color) {
-			// use color from parent node if no other match available
-			if (node.level > 0) node.color = node.parent.color;
-			else node.color = '#999999';
+      if (me.config.autoColors) {
+        if (node.level == 0) {
+          node.color = vis4color.fromHSL(45, 0.9, 0.5).x;
+        } else
+        if (node.level == 1) {
+          var count = node.parent.children.length;
+          node.color = vis4color.fromHSL(index / count * 360, 0.7, 0.5).x;
+        } else {
+          node.color = vis4color.fromHex(node.parent.color).lightness('*' + (0.5+Math.random() * 0.5)).x;
+        }
+      } else {
+        // use color from parent node if no other match available
+        if (node.level > 0) node.color = node.parent.color;
+        else node.color = '#999999';
+      }
 		}
 		// lighten up the color if there are no children
 		if (node.children.length < 2 && node.color) {
