@@ -1,4 +1,3 @@
 {
-  "preset": "google",
-  "excludeFiles": ["app/public/*"]
+  "preset": "google"
 }
