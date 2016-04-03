@@ -33,3 +33,8 @@ If you use Bubbletree to make a visualization we'd love it (but it's not require
 
 * `npm run build` to rebuild library and demos
 * `npm run review` to check code style 
+
+
+## Added in this fork: installation via bower
+
+`bower install bubbletree-bowerized` 
