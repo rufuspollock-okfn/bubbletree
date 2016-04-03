@@ -1,0 +1,28 @@
+{
+  "name": "bubbletree",
+  "description": "BubbleTree is a library for interactive visualization of hierarchical data.",
+  "main": "dist/bubbletree.js",
+  "authors": [
+    "Gregor Aisch"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "visualization"
+  ],
+  "homepage": "https://github.com/okfn/bubbletree",
+  "moduleType": [
+    "globals"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^1.11.3",
+    "raphael": "^2.1.4",
+    "tween.js": "tweenjs#^16.3.4"
+  }
+}
