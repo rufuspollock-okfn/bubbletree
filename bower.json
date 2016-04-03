@@ -1,7 +1,10 @@
 {
   "name": "bubbletree",
   "description": "BubbleTree is a library for interactive visualization of hierarchical data.",
-  "main": "dist/bubbletree.js",
+  "main":  [
+	"dist/bubbletree.min.js",
+	"dist/bubbletree.css"
+  ],
   "authors": [
     "Gregor Aisch"
   ],
