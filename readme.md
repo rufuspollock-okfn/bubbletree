@@ -35,6 +35,10 @@ If you use Bubbletree to make a visualization we'd love it (but it's not require
 * `npm run review` to check code style 
 
 
-## Added in this fork: installation via bower
+## Installation
 
-`bower install bubbletree-bowerized` 
+`npm install bubbletree`
+
+or 
+
+`bower install bubbletree` 
