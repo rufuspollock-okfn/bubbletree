@@ -834,7 +834,12 @@ var BubbleTree = function(config, onHover, onUnHover) {
 
 		me.globalNodeCounter++;
 
-		node.urlToken = urlTokenSource.toLowerCase().replace(/\W/g, "-");
+		if (typeof(urlTokenSource) == "number") {
+			node.urlToken = urlTokenSource.toString();
+		} else {
+			node.urlToken = urlTokenSource.toLowerCase().replace(/\W/g, "-");
+		}
+
 		while (me.nodesByUrlToken.hasOwnProperty(node.urlToken)) {
 			node.urlToken += '-';
 		}
