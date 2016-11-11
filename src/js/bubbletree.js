@@ -27,11 +27,13 @@ var BubbleTree = function(config, onHover, onUnHover) {
 
 	var me = this;
 
-	me.version = "2.0.2";
+	me.version = "2.0.4";
 
 	me.$container = $(config.container).empty();
 
 	me.config = $.extend({
+    // Format node value
+    formatValue: BubbleTree.Utils.formatNumber,
     // Clear colors for all nodes (is doing before autoColors!)
     clearColors: false,
     // If node has no color - automatically assign it
@@ -169,7 +171,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 		// store node in flat node list
 		me.nodeList.push(node);
 
-		node.famount = me.ns.Utils.formatNumber(node.amount);
+		node.famount = me.config.formatValue(node.amount);
 		if (node.parent) node.level = node.parent.level + 1;
 
 		if (me.config.clearColors === true) node.color = false;
@@ -255,7 +257,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 		if (node.breakdowns) {
 			node.breakdownsByName = {};
 			$.each(node.breakdowns, function (c,bd) {
-				bd.famount = me.ns.Utils.formatNumber(bd.amount);
+				bd.famount = me.config.formatValue(bd.amount);
 				if (bd.name) node.breakdownsByName[bd.name] = bd;
 			});
 		}

@@ -161,7 +161,9 @@ BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radius, angle, co
 			.attr({ stroke: '#ffffff', 'stroke-dasharray': "- " });
 
 
-		me.label = $('<div class="bubbletree-label '+me.node.id+'"><div class="bubbletree-amount">'+utils.formatNumber(me.node.amount)+'</div><div class="bubbletree-desc">'+me.node.shortLabel+'</div></div>');
+		me.label = $('<div class="bubbletree-label '+me.node.id+'"><div class="bubbletree-amount">'+
+      me.bc.config.formatValue(me.node.amount)+'</div><div class="bubbletree-desc">'+
+      me.node.shortLabel+'</div></div>');
 		me.container.append(me.label);
 
 		if (me.node.children.length > 0) {

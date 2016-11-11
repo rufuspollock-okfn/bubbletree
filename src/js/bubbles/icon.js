@@ -80,7 +80,9 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 			me.bc.config.initTooltip(me.node, me.circle.node);
 		}
 
-		me.label = $('<div class="bubbletree-label '+me.node.id+'"><div class="bubbletree-amount">'+utils.formatNumber(me.node.amount)+'</div><div class="bubbletree-desc">'+me.node.shortLabel+'</div></div>');
+		me.label = $('<div class="bubbletree-label '+me.node.id+'"><div class="bubbletree-amount">'+
+      me.bc.config.formatValue(me.node.amount)+'</div><div class="bubbletree-desc">'+
+      me.node.shortLabel+'</div></div>');
 		me.bc.$container.append(me.label);
 
 		if ($.isFunction(me.bc.config.initTooltip)) {
