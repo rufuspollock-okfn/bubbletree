@@ -53,7 +53,7 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 
 		for (i in me.node.breakdowns) {
 			b = me.node.breakdowns[i];
-			b.famount = utils.formatNumber(b.amount);
+			b.famount = me.bc.config.formatValue(b.amount);
 			val = b.amount / me.node.amount;
 			breakdown.push(val);
 			bd.push(b);
@@ -197,7 +197,9 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 		me.dashedBorder = me.paper.circle(me.pos.x, me.pos.y,  r*0.85)
 			.attr({ stroke: '#fff', 'stroke-opacity': me.alpha * 0.4,  'stroke-dasharray': ". ", fill: false });
 
-		me.label = $('<div class="bubbletree-label '+me.node.id+'"><div class="bubbletree-amount">'+utils.formatNumber(me.node.amount)+'</div><div class="bubbletree-desc">'+me.node.shortLabel+'</div></div>');
+		me.label = $('<div class="bubbletree-label '+me.node.id+'"><div class="bubbletree-amount">'+
+      me.bc.config.formatValue(me.node.amount)+'</div><div class="bubbletree-desc">'+
+      me.node.shortLabel+'</div></div>');
 		me.bc.$container.append(me.label);
 
 		if (me.node.children.length > 1) {

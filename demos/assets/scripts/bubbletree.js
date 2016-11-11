@@ -630,11 +630,13 @@ var BubbleTree = function(config, onHover, onUnHover) {
 
 	var me = this;
 
-	me.version = "2.0.2";
+	me.version = "2.0.4";
 
 	me.$container = $(config.container).empty();
 
 	me.config = $.extend({
+    // Format node value
+    formatValue: BubbleTree.Utils.formatNumber,
     // Clear colors for all nodes (is doing before autoColors!)
     clearColors: false,
     // If node has no color - automatically assign it
@@ -772,7 +774,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 		// store node in flat node list
 		me.nodeList.push(node);
 
-		node.famount = me.ns.Utils.formatNumber(node.amount);
+		node.famount = me.config.formatValue(node.amount);
 		if (node.parent) node.level = node.parent.level + 1;
 
 		if (me.config.clearColors === true) node.color = false;
@@ -858,7 +860,7 @@ var BubbleTree = function(config, onHover, onUnHover) {
 		if (node.breakdowns) {
 			node.breakdownsByName = {};
 			$.each(node.breakdowns, function (c,bd) {
-				bd.famount = me.ns.Utils.formatNumber(bd.amount);
+				bd.famount = me.config.formatValue(bd.amount);
 				if (bd.name) node.breakdownsByName[bd.name] = bd;
 			});
 		}
@@ -2112,7 +2114,9 @@ BubbleTree.Bubbles.Plain = function(node, bubblechart, origin, radius, angle, co
 			.attr({ stroke: '#ffffff', 'stroke-dasharray': "- " });
 
 
-		me.label = $('<div class="bubbletree-label '+me.node.id+'"><div class="bubbletree-amount">'+utils.formatNumber(me.node.amount)+'</div><div class="bubbletree-desc">'+me.node.shortLabel+'</div></div>');
+		me.label = $('<div class="bubbletree-label '+me.node.id+'"><div class="bubbletree-amount">'+
+      me.bc.config.formatValue(me.node.amount)+'</div><div class="bubbletree-desc">'+
+      me.node.shortLabel+'</div></div>');
 		me.container.append(me.label);
 
 		if (me.node.children.length > 0) {
@@ -2213,7 +2217,7 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 
 		for (i in me.node.breakdowns) {
 			b = me.node.breakdowns[i];
-			b.famount = utils.formatNumber(b.amount);
+			b.famount = me.bc.config.formatValue(b.amount);
 			val = b.amount / me.node.amount;
 			breakdown.push(val);
 			bd.push(b);
@@ -2357,7 +2361,9 @@ BubbleTree.Bubbles.Donut = function(node, bubblechart, origin, radius, angle, co
 		me.dashedBorder = me.paper.circle(me.pos.x, me.pos.y,  r*0.85)
 			.attr({ stroke: '#fff', 'stroke-opacity': me.alpha * 0.4,  'stroke-dasharray': ". ", fill: false });
 
-		me.label = $('<div class="bubbletree-label '+me.node.id+'"><div class="bubbletree-amount">'+utils.formatNumber(me.node.amount)+'</div><div class="bubbletree-desc">'+me.node.shortLabel+'</div></div>');
+		me.label = $('<div class="bubbletree-label '+me.node.id+'"><div class="bubbletree-amount">'+
+      me.bc.config.formatValue(me.node.amount)+'</div><div class="bubbletree-desc">'+
+      me.node.shortLabel+'</div></div>');
 		me.bc.$container.append(me.label);
 
 		if (me.node.children.length > 1) {
@@ -2528,7 +2534,9 @@ BubbleTree.Bubbles.Icon = function(node, bubblechart, origin, radius, angle, col
 			me.bc.config.initTooltip(me.node, me.circle.node);
 		}
 
-		me.label = $('<div class="bubbletree-label '+me.node.id+'"><div class="bubbletree-amount">'+utils.formatNumber(me.node.amount)+'</div><div class="bubbletree-desc">'+me.node.shortLabel+'</div></div>');
+		me.label = $('<div class="bubbletree-label '+me.node.id+'"><div class="bubbletree-amount">'+
+      me.bc.config.formatValue(me.node.amount)+'</div><div class="bubbletree-desc">'+
+      me.node.shortLabel+'</div></div>');
 		me.bc.$container.append(me.label);
 
 		if ($.isFunction(me.bc.config.initTooltip)) {
