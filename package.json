@@ -5,6 +5,7 @@
   "main": "dist/bubbletree.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "npm run build",
     "build": "gulp",
     "review": "jscs src"
   },
