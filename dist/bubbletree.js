@@ -794,6 +794,17 @@ var BubbleTree = function(config, onHover, onUnHover) {
 					node[prop] = styles[node.taxonomy][node.name][prop];
 				}
 			});
+
+			if (styles.getStyle) {
+				// Overwrite the styles with what we get back from styles.getStyle()
+				var style = styles.getStyle(node, index);
+
+				$.each(props, function (p, prop) {
+					if (style.hasOwnProperty(prop)) {
+						node[prop] = style[prop];
+					}
+				});
+			}
 		}
 
 		if (!node.color) {
